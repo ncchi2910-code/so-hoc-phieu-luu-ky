@@ -1,0 +1,25 @@
+# PROMPT CẬP NHẬT GAME — Dán nguyên đoạn dưới dòng kẻ vào Claude Code
+
+(Mở Claude Code trong thư mục dự án như cũ: `cd` vào thư mục, gõ `claude`. Đảm bảo file GAME_SPEC_v2.md đã nằm trong thư mục cùng index.html.)
+
+---
+
+Chào Claude Code. Game "Số Học Phiêu Lưu Ký" (index.html) đã có và chạy tốt rồi. Giờ tôi muốn nâng cấp lớn theo file GAME_SPEC_v2.md trong thư mục này.
+
+Hãy đọc kỹ GAME_SPEC_v2.md trước. Đây là bản cập nhật thay thế spec cũ.
+
+Việc cần làm — SỬA TIẾP trên index.html đang có, KHÔNG viết lại từ đầu, GIỮ phần sinh đề ngẫu nhiên đã chạy đúng:
+
+1. Đổi cấu trúc thành 6 chặng: 3 chặng ôn nền lớp 6 (Cánh Diều) + 3 chặng Chương I lớp 7 (Số hữu tỉ). Bỏ phần Số thực cũ nếu có, không làm phần đó lần này.
+2. Phần ôn lớp 6 BẮT BUỘC làm trước, phải xong 3 chặng ôn mới mở 3 chặng lớp 7. Không cho nhảy cóc.
+3. Thêm tính năng: khi trả lời SAI, hiện NGAY một ô giải thích (đáp án đúng + cách làm từng bước + ví dụ đời thường phù hợp đúng câu đó), bắt đọc xong bấm "Đã hiểu" mới làm tiếp. Giọng kiên nhẫn, khích lệ, không chê.
+4. Nhân vật học sinh trong game tên là "Kim" — gọi tên này xuyên suốt.
+5. Sau mỗi chặng: hiện câu chuyện lịch sử (đúng 6 chuyện trong spec), đọc xong hiện màn phần thưởng gồm ảnh `images/chuyenN.jpg` (N=1..6) + 1 câu cổ vũ tương ứng (6 câu trong spec). Nếu ảnh không load được thì hiện thẻ cổ vũ thiết kế bằng CSS thay thế, KHÔNG để vỡ giao diện. Đường dẫn ảnh tương đối cùng cấp index.html.
+6. Đổi TOÀN BỘ giao diện: bỏ tông vàng giấy cổ, làm lại phong cách trẻ trung tươi sáng cho học sinh lớp 6–7 theo mô tả mục 6 trong spec.
+
+Yêu cầu chất lượng:
+- Đáp án toán phải đúng tuyệt đối, refresh vẫn ra đề mới. Kiểm thử kỹ phần này.
+- Vẫn một file index.html duy nhất, không framework, không localStorage.
+- Chạy mượt trên điện thoại.
+
+Hãy đọc spec, trình bày ngắn gọn kế hoạch sửa (liệt kê các thay đổi chính) rồi mới bắt đầu code. Làm xong thì tự rà lại logic 6 chặng + phần giải thích khi sai + đáp án toán, rồi báo tôi tóm tắt những gì đã đổi.

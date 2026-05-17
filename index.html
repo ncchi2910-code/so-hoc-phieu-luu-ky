@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Số Học Phiêu Lưu Ký — Cùng Kim</title>
+<style>
+  :root{
+    --bg-1:#dbeafe;
+    --bg-2:#e0f7fa;
+    --bg-3:#f0fdf4;
+    --ink:#1f2a44;
+    --ink-2:#4b5b75;
+    --muted:#8093ad;
+    --line:#e3ecf7;
+    --primary:#3b82f6;
+    --primary-2:#2563eb;
+    --pink:#ec4899;
+    --pink-2:#db2777;
+    --mint:#10b981;
+    --mint-2:#059669;
+    --sun:#f59e0b;
+    --sun-2:#d97706;
+    --coral:#fb7185;
+    --violet:#8b5cf6;
+    --card:#ffffff;
+    --shadow-sm:0 2px 6px rgba(31,42,68,0.08);
+    --shadow:0 8px 24px rgba(31,42,68,0.10);
+    --shadow-lg:0 16px 40px rgba(31,42,68,0.18);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;min-height:100vh;color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","Nunito","Quicksand",Arial,sans-serif;
+    background:
+      radial-gradient(900px 600px at 90% -10%, #fde2e8 0%, transparent 60%),
+      radial-gradient(700px 500px at -10% 110%, #d6f3e3 0%, transparent 60%),
+      linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 55%, var(--bg-3) 100%);
+    background-attachment:fixed;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{margin:0;letter-spacing:-0.2px}
+  .app{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:14px 14px 28px;min-height:100vh;display:flex;flex-direction:column}
+
+  /* ====== Buttons ====== */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    font-family:inherit;font-weight:700;font-size:16px;
+    padding:13px 22px;border:0;border-radius:999px;
+    background:linear-gradient(135deg,var(--primary),var(--primary-2));
+    color:#fff;cursor:pointer;
+    box-shadow:0 6px 14px rgba(59,130,246,0.35);
+    transition:transform .08s ease, box-shadow .08s ease, filter .15s ease;
+  }
+  .btn:hover{filter:brightness(1.05)}
+  .btn:active{transform:translateY(1px);box-shadow:0 3px 8px rgba(59,130,246,0.3)}
+  .btn.pink{background:linear-gradient(135deg,var(--pink),var(--pink-2));box-shadow:0 6px 14px rgba(236,72,153,0.35)}
+  .btn.mint{background:linear-gradient(135deg,var(--mint),var(--mint-2));box-shadow:0 6px 14px rgba(16,185,129,0.35)}
+  .btn.sun{background:linear-gradient(135deg,var(--sun),var(--sun-2));box-shadow:0 6px 14px rgba(245,158,11,0.35);color:#3d2a05}
+  .btn.ghost{background:#fff;color:var(--ink);box-shadow:var(--shadow-sm);border:1px solid var(--line)}
+  .btn:disabled{opacity:0.5;cursor:not-allowed;filter:grayscale(0.4)}
+
+  /* ====== Title screen ====== */
+  .title-screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px 4px;text-align:center}
+  .title-card{
+    background:var(--card);
+    border-radius:24px;padding:28px 22px;
+    box-shadow:var(--shadow-lg);
+    max-width:540px;width:100%;
+    border:1px solid var(--line);
+    position:relative;overflow:hidden;
+  }
+  .title-card::before{
+    content:"";position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;
+    background:radial-gradient(circle,#fde2e8,transparent);opacity:0.7;
+  }
+  .title-card::after{
+    content:"";position:absolute;bottom:-60px;left:-60px;width:200px;height:200px;border-radius:50%;
+    background:radial-gradient(circle,#d6f3e3,transparent);opacity:0.7;
+  }
+  .kim-avatar{
+    width:96px;height:96px;border-radius:50%;
+    background:linear-gradient(135deg,#fcd5ce,#ffd6a5);
+    display:flex;align-items:center;justify-content:center;
+    font-size:54px;margin:0 auto 14px;position:relative;z-index:1;
+    box-shadow:0 8px 18px rgba(252,181,168,0.5);
+    border:4px solid #fff;
+  }
+  .game-title{font-size:30px;font-weight:800;color:var(--ink);margin:8px 0 4px;position:relative;z-index:1;letter-spacing:-0.5px}
+  .game-subtitle{color:var(--ink-2);font-size:14px;font-weight:500;margin:2px 0 18px;position:relative;z-index:1}
+  .intro-text{
+    text-align:left;font-size:15px;line-height:1.65;color:var(--ink-2);
+    background:#f7fbff;border-radius:14px;padding:14px 16px;margin-bottom:18px;position:relative;z-index:1;
+    border:1px dashed #c7d8ec;
+  }
+  .intro-text b{color:var(--primary-2)}
+
+  /* ====== Map screen ====== */
+  .map-screen{flex:1;display:flex;flex-direction:column}
+  .map-header{text-align:center;margin:6px 0 14px;padding:0 6px}
+  .map-header h2{font-size:24px;font-weight:800;color:var(--ink);display:flex;justify-content:center;gap:8px;align-items:center}
+  .map-header .sub{font-size:13px;color:var(--muted);margin-top:4px}
+  .kim-bubble{
+    display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);
+    padding:6px 12px 6px 6px;border-radius:999px;box-shadow:var(--shadow-sm);font-size:13px;color:var(--ink-2);font-weight:600;margin-top:6px;
+  }
+  .kim-bubble .mini{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#fcd5ce,#ffd6a5);display:flex;align-items:center;justify-content:center;font-size:18px;border:2px solid #fff}
+
+  .group-card{
+    background:var(--card);border-radius:18px;
+    padding:14px;margin-bottom:14px;box-shadow:var(--shadow);
+    border:1px solid var(--line);
+    position:relative;
+  }
+  .group-card.locked{opacity:0.85}
+  .group-label{
+    display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:var(--ink);
+    text-transform:uppercase;letter-spacing:0.6px;margin-bottom:10px;
+  }
+  .group-label .badge{
+    font-size:11px;padding:3px 10px;border-radius:999px;color:#fff;background:linear-gradient(135deg,var(--mint),var(--mint-2));
+    text-transform:none;letter-spacing:0;
+  }
+  .group-label .badge.locked{background:linear-gradient(135deg,#94a3b8,#64748b)}
+  .group-label .hint{font-weight:500;color:var(--muted);font-size:12px;text-transform:none;letter-spacing:0;margin-left:auto}
+
+  .stages-grid{display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr}
+  @media (max-width:540px){.stages-grid{grid-template-columns:1fr 1fr}}
+  @media (max-width:380px){.stages-grid{grid-template-columns:1fr}}
+  .stage-tile{
+    background:#f7fbff;border:2px solid var(--line);border-radius:16px;
+    padding:12px 10px;cursor:pointer;text-align:center;
+    transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    position:relative;
+  }
+  .stage-tile.unlocked:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:#cbd5e1}
+  .stage-tile.locked{cursor:not-allowed;opacity:0.55;filter:grayscale(0.4)}
+  .stage-tile.done{background:linear-gradient(180deg,#e0f7ec,#c8efd5);border-color:#86d3a8}
+  .stage-tile .num{
+    position:absolute;top:8px;left:8px;width:22px;height:22px;border-radius:50%;
+    background:#fff;color:var(--ink-2);font-size:11px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;border:1px solid var(--line);
+  }
+  .stage-tile .ic{
+    width:54px;height:54px;border-radius:18px;margin:8px auto 6px;
+    display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;
+    background:linear-gradient(135deg,var(--primary),var(--primary-2));
+    box-shadow:0 6px 12px rgba(59,130,246,0.35);
+  }
+  .stage-tile.c1 .ic{background:linear-gradient(135deg,#fbbf24,#f59e0b);box-shadow:0 6px 12px rgba(245,158,11,0.35)}
+  .stage-tile.c2 .ic{background:linear-gradient(135deg,#34d399,#10b981);box-shadow:0 6px 12px rgba(16,185,129,0.35)}
+  .stage-tile.c3 .ic{background:linear-gradient(135deg,#f472b6,#db2777);box-shadow:0 6px 12px rgba(236,72,153,0.35)}
+  .stage-tile.c4 .ic{background:linear-gradient(135deg,#60a5fa,#2563eb);box-shadow:0 6px 12px rgba(59,130,246,0.35)}
+  .stage-tile.c5 .ic{background:linear-gradient(135deg,#a78bfa,#7c3aed);box-shadow:0 6px 12px rgba(124,58,237,0.35)}
+  .stage-tile.c6 .ic{background:linear-gradient(135deg,#fb7185,#e11d48);box-shadow:0 6px 12px rgba(225,29,72,0.35)}
+  .stage-tile.locked .ic{background:linear-gradient(135deg,#94a3b8,#64748b);box-shadow:none}
+  .stage-tile.done .ic::after{content:"✓";position:absolute;font-size:18px;background:var(--mint);width:24px;height:24px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;transform:translate(20px,-20px);border:2px solid #fff}
+  .stage-tile .name{font-weight:700;font-size:13px;color:var(--ink);line-height:1.2;margin:0}
+  .stage-tile .meta{font-size:11px;color:var(--muted);margin-top:3px}
+
+  /* ====== Stage screen ====== */
+  .stage-top{
+    display:flex;align-items:center;gap:10px;
+    background:var(--card);border:1px solid var(--line);
+    padding:10px 14px;border-radius:14px;box-shadow:var(--shadow-sm);
+    margin-bottom:10px;
+  }
+  .stage-top .mini-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#fcd5ce,#ffd6a5);display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid #fff;box-shadow:var(--shadow-sm)}
+  .stage-top .title{font-weight:800;font-size:15px;color:var(--ink);flex:1;line-height:1.2}
+  .stage-top .meta{display:flex;gap:10px;font-size:12px;color:var(--ink-2);font-weight:600}
+  .stage-top .meta b{color:var(--primary-2);font-weight:800}
+
+  .progress-wrap{margin-bottom:10px}
+  .progress-bar{
+    height:10px;background:#e9eff7;border-radius:99px;overflow:hidden;border:1px solid var(--line);
+  }
+  .progress-bar-fill{
+    height:100%;background:linear-gradient(90deg,#34d399,#3b82f6);
+    transition:width .35s cubic-bezier(.5,.2,.2,1);border-radius:99px;
+  }
+
+  .question-card{
+    background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 16px;box-shadow:var(--shadow);
+    flex:1;display:flex;flex-direction:column;
+  }
+  .q-tag{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:11px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;
+    color:#fff;background:linear-gradient(135deg,var(--violet),#6d28d9);
+    padding:4px 10px;border-radius:999px;align-self:flex-start;margin-bottom:10px;
+  }
+  .q-text{font-size:19px;line-height:1.55;color:var(--ink);font-weight:600;margin:4px 0 16px;min-height:54px}
+  .q-text .scenario{display:block;font-size:14px;font-style:italic;color:var(--ink-2);font-weight:500;margin-bottom:6px}
+  .frac{display:inline-block;vertical-align:middle;text-align:center;margin:0 3px;line-height:1}
+  .frac .num{display:block;border-bottom:2.2px solid currentColor;padding:0 5px;font-size:0.88em}
+  .frac .den{display:block;padding:0 5px;font-size:0.88em}
+
+  .options{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+  @media (max-width:440px){.options{grid-template-columns:1fr}}
+  .opt-btn{
+    font-family:inherit;font-size:17px;font-weight:700;
+    padding:14px 12px;border:2px solid var(--line);border-radius:14px;
+    background:#fff;color:var(--ink);cursor:pointer;
+    transition:transform .08s ease, box-shadow .08s ease, border-color .08s ease, background .15s ease;
+    min-height:56px;word-break:break-word;
+  }
+  .opt-btn:hover{border-color:#9ec0eb;background:#f7fbff}
+  .opt-btn:active{transform:translateY(1px)}
+  .opt-btn.correct{background:linear-gradient(135deg,#c6f6d5,#86efac);color:#14532d;border-color:#22c55e}
+  .opt-btn.wrong{background:linear-gradient(135deg,#fed7d7,#fda4af);color:#7f1d1d;border-color:#f87171}
+  .opt-btn.dim{opacity:0.5}
+  .opt-btn:disabled{cursor:default}
+
+  .stage-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:10px;flex-wrap:wrap}
+  .combo-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:6px 12px;border-radius:999px;font-weight:800;font-size:13px;
+    background:linear-gradient(135deg,#fed7aa,#fbbf24);color:#7c2d12;
+    box-shadow:0 3px 8px rgba(251,191,36,0.35);
+  }
+  .combo-badge.zero{opacity:0.5;background:#e9eff7;color:var(--muted);box-shadow:none}
+
+  /* ====== Modals (Explanation + Story + Reward) ====== */
+  .modal-backdrop{
+    position:fixed;inset:0;background:rgba(15,23,42,0.55);z-index:50;
+    display:flex;align-items:center;justify-content:center;padding:18px;
+    backdrop-filter:blur(3px);animation:fadeIn .2s ease;
+  }
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .modal{
+    background:var(--card);border-radius:22px;
+    max-width:560px;width:100%;max-height:92vh;overflow-y:auto;
+    padding:22px 20px;box-shadow:var(--shadow-lg);
+    animation:popIn .28s cubic-bezier(.5,1.5,.5,1);
+    position:relative;
+  }
+  @keyframes popIn{from{transform:scale(0.88);opacity:0}to{transform:scale(1);opacity:1}}
+
+  /* Explanation modal */
+  .explain-modal{border-top:6px solid var(--coral)}
+  .explain-head{
+    display:flex;align-items:center;gap:10px;margin-bottom:12px;
+  }
+  .explain-head .av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#fcd5ce,#ffd6a5);display:flex;align-items:center;justify-content:center;font-size:24px;border:3px solid #fff;box-shadow:var(--shadow-sm)}
+  .explain-head .h{flex:1}
+  .explain-head .h .t{font-size:17px;font-weight:800;color:var(--ink)}
+  .explain-head .h .s{font-size:13px;color:var(--ink-2)}
+  .ex-block{
+    background:#f7fbff;border-radius:14px;padding:12px 14px;margin:10px 0;
+    border-left:4px solid var(--primary);
+  }
+  .ex-block .label{font-size:11px;font-weight:800;color:var(--primary-2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .ex-block .content{font-size:15px;line-height:1.55;color:var(--ink)}
+  .ex-block.steps{border-left-color:var(--violet);background:#f8f6ff}
+  .ex-block.steps .label{color:#6d28d9}
+  .ex-block.real{border-left-color:var(--mint);background:#f0fdf5}
+  .ex-block.real .label{color:var(--mint-2)}
+  .ex-block.real .content{font-style:italic}
+  .ex-actions{display:flex;justify-content:center;margin-top:16px}
+
+  /* Story modal */
+  .story-modal{border-top:6px solid var(--violet)}
+  .story-head{text-align:center;margin-bottom:10px}
+  .story-icon{font-size:42px;color:var(--violet);margin:0 0 4px}
+  .story-title{font-size:21px;font-weight:800;color:var(--ink);margin:2px 0}
+  .story-sub{font-size:13px;color:var(--muted);font-style:italic}
+  .story-body{font-size:15px;line-height:1.7;color:var(--ink);text-align:justify;margin-top:10px}
+  .story-body p{margin:8px 0}
+  .story-body b{color:var(--primary-2)}
+  .story-quote{
+    margin:14px 0 4px;padding:12px 14px;border-radius:12px;
+    background:linear-gradient(135deg,#fff7ed,#fef3c7);
+    border-left:4px solid var(--sun);color:#7c2d12;font-style:italic;font-weight:600;
+  }
+  .story-actions{display:flex;justify-content:center;margin-top:14px}
+
+  /* Reward modal / screen */
+  .reward-card{
+    background:linear-gradient(180deg,#fff,#f7fbff);
+    border-radius:22px;padding:18px;text-align:center;
+    box-shadow:var(--shadow-lg);border:1px solid var(--line);
+  }
+  .reward-card .header{font-size:13px;font-weight:800;color:var(--ink-2);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px}
+  .reward-card .header .star{color:var(--sun)}
+  .reward-img-wrap{
+    width:100%;max-width:420px;margin:6px auto 12px;border-radius:18px;overflow:hidden;
+    background:linear-gradient(135deg,#fde7c4,#fcd5ce,#d6f3e3);
+    aspect-ratio: 4/3;
+    box-shadow:0 10px 24px rgba(0,0,0,0.1);
+    display:flex;align-items:center;justify-content:center;
+    position:relative;
+  }
+  .reward-img-wrap img{display:block;width:100%;height:100%;object-fit:cover}
+  .reward-fallback{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:18px;color:var(--ink);text-align:center;width:100%;height:100%;
+    background:linear-gradient(135deg,#fde7c4,#fcd5ce 50%,#d6f3e3);
+  }
+  .reward-fallback .big-icon{font-size:60px;margin-bottom:8px}
+  .reward-fallback .ribbon{display:inline-block;background:#fff;color:var(--ink);padding:6px 14px;border-radius:999px;font-weight:800;font-size:13px;box-shadow:var(--shadow-sm)}
+  .cheer-line{
+    background:linear-gradient(135deg,#fff7ed,#ffedd5);
+    border-radius:14px;padding:14px 16px;margin:10px 4px 4px;
+    color:#7c2d12;font-size:15px;font-weight:700;line-height:1.5;
+    border:1px dashed #fbbf24;
+  }
+  .cheer-line .label{display:block;font-size:11px;font-weight:800;color:var(--sun-2);letter-spacing:0.6px;margin-bottom:4px;text-transform:uppercase}
+
+  /* Summary */
+  .summary-card{
+    background:var(--card);border-radius:22px;padding:22px 18px;text-align:center;
+    box-shadow:var(--shadow-lg);border:1px solid var(--line);
+  }
+  .summary-card h2{font-size:24px;color:var(--ink);margin-bottom:6px}
+  .summary-stars{font-size:32px;color:var(--sun);margin:10px 0;letter-spacing:6px;filter:drop-shadow(0 4px 8px rgba(245,158,11,0.4))}
+  .summary-stat{font-size:15px;margin:5px 0;color:var(--ink-2)}
+  .summary-stat b{color:var(--ink)}
+  .summary-actions{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+
+  /* Final */
+  .final-card{
+    background:linear-gradient(135deg,#dbeafe,#f0fdf4,#fff7ed);
+    border-radius:24px;padding:28px 20px;text-align:center;
+    box-shadow:var(--shadow-lg);
+  }
+  .crown{font-size:64px;filter:drop-shadow(0 6px 12px rgba(245,158,11,0.5))}
+
+  /* Confetti */
+  .confetti{position:fixed;inset:0;pointer-events:none;z-index:80;overflow:hidden}
+  .confetti i{
+    position:absolute;top:-20px;width:10px;height:14px;border-radius:2px;opacity:0.95;
+    animation:fall 2.4s linear forwards;
+  }
+  @keyframes fall{
+    to{transform:translateY(110vh) rotate(720deg);opacity:0.4}
+  }
+
+  /* Tap feedback */
+  .tap-pop{animation:tapPop .25s ease}
+  @keyframes tapPop{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+
+  .footer-credit{text-align:center;font-size:11px;color:var(--muted);padding:10px 0 4px}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<script>
+"use strict";
+
+/* ========================================================================
+   PHẦN 1 — TIỆN ÍCH SỐ HỌC (GIỮ NGUYÊN — đã test ổn)
+   ========================================================================*/
+
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b]}return a||1}
+function lcm(a,b){return Math.abs(a*b)/gcd(a,b)}
+function randInt(lo,hi){return Math.floor(Math.random()*(hi-lo+1))+lo}
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
+function shuffle(arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+class Frac{
+  constructor(n,d=1){
+    if(d===0) throw new Error("Chia 0");
+    if(!Number.isInteger(n)||!Number.isInteger(d)) throw new Error("Frac cần số nguyên: "+n+","+d);
+    if(d<0){n=-n;d=-d}
+    const g=gcd(n,d);
+    this.n=n/g;
+    this.d=d/g;
+  }
+  add(o){return new Frac(this.n*o.d + o.n*this.d, this.d*o.d)}
+  sub(o){return new Frac(this.n*o.d - o.n*this.d, this.d*o.d)}
+  mul(o){return new Frac(this.n*o.n, this.d*o.d)}
+  div(o){if(o.n===0) throw new Error("div 0");return new Frac(this.n*o.d, this.d*o.n)}
+  neg(){return new Frac(-this.n,this.d)}
+  pow(k){let n=1,d=1;for(let i=0;i<k;i++){n*=this.n;d*=this.d}return new Frac(n,d)}
+  eq(o){return this.n===o.n && this.d===o.d}
+  isInt(){return this.d===1}
+  toNum(){return this.n/this.d}
+  toHTML(){
+    if(this.d===1) return this.n<0 ? "(−"+Math.abs(this.n)+")" : ""+this.n;
+    const sign = this.n<0 ? "−" : "";
+    return '<span class="frac"><span class="num">'+sign+Math.abs(this.n)+'</span><span class="den">'+this.d+'</span></span>';
+  }
+  toHTMLraw(){
+    if(this.d===1) return this.n<0 ? "−"+Math.abs(this.n) : ""+this.n;
+    const sign = this.n<0 ? "−" : "";
+    return '<span class="frac"><span class="num">'+sign+Math.abs(this.n)+'</span><span class="den">'+this.d+'</span></span>';
+  }
+  toLabel(){
+    if(this.d===1) return this.n<0 ? "−"+Math.abs(this.n) : ""+this.n;
+    const sign = this.n<0 ? "−" : "";
+    return sign + Math.abs(this.n) + "/" + this.d;
+  }
+}
+function F(n,d){return new Frac(n,d||1)}
+
+function isFiniteDecimal(frac){
+  let d=frac.d;
+  while(d%2===0) d/=2;
+  while(d%5===0) d/=5;
+  return d===1;
+}
+function fmtNum(x, nDec){
+  if(nDec===undefined) nDec=4;
+  let s = x.toFixed(nDec);
+  if(s.indexOf(".")>=0) s = s.replace(/0+$/,"").replace(/\.$/,"");
+  return s.replace("-","−").replace(".",",");
+}
+function intHTML(n){return n<0 ? "−"+Math.abs(n) : ""+n}
+
+/* ====== Tạo lựa chọn (đã test) ====== */
+function makeOptionsFrac(correct, distractors){
+  const seen = new Set();
+  const opts = [];
+  function add(f){
+    const k = f.toLabel();
+    if(seen.has(k)) return;
+    seen.add(k); opts.push(f);
+  }
+  add(correct);
+  for(const f of distractors){ if(opts.length>=4) break; add(f); }
+  let guard=0;
+  while(opts.length<4 && guard<30){
+    guard++;
+    const dn = correct.n + randInt(-5,5)*(randInt(1,3));
+    const dd = correct.d + randInt(0,2);
+    try{ const f=new Frac(dn || 1, Math.max(1,dd)); add(f);}catch(e){}
+  }
+  const shuffled = shuffle(opts);
+  const idx = shuffled.findIndex(o=>o.eq(correct));
+  return { options: shuffled.map(o=>o.toLabel()), answerIdx: idx };
+}
+
+function makeOptionsStr(correctLabel, distractorLabels){
+  const seen=new Set([correctLabel]);
+  const opts=[correctLabel];
+  for(const d of distractorLabels){if(opts.length>=4) break; if(d!=null && !seen.has(d)){seen.add(d);opts.push(d)}}
+  if(opts.length<4){
+    const m = correctLabel.replace("−","-").replace(",",".");
+    const v = parseFloat(m);
+    if(Number.isFinite(v)){
+      const fmts = [v+1, v-1, v+2, v-2, v*2, Math.round(v/2)];
+      for(const cand of fmts){
+        if(opts.length>=4) break;
+        const s = (cand<0?"−"+Math.abs(cand):""+cand);
+        if(!seen.has(s)){ seen.add(s); opts.push(s); }
+      }
+    }
+  }
+  let pad = 1;
+  while(opts.length<4){
+    const s = "≈" + pad;
+    if(!seen.has(s)){ seen.add(s); opts.push(s); }
+    pad++;
+  }
+  const shuffled = shuffle(opts);
+  return { options: shuffled, answerIdx: shuffled.indexOf(correctLabel) };
+}
+
+/* ========================================================================
+   PHẦN 2 — TIỆN ÍCH GIẢI THÍCH
+   Mỗi câu sẽ có explain = {correctHTML, steps[], realWorld}
+   ========================================================================*/
+
+// Mô tả "đời thường" cho số nguyên (nợ/có/tiền)
+function realIntAdd(a,b){
+  // Hình dung qua tiền/nợ
+  if(a>=0 && b>=0) return "Kim có "+a+" nghìn, được mẹ cho thêm "+b+" nghìn → tổng "+(a+b)+" nghìn.";
+  if(a<0 && b<0) return "Kim đang nợ "+Math.abs(a)+" nghìn, nợ thêm "+Math.abs(b)+" nghìn nữa → tổng nợ "+(Math.abs(a)+Math.abs(b))+" nghìn (tức "+(a+b)+").";
+  if(a<0 && b>0){
+    if(a+b>=0) return "Kim đang nợ "+Math.abs(a)+" nghìn, được cho "+b+" nghìn. Trả nợ xong còn "+(a+b)+" nghìn.";
+    return "Kim đang nợ "+Math.abs(a)+" nghìn, được cho "+b+" nghìn. Trả bớt vẫn còn nợ "+Math.abs(a+b)+" nghìn (tức "+(a+b)+").";
+  }
+  // a>=0, b<0
+  if(a+b>=0) return "Kim có "+a+" nghìn, tiêu "+Math.abs(b)+" nghìn → còn "+(a+b)+" nghìn.";
+  return "Kim có "+a+" nghìn, nhưng cần tiêu "+Math.abs(b)+" nghìn → bị thiếu, thành nợ "+Math.abs(a+b)+" nghìn (tức "+(a+b)+").";
+}
+function realIntSub(a,b){
+  // a − b = a + (−b)
+  return "Phép trừ "+intHTML(a)+" − "+intHTML(b)+" có thể đổi thành "+intHTML(a)+" + "+intHTML(-b)+". " + realIntAdd(a, -b);
+}
+function realMul(a,b){
+  if(a>0 && b>0) return "Hình dung "+a+" hộp bút, mỗi hộp "+b+" cây → tổng "+(a*b)+" cây bút.";
+  if(a<0 && b<0) return "Hai số âm nhân nhau ra số dương: như khi 'nhân đôi khoản nợ ngược lại' → trở thành dư. Kết quả "+(a*b)+".";
+  if(a<0 || b<0){
+    const pos = a<0 ? b : a;
+    const neg = a<0 ? a : b;
+    return "Nhân số dương "+pos+" với số âm "+intHTML(neg)+" → kết quả âm. Hình dung "+pos+" tháng mỗi tháng tiêu hết "+Math.abs(neg)+" nghìn (số tiền giảm), tổng giảm "+(pos*Math.abs(neg))+" nghìn (tức "+(a*b)+").";
+  }
+  return "Kết quả "+(a*b)+".";
+}
+function realDiv(a,b){
+  if(a>0 && b>0) return "Chia "+a+" viên kẹo cho "+b+" bạn, mỗi bạn được "+(a/b)+" viên.";
+  return "Quy tắc dấu khi chia giống nhân: cùng dấu → dương, khác dấu → âm. Kết quả "+(a/b)+".";
+}
+
+function fmtFracSimple(n,d){ return d===1 ? ""+n : n+"/"+d; }
+function realFracAdd(a,b,c,d, rN, rD){
+  return "Như chia bánh: "+fmtFracSimple(a,b)+" cái bánh cộng thêm "+fmtFracSimple(c,d)+" cái bánh được "+fmtFracSimple(rN,rD)+" cái bánh. Trước đó cần quy đồng để hai miếng cùng kích thước.";
+}
+function realFracSub(a,b,c,d, rN, rD){
+  return "Như chia bánh: có "+fmtFracSimple(a,b)+" cái bánh, cho đi "+fmtFracSimple(c,d)+" cái → còn "+fmtFracSimple(rN,rD)+" cái bánh.";
+}
+function realFracMul(a,b,c,d, rN, rD){
+  return "Như lấy '"+fmtFracSimple(c,d)+" của "+fmtFracSimple(a,b)+"': nhân tử với tử, mẫu với mẫu rồi rút gọn → "+fmtFracSimple(rN,rD)+".";
+}
+function realFracDiv(){
+  return "Chia hai phân số: 'lật ngược phân số thứ hai rồi nhân'. Ví dụ chia 1/2 cho 1/4 nghĩa là hỏi 'trong nửa cái bánh có mấy miếng 1/4' → có 2 miếng.";
+}
+
+/* ========================================================================
+   PHẦN 3 — SINH ĐỀ NHÓM A (LỚP 6)
+   ========================================================================*/
+
+/* ---------- Chặng 1: Bảng cửu chương & Tính nhẩm ---------- */
+
+function genQ_mulTable(){
+  const a = randInt(2,9), b = randInt(2,9);
+  const ans = a*b;
+  const correct = ""+ans;
+  const distractors = [""+(ans+a), ""+(ans-a), ""+(ans+b), ""+(ans-b)].filter(x=>x!==correct);
+  const mo = makeOptionsStr(correct, shuffle(distractors));
+  return {
+    qHTML: "Tính nhanh: <b>"+a+" × "+b+"</b> = ?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Bảng cửu chương",
+    explain: {
+      correctHTML: a+" × "+b+" = <b>"+ans+"</b>",
+      steps: [
+        "Đếm "+a+" nhóm, mỗi nhóm "+b+": cộng "+b+" với chính nó "+a+" lần.",
+        "Có thể nhớ qua bảng cửu chương "+a+" (hoặc "+b+")."
+      ],
+      realWorld: "Hình dung Kim có "+a+" hộp bút, mỗi hộp "+b+" cây bút → tổng "+ans+" cây bút."
+    }
+  };
+}
+
+function genQ_divTable(){
+  const a = randInt(2,9), b = randInt(2,9);
+  const dividend = a*b;
+  const ans = b;
+  const correct = ""+ans;
+  const distractors = [""+(ans+1), ""+Math.max(1,ans-1), ""+a, ""+(a*2)].filter(x=>x!==correct);
+  const mo = makeOptionsStr(correct, shuffle(distractors));
+  return {
+    qHTML: "Tính nhanh: <b>"+dividend+" ÷ "+a+"</b> = ?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Chia trong bảng",
+    explain: {
+      correctHTML: dividend+" ÷ "+a+" = <b>"+ans+"</b>",
+      steps: [
+        "Hỏi ngược: \""+a+" nhân mấy bằng "+dividend+"?\" → đáp "+ans+".",
+        "Hoặc nhẩm bảng cửu chương "+a+"."
+      ],
+      realWorld: "Hình dung chia "+dividend+" viên kẹo cho "+a+" bạn, mỗi bạn được "+ans+" viên."
+    }
+  };
+}
+
+function genQ_quickAddSub(){
+  const op = pick(["+","−"]);
+  const a = randInt(-15,15);
+  const b = randInt(-15,15);
+  const ans = op==="+" ? a+b : a-b;
+  const correct = intHTML(ans);
+  const distractors = [intHTML(ans+1), intHTML(ans-1), intHTML(-ans), intHTML(a+b+a-b!==ans?a+b:a-b)].filter(x=>x!==correct);
+  const mo = makeOptionsStr(correct, shuffle(distractors));
+  return {
+    qHTML: "Tính nhanh: <b>"+intHTML(a)+" "+op+" "+intHTML(b)+"</b> = ?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Tính nhẩm",
+    explain: {
+      correctHTML: intHTML(a)+" "+op+" "+intHTML(b)+" = <b>"+intHTML(ans)+"</b>",
+      steps: op==="+"
+        ? [
+            "Cộng hai số nguyên: cùng dấu thì cộng giá trị tuyệt đối và giữ dấu; khác dấu thì lấy hiệu rồi giữ dấu của số có giá trị tuyệt đối lớn hơn.",
+            "Ở đây: "+intHTML(a)+" + "+intHTML(b)+" = "+intHTML(ans)+"."
+          ]
+        : [
+            "Phép trừ "+intHTML(a)+" − "+intHTML(b)+" có thể chuyển thành cộng số đối: "+intHTML(a)+" + "+intHTML(-b)+".",
+            "Tính: "+intHTML(a)+" + "+intHTML(-b)+" = "+intHTML(ans)+"."
+          ],
+      realWorld: op==="+" ? realIntAdd(a,b) : realIntSub(a,b)
+    }
+  };
+}
+
+/* ---------- Chặng 2: Số nguyên & Quy tắc dấu ---------- */
+
+function genQ_intArith(){
+  const op = pick(["+","−","×","÷"]);
+  let a, b, ans;
+  if(op==="÷"){
+    // chọn b chia hết cho ans
+    b = pick([-9,-8,-6,-5,-4,-3,-2,2,3,4,5,6,8,9]);
+    const q = randInt(-9,9);
+    a = b*q;
+    ans = q;
+  } else if(op==="×"){
+    a = randInt(-9,9); b = randInt(-9,9);
+    ans = a*b;
+  } else {
+    a = randInt(-25,25); b = randInt(-25,25);
+    ans = op==="+" ? a+b : a-b;
+  }
+  const correct = intHTML(ans);
+  const distractors = [intHTML(ans+1), intHTML(ans-1), intHTML(-ans), intHTML(ans+2)].filter(x=>x!==correct);
+  const mo = makeOptionsStr(correct, shuffle(distractors));
+  let steps, realWorld;
+  if(op==="+"){
+    steps = ["Cộng số nguyên: cùng dấu cộng trị tuyệt đối giữ dấu; khác dấu lấy hiệu, dấu theo số trị tuyệt đối lớn hơn.","Kết quả: "+intHTML(a)+" + "+intHTML(b)+" = "+intHTML(ans)+"."];
+    realWorld = realIntAdd(a,b);
+  } else if(op==="−"){
+    steps = ["Trừ = cộng số đối: "+intHTML(a)+" − "+intHTML(b)+" = "+intHTML(a)+" + "+intHTML(-b)+".","Tính: = "+intHTML(ans)+"."];
+    realWorld = realIntSub(a,b);
+  } else if(op==="×"){
+    steps = ["Quy tắc dấu khi nhân: cùng dấu → dương; khác dấu → âm.","Trị tuyệt đối: "+Math.abs(a)+" × "+Math.abs(b)+" = "+Math.abs(ans)+". Vậy "+intHTML(a)+" × "+intHTML(b)+" = "+intHTML(ans)+"."];
+    realWorld = realMul(a,b);
+  } else {
+    steps = ["Quy tắc dấu khi chia giống nhân: cùng dấu → dương; khác dấu → âm.","Trị tuyệt đối: "+Math.abs(a)+" ÷ "+Math.abs(b)+" = "+Math.abs(ans)+". Vậy "+intHTML(a)+" ÷ "+intHTML(b)+" = "+intHTML(ans)+"."];
+    realWorld = realDiv(a,b);
+  }
+  return {
+    qHTML: "Tính: <b>"+intHTML(a)+" "+op+" "+intHTML(b)+"</b> = ?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Số nguyên",
+    explain: { correctHTML: intHTML(a)+" "+op+" "+intHTML(b)+" = <b>"+intHTML(ans)+"</b>", steps, realWorld }
+  };
+}
+
+function genQ_parens(){
+  // Bỏ dấu ngoặc: a − (b ± c) hoặc a + (b ± c)
+  const outerSign = pick(["+","−"]);
+  const innerOp = pick(["+","−"]);
+  const a = randInt(-12,12), b = randInt(-12,12), c = randInt(-12,12);
+  const inner = innerOp==="+" ? (b+c) : (b-c);
+  const ans = outerSign==="+" ? a+inner : a-inner;
+  const correct = intHTML(ans);
+  const distractors = [
+    intHTML(outerSign==="−" ? a - b + c : a + b - c),
+    intHTML(outerSign==="−" ? a - b - c : a + b + c),
+    intHTML(ans+1),
+    intHTML(-ans)
+  ].filter(x=>x!==correct);
+  const mo = makeOptionsStr(correct, shuffle(distractors));
+  const expr = intHTML(a)+" "+outerSign+" ("+intHTML(b)+" "+innerOp+" "+intHTML(c)+")";
+  let stepText;
+  if(outerSign==="−"){
+    // bỏ ngoặc có dấu trừ trước: đổi dấu hết bên trong
+    const flippedInnerOp = innerOp==="+" ? "−" : "+";
+    stepText = [
+      "Trước ngoặc có dấu trừ → bỏ ngoặc thì ĐỔI DẤU mọi số bên trong.",
+      "Vậy "+expr+" = "+intHTML(a)+" "+(innerOp==="+"?"−":"+")+" "+Math.abs(b)+" "+flippedInnerOp+" "+Math.abs(c)+" = "+intHTML(ans)+"."
+    ];
+  } else {
+    stepText = [
+      "Trước ngoặc có dấu cộng → bỏ ngoặc giữ nguyên dấu các số bên trong.",
+      "Tính: "+expr+" = "+intHTML(a)+" + ("+intHTML(inner)+") = "+intHTML(ans)+"."
+    ];
+  }
+  return {
+    qHTML: "Bỏ ngoặc rồi tính: <b>"+expr+"</b> = ?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Quy tắc dấu ngoặc",
+    explain: {
+      correctHTML: expr+" = <b>"+intHTML(ans)+"</b>",
+      steps: stepText,
+      realWorld: outerSign==="−"
+        ? "Hình dung: Kim mượn của bạn 'một gói gồm "+intHTML(b)+" và "+intHTML(c)+"'. Khi lấy ngược lại (trả về), Kim phải đổi dấu hết — mượn thành trả, có thành nợ."
+        : "Hình dung: thêm vào một gói gồm hai khoản — gói thế nào, thêm thế đó, dấu giữ nguyên."
+    }
+  };
+}
+
+function genQ_intOrder(){
+  const variant = pick([1,2,3]);
+  let expr, ans, stepExplain;
+  if(variant===1){
+    const a=randInt(-9,9), b=randInt(2,9), c=randInt(2,9);
+    ans = a + b*c;
+    expr = intHTML(a)+" + "+b+" × "+c;
+    stepExplain = "Thứ tự: nhân trước, cộng sau. "+b+" × "+c+" = "+(b*c)+", rồi "+intHTML(a)+" + "+(b*c)+" = "+intHTML(ans)+".";
+  } else if(variant===2){
+    const a=randInt(-9,9), b=randInt(-9,9), c=randInt(2,9);
+    ans = (a+b)*c;
+    expr = "("+intHTML(a)+" + "+intHTML(b)+") × "+c;
+    stepExplain = "Trong ngoặc trước: "+intHTML(a)+" + "+intHTML(b)+" = "+intHTML(a+b)+". Rồi nhân với "+c+" được "+intHTML(ans)+".";
+  } else {
+    const a=randInt(-9,9), b=randInt(2,9), c=randInt(2,9), d=randInt(-9,9);
+    ans = a - b*c + d;
+    expr = intHTML(a)+" − "+b+" × "+c+" + "+intHTML(d);
+    stepExplain = "Nhân trước: "+b+" × "+c+" = "+(b*c)+". Rồi tính trái sang phải: "+intHTML(a)+" − "+(b*c)+" + "+intHTML(d)+" = "+intHTML(ans)+".";
+  }
+  const correct = intHTML(ans);
+  const distractors = [intHTML(ans+1), intHTML(ans-1), intHTML(-ans), intHTML(ans+5)].filter(x=>x!==correct);
+  const mo = makeOptionsStr(correct, shuffle(distractors));
+  return {
+    qHTML: "Tính giá trị: <b>"+expr+"</b> = ?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Thứ tự phép tính",
+    explain: {
+      correctHTML: expr+" = <b>"+intHTML(ans)+"</b>",
+      steps: ["Quy tắc: nhân-chia trước, cộng-trừ sau; có ngoặc thì làm trong ngoặc trước.", stepExplain],
+      realWorld: "Như khi đi siêu thị: việc 'nhân' (giá × số lượng) phải xong trước, sau đó mới 'cộng/trừ' tổng tiền và khuyến mãi."
+    }
+  };
+}
+
+/* ---------- Chặng 3: Phân số & Số thập phân lớp 6 ---------- */
+
+function genQ_simplifyFrac(){
+  // Chọn k>=2 nhân vào tử mẫu rút gọn
+  const baseD = pick([2,3,4,5,6,7]);
+  let baseN = randInt(1, baseD-1);
+  while(gcd(baseN, baseD)!==1) baseN++;
+  const k = pick([2,3,4]);
+  const n = baseN*k, d = baseD*k;
+  const correct = baseN+"/"+baseD;
+  const distractors = [
+    n+"/"+d,
+    (baseN+1)+"/"+baseD,
+    baseN+"/"+(baseD+1),
+    (baseN*2)+"/"+(baseD*2)
+  ].filter(x=>x!==correct);
+  const mo = makeOptionsStr(correct, shuffle(distractors));
+  return {
+    qHTML: "Rút gọn phân số <span class=\"frac\"><span class=\"num\">"+n+"</span><span class=\"den\">"+d+"</span></span> về tối giản:",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Rút gọn phân số",
+    explain: {
+      correctHTML: n+"/"+d+" = <b>"+baseN+"/"+baseD+"</b>",
+      steps: [
+        "Tìm ƯCLN của "+n+" và "+d+": là "+k+".",
+        "Chia cả tử và mẫu cho "+k+": "+n+"÷"+k+" = "+baseN+", "+d+"÷"+k+" = "+baseD+".",
+        "Vậy phân số tối giản là "+baseN+"/"+baseD+"."
+      ],
+      realWorld: "Như cắt bánh: chia "+d+" miếng nhỏ rồi lấy "+n+" miếng, cũng bằng chia "+baseD+" miếng to và lấy "+baseN+" miếng — cùng phần bánh đó thôi."
+    }
+  };
+}
+
+function genQ_commonDen(){
+  // Hỏi mẫu chung nhỏ nhất của 1/a và 1/b
+  const a = pick([2,3,4,5,6]);
+  let b = pick([2,3,4,5,6,8,9]);
+  while(b===a) b = pick([2,3,4,5,6,8,9]);
+  const ans = lcm(a,b);
+  const correct = ""+ans;
+  const distractors = [""+(a*b), ""+(a+b), ""+Math.max(a,b), ""+(ans+1)].filter(x=>x!==correct);
+  const mo = makeOptionsStr(correct, shuffle(distractors));
+  return {
+    qHTML: "Mẫu chung nhỏ nhất (BCNN) của hai phân số <span class=\"frac\"><span class=\"num\">1</span><span class=\"den\">"+a+"</span></span> và <span class=\"frac\"><span class=\"num\">1</span><span class=\"den\">"+b+"</span></span> là bao nhiêu?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Mẫu chung",
+    explain: {
+      correctHTML: "BCNN("+a+", "+b+") = <b>"+ans+"</b>",
+      steps: [
+        "Mẫu chung nhỏ nhất là số nhỏ nhất chia hết cho cả hai mẫu "+a+" và "+b+".",
+        "BCNN("+a+","+b+") = "+ans+"."+(ans===a*b?" (Vì "+a+" và "+b+" không có ước chung > 1)":" (Vì có ước chung nên nhỏ hơn "+a+"×"+b+"="+(a*b)+")"),
+      ],
+      realWorld: "Khi cộng 1/"+a+" + 1/"+b+", Kim cần cắt bánh thành cùng số miếng → cắt thành "+ans+" miếng là cách ít miếng nhất mà cả hai phân số đều biểu diễn được."
+    }
+  };
+}
+
+function genQ_fracBasicPos(){
+  // Phép tính 4 phép tính phân số DƯƠNG đơn giản (lớp 6)
+  const op = pick(["+","−","×","÷"]);
+  function pos(){
+    const d = pick([2,3,4,5,6,8]);
+    let n = randInt(1, d);
+    return F(n,d);
+  }
+  let a = pos(), b = pos();
+  // đảm bảo a−b ≥ 0 cho phép trừ
+  if(op==="−" && a.toNum() < b.toNum()){ const t=a; a=b; b=t; }
+  let ans;
+  if(op==="+") ans = a.add(b);
+  else if(op==="−") ans = a.sub(b);
+  else if(op==="×") ans = a.mul(b);
+  else ans = a.div(b);
+  const distractors = [];
+  try{ if(op==="+") distractors.push(new Frac(a.n+b.n, a.d+b.d)); }catch(e){}
+  try{ distractors.push(a.add(b)); }catch(e){}
+  try{ distractors.push(a.mul(b)); }catch(e){}
+  if(b.n!==0) try{ distractors.push(a.div(b)); }catch(e){}
+  distractors.push(F(ans.n+1, ans.d || 1));
+  const mo = makeOptionsFrac(ans, shuffle(distractors.filter(d=>!d.eq(ans))));
+  // Build steps depending on op
+  let steps, realWorld;
+  if(op==="+" || op==="−"){
+    const L = lcm(a.d, b.d);
+    const an = a.n*(L/a.d), bn = b.n*(L/b.d);
+    const rn = op==="+" ? an+bn : an-bn;
+    steps = [
+      "Quy đồng mẫu: mẫu chung là "+L+". "+a.toLabel()+" = "+an+"/"+L+"; "+b.toLabel()+" = "+bn+"/"+L+".",
+      (op==="+"?"Cộng tử với tử: ":"Trừ tử cho tử: ")+an+(op==="+"?"+":"−")+bn+" = "+rn+", giữ mẫu "+L+".",
+      "Rút gọn (nếu được): "+rn+"/"+L+" = "+ans.toLabel()+"."
+    ];
+    realWorld = op==="+"
+      ? realFracAdd(a.n,a.d,b.n,b.d, ans.n, ans.d)
+      : realFracSub(a.n,a.d,b.n,b.d, ans.n, ans.d);
+  } else if(op==="×"){
+    steps = [
+      "Nhân hai phân số: nhân tử với tử, mẫu với mẫu.",
+      a.toLabel()+" × "+b.toLabel()+" = ("+a.n+"×"+b.n+")/("+a.d+"×"+b.d+") = "+(a.n*b.n)+"/"+(a.d*b.d)+".",
+      "Rút gọn về "+ans.toLabel()+"."
+    ];
+    realWorld = realFracMul(a.n,a.d,b.n,b.d, ans.n, ans.d);
+  } else {
+    steps = [
+      "Chia hai phân số: lật ngược phân số sau rồi nhân.",
+      a.toLabel()+" ÷ "+b.toLabel()+" = "+a.toLabel()+" × "+b.d+"/"+b.n+" = "+(a.n*b.d)+"/"+(a.d*b.n)+".",
+      "Rút gọn về "+ans.toLabel()+"."
+    ];
+    realWorld = realFracDiv();
+  }
+  return {
+    qHTML: "Tính: "+a.toHTML()+" "+op+" "+b.toHTML()+" = ?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Phân số lớp 6",
+    explain: { correctHTML: a.toLabel()+" "+op+" "+b.toLabel()+" = <b>"+ans.toLabel()+"</b>", steps, realWorld }
+  };
+}
+
+function genQ_fracDecimal(){
+  // Đổi phân số → thập phân HOẶC ngược lại (chọn phân số HỮU HẠN)
+  const finiteFracs = [
+    [1,2,"0,5"], [1,4,"0,25"], [3,4,"0,75"],
+    [1,5,"0,2"], [2,5,"0,4"], [3,5,"0,6"], [4,5,"0,8"],
+    [1,8,"0,125"], [3,8,"0,375"], [5,8,"0,625"], [7,8,"0,875"],
+    [1,10,"0,1"], [3,10,"0,3"], [7,10,"0,7"], [9,10,"0,9"],
+    [1,20,"0,05"], [3,20,"0,15"],
+    [1,25,"0,04"], [3,25,"0,12"]
+  ];
+  const it = pick(finiteFracs);
+  const askDecimal = Math.random()<0.5;
+  if(askDecimal){
+    const correct = it[2];
+    const distractors = [
+      fmtNum(it[0]/(it[1]+1), 4),
+      fmtNum((it[0]+1)/it[1], 4),
+      fmtNum(it[0]/it[1]*10, 4),
+    ];
+    const mo = makeOptionsStr(correct, distractors);
+    return {
+      qHTML: "Đổi phân số <span class=\"frac\"><span class=\"num\">"+it[0]+"</span><span class=\"den\">"+it[1]+"</span></span> sang số thập phân:",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"Đổi phân số ↔ thập phân",
+      explain: {
+        correctHTML: it[0]+"/"+it[1]+" = <b>"+it[2]+"</b>",
+        steps: [
+          "Lấy tử "+it[0]+" chia cho mẫu "+it[1]+" được "+it[2]+".",
+          "Mẹo: nếu nhân được mẫu lên 10/100/1000 thì đổi dễ. Ví dụ "+it[0]+"/"+it[1]+" = "+(it[0]*(100/it[1]))+"/100 = "+it[2]+" (khi "+it[1]+" là ước của 100)."
+        ],
+        realWorld: "Như chia "+it[0]+" cái bánh cho "+it[1]+" bạn: mỗi bạn được "+it[2]+" cái."
+      }
+    };
+  } else {
+    const correct = it[0]+"/"+it[1];
+    const distractors = [
+      (it[0]+1)+"/"+it[1],
+      it[0]+"/"+(it[1]+1),
+      (it[0]*2)+"/"+it[1]
+    ];
+    const mo = makeOptionsStr(correct, distractors);
+    return {
+      qHTML: "Đổi số thập phân <b>"+it[2]+"</b> sang phân số tối giản:",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"Đổi phân số ↔ thập phân",
+      explain: {
+        correctHTML: it[2]+" = <b>"+it[0]+"/"+it[1]+"</b>",
+        steps: [
+          "Viết "+it[2]+" thành phân số: "+it[2].replace(",",".")+" = phân số có mẫu là 10, 100, hoặc 1000 tuỳ số chữ số thập phân.",
+          "Rút gọn về tối giản: "+it[0]+"/"+it[1]+"."
+        ],
+        realWorld: "Số "+it[2]+" của một cái bánh chính bằng "+it[0]+"/"+it[1]+" cái bánh (cùng một phần thôi, hai cách viết)."
+      }
+    };
+  }
+}
+
+/* ========================================================================
+   PHẦN 4 — SINH ĐỀ NHÓM B (LỚP 7 — Chương I) — kèm explain
+   ========================================================================*/
+
+// Chặng 4: Cộng/Trừ/Nhân/Chia số hữu tỉ
+function genQ_ratArith(){
+  const op = pick(["+","−","×","÷"]);
+  function smallFrac(allowInt){
+    const useInt = allowInt && Math.random()<0.35;
+    if(useInt) return F(randInt(-9,9) || 2);
+    let d = pick([2,3,4,5,6,8,10]);
+    let n = randInt(-9,9); if(n===0) n=1;
+    return F(n,d);
+  }
+  let a = smallFrac(true), b = smallFrac(true);
+  if(op==="÷" && b.n===0) b = F(1,2);
+  let ans;
+  if(op==="+") ans = a.add(b);
+  else if(op==="−") ans = a.sub(b);
+  else if(op==="×") ans = a.mul(b);
+  else ans = a.div(b);
+  const distractors=[];
+  try{ if(op==="+") distractors.push(new Frac(a.n+b.n, a.d+b.d)); }catch(e){}
+  try{ distractors.push(a.add(b)); }catch(e){}
+  try{ distractors.push(a.sub(b)); }catch(e){}
+  try{ distractors.push(a.mul(b)); }catch(e){}
+  if(b.n!==0) try{ distractors.push(a.div(b)); }catch(e){}
+  try{ distractors.push(ans.neg()); }catch(e){}
+  const mo = makeOptionsFrac(ans, shuffle(distractors.filter(d=>!d.eq(ans))));
+  let steps, realWorld;
+  if(op==="+" || op==="−"){
+    const L = lcm(a.d, b.d);
+    const an = a.n*(L/a.d), bn = b.n*(L/b.d);
+    const rn = op==="+" ? an+bn : an-bn;
+    steps = [
+      "Quy đồng mẫu: mẫu chung "+L+". "+a.toLabel()+" = "+an+"/"+L+"; "+b.toLabel()+" = "+bn+"/"+L+".",
+      (op==="+"?"Cộng tử với tử (giữ dấu): ":"Trừ tử cho tử (giữ dấu): ")+an+(op==="+"?" + ":" − ")+"("+bn+") = "+rn+".",
+      "Kết quả: "+rn+"/"+L+" = "+ans.toLabel()+"."
+    ];
+    realWorld = "Kim cộng/trừ phân số có cả số âm cứ làm như cộng/trừ trên trục số: số âm tức là 'thiếu/nợ'.";
+  } else if(op==="×"){
+    steps = [
+      "Nhân tử với tử, mẫu với mẫu, để ý dấu (cùng dấu → dương, khác dấu → âm).",
+      a.toLabel()+" × "+b.toLabel()+" = ("+a.n+"×"+b.n+")/("+a.d+"×"+b.d+") = "+(a.n*b.n)+"/"+(a.d*b.d)+" = "+ans.toLabel()+"."
+    ];
+    realWorld = "Quy tắc dấu giống nhân số nguyên: âm × âm = dương, âm × dương = âm.";
+  } else {
+    steps = [
+      "Chia hai phân số: lật ngược phân số sau rồi nhân, dấu áp dụng quy tắc nhân.",
+      a.toLabel()+" ÷ "+b.toLabel()+" = "+a.toLabel()+" × "+(b.n<0?"−":"")+b.d+"/"+Math.abs(b.n)+" → kết quả "+ans.toLabel()+"."
+    ];
+    realWorld = "Như chia bánh phần âm: cứ tính trị tuyệt đối trước, dấu xử lý sau theo quy tắc dấu.";
+  }
+  return {
+    qHTML: "Tính: "+a.toHTML()+" "+op+" "+b.toHTML()+" = ?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Số hữu tỉ",
+    explain: { correctHTML: a.toLabel()+" "+op+" "+b.toLabel()+" = <b>"+ans.toLabel()+"</b>", steps, realWorld }
+  };
+}
+
+// Chặng 5: Lũy thừa số hữu tỉ
+function genQ_ratPower(){
+  const variant = pick([1,2,3]);
+  let qHTML, ans, base, exp, expr;
+  if(variant===1){
+    const d = pick([2,3,4,5]);
+    let n = pick([1,2,3,-1,-2,-3]); if(n===0) n=1;
+    base = F(n,d); exp = pick([2,3]);
+    ans = base.pow(exp);
+    qHTML = "Tính "+base.toHTML()+"<sup>"+exp+"</sup> = ?";
+    expr = base.toLabel()+"^"+exp;
+  } else if(variant===2){
+    const a = randInt(2,7); exp = pick([2,3]);
+    base = F(-a);
+    ans = base.pow(exp);
+    qHTML = "Tính (−"+a+")<sup>"+exp+"</sup> = ?";
+    expr = "(−"+a+")^"+exp;
+  } else {
+    const a = randInt(2,5);
+    let m = randInt(2,4), n = randInt(1,3);
+    const isMul = Math.random()<0.5;
+    if(isMul){
+      ans = F(Math.pow(a,m+n));
+      qHTML = a+"<sup>"+m+"</sup> × "+a+"<sup>"+n+"</sup> = ?";
+      expr = a+"^"+m+" × "+a+"^"+n;
+      var stepExtra = ["Cùng cơ số khi nhân: GIỮ cơ số, CỘNG số mũ. "+a+"^"+m+" × "+a+"^"+n+" = "+a+"^("+m+"+"+n+") = "+a+"^"+(m+n)+" = "+ans.toLabel()+"."];
+    } else {
+      if(m<n){const t=m; m=n; n=t}
+      ans = F(Math.pow(a, m-n));
+      qHTML = a+"<sup>"+m+"</sup> ÷ "+a+"<sup>"+n+"</sup> = ?";
+      expr = a+"^"+m+" ÷ "+a+"^"+n;
+      var stepExtra = ["Cùng cơ số khi chia: GIỮ cơ số, TRỪ số mũ. "+a+"^"+m+" ÷ "+a+"^"+n+" = "+a+"^("+m+"−"+n+") = "+a+"^"+(m-n)+" = "+ans.toLabel()+"."];
+    }
+  }
+  const distractors = [];
+  distractors.push(ans.neg());
+  try{distractors.push(new Frac(ans.n*2, ans.d))}catch(e){}
+  try{distractors.push(new Frac(ans.n, Math.max(1,ans.d*ans.d)))}catch(e){}
+  const mo = makeOptionsFrac(ans, shuffle(distractors.filter(x=>!x.eq(ans))));
+  let steps;
+  if(variant===1){
+    steps = [
+      "Lũy thừa "+base.toLabel()+"^"+exp+" nghĩa là nhân "+base.toLabel()+" với chính nó "+exp+" lần.",
+      "= ("+base.n+")^"+exp+" / ("+base.d+")^"+exp+" = "+Math.pow(base.n,exp)+"/"+Math.pow(base.d,exp)+" = "+ans.toLabel()+".",
+      "Lưu ý dấu: số âm mũ chẵn → dương; mũ lẻ → âm."
+    ];
+  } else if(variant===2){
+    steps = [
+      "(−"+Math.abs(base.n)+")^"+exp+" = (−"+Math.abs(base.n)+") nhân với chính nó "+exp+" lần.",
+      "Mũ "+(exp%2===0?"chẵn → kết quả DƯƠNG":"lẻ → kết quả ÂM")+".",
+      "Trị tuyệt đối: "+Math.abs(base.n)+"^"+exp+" = "+Math.pow(Math.abs(base.n),exp)+", có dấu là "+ans.toLabel()+"."
+    ];
+  } else {
+    steps = stepExtra;
+  }
+  return {
+    qHTML, options: mo.options, answerIdx: mo.answerIdx, tag:"Lũy thừa",
+    explain: {
+      correctHTML: expr+" = <b>"+ans.toLabel()+"</b>",
+      steps,
+      realWorld: "Hình dung lũy thừa như 'nhân đôi/nhân ba lặp lại': 2^3 = 2×2×2 = 8, giống một tế bào chia ba lần thành 8 tế bào."
+    }
+  };
+}
+
+// Chặng 5: Thứ tự phép tính (mức lớp 7 — có ngoặc + phép tính kết hợp)
+function genQ_ratOrder(){
+  const variant = pick([1,2,3,4]);
+  let expr, ans, stepLine;
+  if(variant===1){
+    const a=randInt(-9,9), b=randInt(2,9), c=randInt(2,9);
+    ans = F(a + b*c);
+    expr = intHTML(a) + " + " + b + " × " + c;
+    stepLine = "Nhân trước: "+b+"×"+c+" = "+(b*c)+". Rồi "+intHTML(a)+" + "+(b*c)+" = "+intHTML(a+b*c)+".";
+  } else if(variant===2){
+    const a=randInt(-9,9), b=randInt(-9,9), c=randInt(2,9);
+    ans = F((a+b)*c);
+    expr = "(" + intHTML(a) + " + " + intHTML(b) + ") × " + c;
+    stepLine = "Trong ngoặc trước: "+intHTML(a)+"+"+intHTML(b)+" = "+intHTML(a+b)+". Rồi nhân "+c+" được "+intHTML((a+b)*c)+".";
+  } else if(variant===3){
+    const a=randInt(-9,9), b=randInt(2,9), c=randInt(2,9), d=randInt(-9,9);
+    ans = F(a - b*c + d);
+    expr = intHTML(a) + " − " + b + " × " + c + " + " + intHTML(d);
+    stepLine = "Nhân trước "+b+"×"+c+" = "+(b*c)+". Rồi tính trái sang phải: "+intHTML(a)+"−"+(b*c)+"+"+intHTML(d)+" = "+intHTML(a-b*c+d)+".";
+  } else {
+    const a=randInt(2,12), b=randInt(2,12), c=randInt(-5,5), d=randInt(-5,5);
+    ans = F((a-b)*(c+d));
+    expr = "(" + a + " − " + b + ") × (" + intHTML(c) + " + " + intHTML(d) + ")";
+    stepLine = "Tính trong ngoặc trước: ("+a+"−"+b+") = "+intHTML(a-b)+"; ("+intHTML(c)+"+"+intHTML(d)+") = "+intHTML(c+d)+". Rồi nhân được "+intHTML((a-b)*(c+d))+".";
+  }
+  const distractors=[];
+  distractors.push(F(ans.n + randInt(1,5)));
+  distractors.push(F(ans.n - randInt(1,5)));
+  distractors.push(ans.neg());
+  const mo = makeOptionsFrac(ans, distractors);
+  return {
+    qHTML: "Tính giá trị: <b>"+expr+"</b> = ?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Thứ tự phép tính",
+    explain: {
+      correctHTML: expr+" = <b>"+ans.toLabel()+"</b>",
+      steps: ["Nguyên tắc: ngoặc → nhân/chia → cộng/trừ; cùng cấp thì làm trái sang phải.", stepLine],
+      realWorld: "Như đi mua hàng: tính (giá × số lượng) trước, rồi mới cộng/trừ vào tổng."
+    }
+  };
+}
+
+// Chặng 6: Biểu diễn thập phân
+function genQ_ratDecimal(){
+  const variant = pick([1,2]);
+  let frac;
+  if(variant===1){
+    const denoms = [2,4,5,8,10,16,20,25,40,50];
+    const d = pick(denoms);
+    let n = randInt(1, d-1);
+    while(gcd(n,d)===d) n = randInt(1,d-1);
+    frac = F(n,d);
+  } else {
+    const denoms = [3,6,7,9,11,12,15,18,21];
+    const d = pick(denoms);
+    let n = randInt(1, d-1);
+    while(gcd(n,d)===d) n = randInt(1,d-1);
+    frac = F(n,d);
+  }
+  const finite = isFiniteDecimal(frac);
+  const correct = finite ? "Số thập phân hữu hạn" : "Số thập phân vô hạn tuần hoàn";
+  const wrong = finite ? "Số thập phân vô hạn tuần hoàn" : "Số thập phân hữu hạn";
+  const opts = shuffle([correct, wrong, "Số vô tỉ", "Không xác định"]);
+  // Mô tả lý do
+  let dCheck = frac.d;
+  let factors = "";
+  let dd = frac.d;
+  const primes = [];
+  let p = 2;
+  while(dd>1){
+    while(dd%p===0){primes.push(p); dd/=p}
+    p++;
+    if(p>dd) {if(dd>1){primes.push(dd); dd=1}}
+  }
+  factors = primes.join(" × ");
+  return {
+    qHTML: "Phân số "+frac.toHTML()+" viết được dưới dạng nào?",
+    options: opts, answerIdx: opts.indexOf(correct),
+    tag:"Biểu diễn thập phân",
+    explain: {
+      correctHTML: frac.toLabel()+" → <b>"+correct+"</b>",
+      steps: [
+        "Quy tắc: phân số tối giản chỉ cho thập phân HỮU HẠN nếu mẫu CHỈ CHỨA ước 2 và/hoặc 5.",
+        "Mẫu "+frac.d+" = "+factors+" → "+(finite?"chỉ có 2 và 5 → hữu hạn":"có ước khác 2 và 5 → vô hạn tuần hoàn"),
+        finite ? "Ví dụ: "+frac.toLabel()+" = "+fmtNum(frac.n/frac.d,4)+"." : "Ví dụ: 1/3 = 0,333... lặp mãi không hết."
+      ],
+      realWorld: finite
+        ? "Như chia "+frac.n+" ổ bánh cho "+frac.d+" bạn: chia đến số chữ số thập phân nào đó là dừng, không lẻ tiếp."
+        : "Như chia 1 quả táo cho 3 bạn theo cân điện tử: mãi không ra số chẵn — phần lẻ cứ lặp lại."
+    }
+  };
+}
+
+/* ========================================================================
+   PHẦN 5 — DANH SÁCH ĐỀ CHO 6 CHẶNG
+   ========================================================================*/
+
+function buildStage1(){ // bảng cửu chương + tính nhẩm
+  const list = [];
+  for(let i=0;i<4;i++) list.push(genQ_mulTable());
+  for(let i=0;i<3;i++) list.push(genQ_divTable());
+  for(let i=0;i<3;i++) list.push(genQ_quickAddSub());
+  return shuffle(list);
+}
+function buildStage2(){ // số nguyên & quy tắc dấu
+  const list = [];
+  for(let i=0;i<5;i++) list.push(genQ_intArith());
+  for(let i=0;i<3;i++) list.push(genQ_parens());
+  for(let i=0;i<2;i++) list.push(genQ_intOrder());
+  return shuffle(list);
+}
+function buildStage3(){ // phân số & thập phân lớp 6
+  const list = [];
+  for(let i=0;i<2;i++) list.push(genQ_simplifyFrac());
+  for(let i=0;i<2;i++) list.push(genQ_commonDen());
+  for(let i=0;i<4;i++) list.push(genQ_fracBasicPos());
+  for(let i=0;i<2;i++) list.push(genQ_fracDecimal());
+  return shuffle(list);
+}
+function buildStage4(){ // cộng trừ nhân chia số hữu tỉ
+  const list = [];
+  for(let i=0;i<10;i++) list.push(genQ_ratArith());
+  return shuffle(list);
+}
+function buildStage5(){ // lũy thừa + thứ tự
+  const list = [];
+  for(let i=0;i<5;i++) list.push(genQ_ratPower());
+  for(let i=0;i<5;i++) list.push(genQ_ratOrder());
+  return shuffle(list);
+}
+function buildStage6(){ // biểu diễn thập phân
+  const list = [];
+  for(let i=0;i<10;i++) list.push(genQ_ratDecimal());
+  return shuffle(list);
+}
+
+/* ========================================================================
+   PHẦN 6 — SELF-TEST
+   ========================================================================*/
+function selfTest(){
+  console.assert(F(2,4).eq(F(1,2)), "rút gọn");
+  console.assert(F(1,2).add(F(1,3)).eq(F(5,6)), "1/2+1/3");
+  console.assert(F(-3,4).mul(F(2,5)).eq(F(-3,10)), "(-3/4)*2/5");
+  console.assert(F(-1,2).div(F(3,4)).eq(F(-2,3)), "(-1/2)/(3/4)");
+  console.assert(F(-2,3).pow(3).eq(F(-8,27)), "(-2/3)^3");
+  console.assert(isFiniteDecimal(F(1,2))===true, "1/2 hữu hạn");
+  console.assert(isFiniteDecimal(F(1,3))===false, "1/3 vô hạn");
+  console.assert(lcm(4,6)===12, "lcm(4,6)");
+  const gens = [
+    genQ_mulTable, genQ_divTable, genQ_quickAddSub,
+    genQ_intArith, genQ_parens, genQ_intOrder,
+    genQ_simplifyFrac, genQ_commonDen, genQ_fracBasicPos, genQ_fracDecimal,
+    genQ_ratArith, genQ_ratPower, genQ_ratOrder, genQ_ratDecimal
+  ];
+  let pass=0, fail=0;
+  for(const g of gens){
+    for(let i=0;i<150;i++){
+      try{
+        const q = g();
+        if(!q || !q.options || q.options.length<2) throw new Error("opts");
+        if(q.answerIdx<0 || q.answerIdx>=q.options.length) throw new Error("idx");
+        if(!q.qHTML) throw new Error("noQ");
+        if(!q.explain || !q.explain.steps || !q.explain.realWorld) throw new Error("noExplain");
+        const set = new Set(q.options);
+        if(set.size !== q.options.length) throw new Error("dup");
+        pass++;
+      } catch(e){
+        fail++;
+        if(fail<5) console.warn("test fail", g.name, e.message);
+      }
+    }
+  }
+  console.log("Self-test: pass="+pass+", fail="+fail);
+  return fail===0;
+}
+
+/* ========================================================================
+   PHẦN 7 — NỘI DUNG: STORIES + CHEERS + STAGES
+   ========================================================================*/
+
+const STORIES = [
+  {
+    title: "Câu chuyện #1 — Tính nhẩm từ thời kim tự tháp",
+    sub: "Ai Cập cổ đại (~3000 TCN)",
+    icon: "🏺",
+    body: `<p>Cách đây hơn <b>5000 năm</b>, người Ai Cập cổ đại đã biết đếm và tính nhẩm rất giỏi. Họ cần đếm số viên đá xây <b>kim tự tháp</b>, đo diện tích ruộng sau mỗi mùa lũ sông Nile, chia bánh mì cho thợ và lính. Trên các <b>giấy cói</b> còn sót lại, ta thấy họ có cả những bảng nhân để tính nhanh.</p>
+    <p>Không có máy tính, mọi phép nhân – chia đều phải nhẩm trong đầu hoặc dùng ngón tay. Vì vậy, <b>tính nhẩm</b> không phải là chuyện vặt — nó là kỹ năng sống còn của thương nhân, quan thuế và thợ xây.</p>
+    <p>Kim đang luyện chính kỹ năng mà loài người đã rèn từ hàng nghìn năm trước đó.</p>`,
+    quote: "Tính nhẩm nhanh là một kỹ năng loài người mài giũa từ hàng nghìn năm — Kim đang nối tiếp truyền thống ấy."
+  },
+  {
+    title: "Câu chuyện #2 — Khi 'số âm' là 'khoản nợ'",
+    sub: "Thương mại Trung Hoa cổ (~thế kỷ II TCN)",
+    icon: "🧧",
+    body: `<p>Người Trung Hoa cổ đã dùng <b>số âm</b> từ rất sớm, ngay trong sách <b>"Cửu chương toán thuật"</b> (khoảng thế kỷ II TCN). Khi ghi sổ sách, họ dùng <b>thẻ tre màu đỏ</b> cho số dương (số "có"), <b>thẻ tre màu đen</b> cho số âm (số "nợ").</p>
+    <p>Ý tưởng rất đời thường: bán hàng được tiền là +, mượn của ai là −. Cộng trừ số âm khi đó chính là tính toán "thu – chi", "có – nợ" trong cửa hiệu.</p>
+    <p>Vì vậy mỗi khi Kim thấy phép tính có dấu trừ, cứ nghĩ đến tiền — tự nhiên là hiểu.</p>`,
+    quote: "Số âm sinh ra từ chuyện vay – trả rất đời thường — không hề khó hiểu nếu Kim hình dung qua tiền nong."
+  },
+  {
+    title: "Câu chuyện #3 — Phân số trên giấy cói Ai Cập",
+    sub: "Giấy cói Rhind (~1650 TCN)",
+    icon: "📜",
+    body: `<p>Một trong những tài liệu toán cổ nhất loài người là <b>giấy cói Rhind</b> của Ai Cập (khoảng năm 1650 TCN). Trong đó có bài toán: <i>"chia 9 ổ bánh mì cho 10 người thợ"</i>. Người Ai Cập đã giải nó bằng phân số!</p>
+    <p>Họ dùng các phân số đơn vị như <b>1/2, 1/3, 1/4</b>… để ghi kết quả, vì chia phải <b>công bằng</b> — ai cũng được phần bằng nhau, không hơn không kém.</p>
+    <p>Vậy là phân số ra đời không phải để hành học sinh, mà để các thợ xây kim tự tháp khỏi cãi nhau khi ăn cơm trưa.</p>`,
+    quote: "Phân số ra đời từ nhu cầu chia công bằng — Kim học nó cũng là học cách chia rạch ròi."
+  },
+  {
+    title: "Câu chuyện #4 — Khi số 0 lên đường",
+    sub: "Ấn Độ thời trung đại — Sử 7, Bài 5",
+    icon: "✨",
+    body: `<p>Vào khoảng thế kỷ V–VII, các nhà toán học <b>Ấn Độ</b> đưa <b>số 0</b> trở thành một con số đầy đủ và xây dựng <b>hệ chữ số thập phân</b> mà ta dùng hôm nay. Nhà bác học <b>Brahmagupta</b> (thế kỷ VII) còn viết hẳn các quy tắc tính với <b>số âm</b> — coi số âm như "khoản nợ".</p>
+    <p>Tri thức ấy theo các thương nhân và học giả <b>Hồi giáo</b> ở Bagdad lan sang châu Âu. Đến thế kỷ XII, người châu Âu mới bỏ chữ số La Mã cồng kềnh và dùng "số Ả Rập" (gốc Ấn Độ).</p>
+    <p>Không có số 0 và số âm, Kim sẽ không thể viết −1/2, không thể tính toán số hữu tỉ.</p>`,
+    quote: "Nhờ các nhà toán học Ấn Độ mà hôm nay Kim mới có số 0 và số âm để cộng – trừ – nhân – chia số hữu tỉ."
+  },
+  {
+    title: "Câu chuyện #5 — Al-Khwarizmi và 'đại số'",
+    sub: "Thời hoàng kim toán học Hồi giáo (~thế kỷ IX)",
+    icon: "🕌",
+    body: `<p>Thế kỷ IX, tại thành <b>Bagdad</b>, nhà bác học <b>Al-Khwarizmi</b> viết cuốn sách "Al-jabr" — chính từ này là nguồn gốc của chữ <b>"đại số" (algebra)</b> hôm nay. Tên ông cũng cho ra từ <b>"algorithm"</b> (thuật toán).</p>
+    <p>Ông và các học giả thời đó đã <b>hệ thống hoá</b> các quy tắc tính toán: thứ tự thực hiện phép tính, quy tắc dấu, cách giải phương trình. Họ kết hợp tri thức Hy Lạp, Ấn Độ, Ba Tư để tạo ra nền toán học đầu tiên có "luật chơi" rõ ràng.</p>
+    <p>Mỗi lần Kim làm "lũy thừa trước, rồi nhân chia, rồi cộng trừ" — Kim đang đi theo các quy tắc được hệ thống hoá từ hơn 1100 năm trước.</p>`,
+    quote: "Quy tắc tính toán có trật tự được hệ thống hoá từ thời này — Kim đang dùng đúng 'luật chơi' của các nhà bác học Bagdad."
+  },
+  {
+    title: "Câu chuyện #6 — Con số vượt đại dương",
+    sub: "Các cuộc phát kiến địa lí — Sử 7, Bài 2",
+    icon: "⛵",
+    body: `<p>Thế kỷ XV–XVI, các nhà thám hiểm châu Âu căng buồm đi khắp đại dương. Năm <b>1492</b>, Columbus đến châu Mỹ. Năm <b>1498</b>, Vasco da Gama vòng qua mũi Hảo Vọng tới Ấn Độ. Năm <b>1519–1522</b>, đoàn Magellan đi vòng quanh thế giới lần đầu.</p>
+    <p>Để vượt biển, họ phải tính toán: kinh độ, vĩ độ, đo bằng kính lục phân, ước lượng khoảng cách dưới dạng <b>số thập phân</b>. Cùng lúc, trên <b>Con đường tơ lụa</b>, hệ chữ số Ả Rập – Ấn Độ và phép viết số thập phân theo chân thương nhân lan ra khắp thế giới.</p>
+    <p>Số thập phân hữu hạn / vô hạn tuần hoàn — những thứ Kim vừa học — chính là ngôn ngữ chung mà con người dùng để đo đạc, ghi sổ, và đi xa.</p>`,
+    quote: "Hệ chữ số và số thập phân lan ra toàn thế giới qua giao thương — Kim đang dùng ngôn ngữ chung của nhân loại."
+  }
+];
+
+const CHEERS = [
+  "Kim ơi, mỗi chặng toán cũng như một chông gai — vượt qua rồi mới thấy mình mạnh hơn. Gai Con không bỏ cuộc!",
+  "Giỏi lắm Kim! Anh Trai vượt ngàn chông gai, còn Kim vừa vượt một chặng số học. Tinh thần đó, giữ vững nhé!",
+  "Một câu chuyện lịch sử + một chặng chinh phục = một bước Kim tiến gần hơn tới đỉnh. Cố lên Gai Con!",
+  "Chặng này khó mà Kim vẫn qua — đúng chất một Gai Con bản lĩnh. Tiếp tục thôi!",
+  "Kim thấy không, kiên trì từng bước nhỏ sẽ tới đích lớn. Anh Trai cũng đi lên từ những bước như thế!",
+  "Hoàn thành xuất sắc, Kim! Vượt ngàn chông gai số học — Kim chính là nhà vô địch của hành trình này!"
+];
+
+const STAGES = [
+  // GROUP A
+  { id:1, group:"A", name:"Bảng cửu chương & Tính nhẩm",
+    desc:"Nhân, chia trong bảng + cộng/trừ nhanh số nguyên.",
+    icon:"✖️", color:"c1", build: buildStage1, passN:7, totalN:10 },
+  { id:2, group:"A", name:"Số nguyên & Quy tắc dấu",
+    desc:"Cộng trừ nhân chia số âm, bỏ ngoặc, thứ tự phép tính.",
+    icon:"➕", color:"c2", build: buildStage2, passN:7, totalN:10 },
+  { id:3, group:"A", name:"Phân số & Thập phân (lớp 6)",
+    desc:"Rút gọn, quy đồng, 4 phép tính, đổi ↔ thập phân.",
+    icon:"🍰", color:"c3", build: buildStage3, passN:7, totalN:10 },
+  // GROUP B
+  { id:4, group:"B", name:"4 phép tính số hữu tỉ",
+    desc:"Cộng – trừ – nhân – chia phân số có số âm.",
+    icon:"⚙️", color:"c4", build: buildStage4, passN:7, totalN:10 },
+  { id:5, group:"B", name:"Lũy thừa & Thứ tự phép tính",
+    desc:"Lũy thừa số hữu tỉ, ngoặc, quy tắc thứ tự.",
+    icon:"⚡", color:"c5", build: buildStage5, passN:7, totalN:10 },
+  { id:6, group:"B", name:"Biểu diễn thập phân số hữu tỉ",
+    desc:"Hữu hạn / vô hạn tuần hoàn, đổi qua lại.",
+    icon:"🔢", color:"c6", build: buildStage6, passN:7, totalN:10 }
+];
+
+/* ========================================================================
+   PHẦN 8 — STATE & RENDER
+   ========================================================================*/
+
+const state = {
+  screen:"title",       // title | map | stage | summary | story | reward | final
+  stageIdx:0,
+  completed:[false,false,false,false,false,false],
+  questions:[],
+  qIdx:0,
+  correctCount:0,
+  combo:0,
+  bestCombo:0,
+  score:0,
+  locked:false,         // khi modal giải thích mở
+  storyIdx:0
+};
+
+function isGroupAComplete(){
+  return state.completed[0] && state.completed[1] && state.completed[2];
+}
+function isUnlocked(i){
+  if(i<3) return true;                       // Nhóm A luôn mở
+  return isGroupAComplete();                 // Nhóm B mở khi xong nhóm A
+}
+
+const app = document.getElementById("app");
+function el(html){
+  const wrap = document.createElement("div");
+  wrap.innerHTML = html.trim();
+  return wrap.firstElementChild;
+}
+
+function render(){
+  app.innerHTML = "";
+  if(state.screen==="title") renderTitle();
+  else if(state.screen==="map") renderMap();
+  else if(state.screen==="stage") renderStage();
+  else if(state.screen==="summary") renderSummary();
+  else if(state.screen==="story") renderStory();
+  else if(state.screen==="reward") renderReward();
+  else if(state.screen==="final") renderFinal();
+}
+
+function renderTitle(){
+  const v = el(`
+    <div class="title-screen">
+      <div class="title-card">
+        <div class="kim-avatar">🧒</div>
+        <h1 class="game-title">Số Học Phiêu Lưu Ký</h1>
+        <p class="game-subtitle">Cùng <b>Kim</b> chinh phục Toán 6 → Toán 7 · Chương I Số hữu tỉ</p>
+        <div class="intro-text">
+          Chào <b>Kim</b>! Hành trình gồm <b>6 chặng</b>:
+          3 chặng <b>ôn nền lớp 6</b> (bảng cửu chương, số nguyên, phân số) — bắt buộc trước,
+          rồi mở khoá <b>3 chặng lớp 7</b> Chương I Số hữu tỉ.
+          Mỗi chặng vượt qua sẽ mở một <b>câu chuyện lịch sử</b> + một <b>phần thưởng</b> nhỏ.
+          Sai cũng không sao — Kim sẽ được giải thích lại từng bước, có ví dụ đời thường.
+        </div>
+        <button class="btn pink" id="btn-start">Bắt đầu cùng Kim →</button>
+      </div>
+      <div class="footer-credit">v2 · phiên bản 6 chặng cho Gai Con học toán</div>
+    </div>
+  `);
+  app.appendChild(v);
+  document.getElementById("btn-start").onclick = ()=>{state.screen="map"; render();};
+}
+
+function renderMap(){
+  const v = el(`
+    <div class="map-screen">
+      <div class="map-header">
+        <h2>🗺️ Bản đồ phiêu lưu của Kim</h2>
+        <div class="sub">Hoàn thành lần lượt 6 chặng để mở hết câu chuyện và phần thưởng</div>
+        <div class="kim-bubble"><span class="mini">🧒</span><span>Kim đã qua <b style="color:var(--primary-2);margin:0 4px">${state.completed.filter(x=>x).length}</b>/6 chặng</span></div>
+      </div>
+    </div>
+  `);
+  app.appendChild(v);
+
+  // Group A
+  const groupA = el(`
+    <div class="group-card">
+      <div class="group-label">
+        <span>📘 Nhóm A · Ôn nền lớp 6</span>
+        <span class="badge">${isGroupAComplete()?"Hoàn tất":"Đang mở"}</span>
+        <span class="hint">${isGroupAComplete()?"Đã đủ điều kiện vào lớp 7":"Phải xong nhóm này trước"}</span>
+      </div>
+      <div class="stages-grid" id="grid-a"></div>
+    </div>
+  `);
+  v.appendChild(groupA);
+  const gA = groupA.querySelector("#grid-a");
+  STAGES.slice(0,3).forEach((s, i)=>gA.appendChild(stageTile(s, i)));
+
+  // Group B
+  const bUnlocked = isGroupAComplete();
+  const groupB = el(`
+    <div class="group-card ${bUnlocked?"":"locked"}">
+      <div class="group-label">
+        <span>📗 Nhóm B · Lớp 7 — Chương I Số hữu tỉ</span>
+        <span class="badge ${bUnlocked?"":"locked"}">${bUnlocked?"Đã mở":"🔒 Khoá"}</span>
+        <span class="hint">${bUnlocked?"Tha hồ chọn chặng":"Hoàn tất nhóm A để mở"}</span>
+      </div>
+      <div class="stages-grid" id="grid-b"></div>
+    </div>
+  `);
+  v.appendChild(groupB);
+  const gB = groupB.querySelector("#grid-b");
+  STAGES.slice(3,6).forEach((s, i)=>gB.appendChild(stageTile(s, i+3)));
+
+  // Final celebration nếu xong hết
+  if(state.completed.every(x=>x)){
+    const f = el(`
+      <div style="margin:6px auto 0;text-align:center">
+        <button class="btn sun" id="btn-final">👑 Xem màn chúc mừng hoàn thành</button>
+      </div>
+    `);
+    v.appendChild(f);
+    document.getElementById("btn-final").onclick = ()=>{state.screen="final"; render()};
+  }
+}
+
+function stageTile(s, idx){
+  const done = state.completed[idx];
+  const unlocked = isUnlocked(idx);
+  const cls = done ? "done" : unlocked ? "unlocked" : "locked";
+  const t = el(`
+    <div class="stage-tile ${cls} ${s.color}">
+      <div class="num">${s.id}</div>
+      <div class="ic">${unlocked ? s.icon : "🔒"}</div>
+      <p class="name">${s.name}</p>
+      <p class="meta">${done?"Đã qua ✓":(unlocked?(s.totalN+" câu · qua "+s.passN+"/"+s.totalN):"Khoá")}</p>
+    </div>
+  `);
+  if(unlocked) t.onclick = ()=>startStage(idx);
+  return t;
+}
+
+function startStage(i){
+  state.stageIdx = i;
+  state.questions = STAGES[i].build();
+  state.qIdx = 0;
+  state.correctCount = 0;
+  state.combo = 0;
+  state.bestCombo = 0;
+  state.score = 0;
+  state.locked = false;
+  state.screen = "stage";
+  render();
+}
+
+function renderStage(){
+  const s = STAGES[state.stageIdx];
+  const q = state.questions[state.qIdx];
+  const pct = Math.round((state.qIdx / s.totalN) * 100);
+  const v = el(`
+    <div>
+      <div class="stage-top">
+        <span class="mini-av">🧒</span>
+        <div class="title">Chặng ${s.id} · ${s.name}</div>
+        <div class="meta">
+          <span>Câu <b>${state.qIdx+1}</b>/${s.totalN}</span>
+          <span>Đúng <b>${state.correctCount}</b></span>
+          <span>Điểm <b>${state.score}</b></span>
+        </div>
+      </div>
+      <div class="progress-wrap"><div class="progress-bar"><div class="progress-bar-fill" style="width:${pct}%"></div></div></div>
+      <div class="question-card">
+        <span class="q-tag">${q.tag}</span>
+        <div class="q-text">${q.qHTML}</div>
+        <div class="options" id="opts"></div>
+        <div class="stage-bottom">
+          <span class="combo-badge ${state.combo>=2?"":"zero"}">🔥 Combo ×${state.combo}</span>
+          <button class="btn ghost" id="btn-back">← Bản đồ</button>
+        </div>
+      </div>
+    </div>
+  `);
+  app.appendChild(v);
+  const opts = document.getElementById("opts");
+  q.options.forEach((label, idx)=>{
+    const b = document.createElement("button");
+    b.className = "opt-btn";
+    b.innerHTML = renderOptionLabel(label);
+    b.onclick = ()=>answer(idx);
+    opts.appendChild(b);
+  });
+  document.getElementById("btn-back").onclick = ()=>{
+    if(state.locked) return;
+    if(confirm("Kim muốn về bản đồ? Tiến trình chặng này sẽ mất.")){
+      state.screen = "map"; render();
+    }
+  };
+}
+
+function renderOptionLabel(label){
+  if(/[a-zA-ZÀ-ỹ]/.test(label)) return label;
+  if(label.indexOf("/")>=0){
+    let neg=false, body=label;
+    if(body[0]==="−"||body[0]==="-"){neg=true; body=body.slice(1)}
+    const [n,d] = body.split("/");
+    return (neg?"−":"") + '<span class="frac"><span class="num">'+n+'</span><span class="den">'+d+'</span></span>';
+  }
+  if(label[0]==="-") return "−"+label.slice(1);
+  return label;
+}
+
+function answer(idx){
+  if(state.locked) return;
+  state.locked = true;
+  const q = state.questions[state.qIdx];
+  const optsEl = document.getElementById("opts");
+  Array.from(optsEl.children).forEach((btn, i)=>{
+    btn.disabled = true;
+    if(i === q.answerIdx) btn.classList.add("correct");
+    else if(i === idx) btn.classList.add("wrong");
+    else btn.classList.add("dim");
+  });
+  const correct = idx === q.answerIdx;
+  if(correct){
+    state.correctCount++;
+    state.combo++;
+    if(state.combo > state.bestCombo) state.bestCombo = state.combo;
+    const bonus = Math.max(0, state.combo-1)*3;
+    state.score += 10 + bonus;
+    // Nhỏ flash, không cần modal
+    setTimeout(()=>{
+      state.locked = false;
+      state.qIdx++;
+      if(state.qIdx >= STAGES[state.stageIdx].totalN) finishStage();
+      else render();
+    }, 800);
+  } else {
+    state.combo = 0;
+    // BẮT đọc giải thích
+    showExplainModal(q, idx);
+  }
+}
+
+function showExplainModal(q, chosenIdx){
+  const correctLabel = q.options[q.answerIdx];
+  const chosenLabel = q.options[chosenIdx];
+  const exp = q.explain || {};
+  const stepsHTML = (exp.steps||[]).map(s=>"<div>• "+s+"</div>").join("");
+  const modal = el(`
+    <div class="modal-backdrop" id="exp-bd">
+      <div class="modal explain-modal">
+        <div class="explain-head">
+          <div class="av">🧒</div>
+          <div class="h">
+            <div class="t">Chưa đúng, không sao Kim ơi 💪</div>
+            <div class="s">Đọc giải thích nhé, rồi chúng ta đi tiếp.</div>
+          </div>
+        </div>
+
+        <div class="ex-block">
+          <div class="label">🎯 Đáp án đúng</div>
+          <div class="content">${exp.correctHTML || ("Đúng là <b>"+renderOptionLabel(correctLabel)+"</b>")}.
+          <br><span style="color:var(--ink-2);font-size:13px">(Kim chọn: <b>${renderOptionLabel(chosenLabel)}</b> — chưa đúng.)</span></div>
+        </div>
+
+        <div class="ex-block steps">
+          <div class="label">📝 Cách làm từng bước</div>
+          <div class="content">${stepsHTML || "<div>• Làm theo công thức của dạng bài này.</div>"}</div>
+        </div>
+
+        <div class="ex-block real">
+          <div class="label">💡 Ví dụ đời thường</div>
+          <div class="content">${exp.realWorld || "Cứ bình tĩnh, làm lại sẽ ra."}</div>
+        </div>
+
+        <div class="ex-actions">
+          <button class="btn mint" id="btn-understood">Đã hiểu — đi tiếp 👍</button>
+        </div>
+      </div>
+    </div>
+  `);
+  app.appendChild(modal);
+  document.getElementById("btn-understood").onclick = ()=>{
+    modal.remove();
+    state.locked = false;
+    state.qIdx++;
+    if(state.qIdx >= STAGES[state.stageIdx].totalN) finishStage();
+    else render();
+  };
+}
+
+function finishStage(){
+  const s = STAGES[state.stageIdx];
+  const pass = state.correctCount >= s.passN;
+  if(pass){
+    state.completed[state.stageIdx] = true;
+    if(pass) fireConfetti();
+  }
+  state.screen = "summary";
+  render();
+}
+
+function renderSummary(){
+  const s = STAGES[state.stageIdx];
+  const pass = state.correctCount >= s.passN;
+  const stars = pass ? (state.correctCount===s.totalN ? "★★★" : state.correctCount>=9 ? "★★☆" : "★☆☆") : "☆☆☆";
+  const v = el(`
+    <div>
+      <div class="map-header">
+        <h2>${pass ? "🎉 Kim vượt chặng "+s.id+"!" : "💪 Kim thử lại chặng "+s.id+" nhé!"}</h2>
+      </div>
+      <div class="summary-card">
+        <div class="summary-stars">${stars}</div>
+        <div class="summary-stat">Đúng: <b>${state.correctCount}/${s.totalN}</b> · Combo cao nhất: <b>×${state.bestCombo}</b></div>
+        <div class="summary-stat">Điểm chặng: <b>${state.score}</b></div>
+        <div class="summary-stat" style="margin-top:12px">
+          ${pass ? "Kim đã vượt chặng <b>"+s.name+"</b>. Một câu chuyện lịch sử & phần thưởng đang chờ!" : "Cần đúng ít nhất <b>"+s.passN+"/"+s.totalN+"</b>. Chơi lại nhé — đề sẽ đổi mới hoàn toàn."}
+        </div>
+        <div class="summary-actions">
+          ${pass ? '<button class="btn pink" id="btn-story">📜 Đọc câu chuyện + nhận thưởng</button>' : '<button class="btn" id="btn-retry">↻ Thử lại</button>'}
+          <button class="btn ghost" id="btn-map">← Về bản đồ</button>
+        </div>
+      </div>
+    </div>
+  `);
+  app.appendChild(v);
+  if(pass){
+    document.getElementById("btn-story").onclick = ()=>{
+      state.storyIdx = state.stageIdx;
+      state.screen = "story"; render();
+    };
+  } else {
+    document.getElementById("btn-retry").onclick = ()=>startStage(state.stageIdx);
+  }
+  document.getElementById("btn-map").onclick = ()=>{state.screen="map"; render()};
+}
+
+function renderStory(){
+  // bản đồ ngầm làm nền
+  renderMap();
+  const story = STORIES[state.storyIdx];
+  const modal = el(`
+    <div class="modal-backdrop">
+      <div class="modal story-modal">
+        <div class="story-head">
+          <div class="story-icon">${story.icon}</div>
+          <h2 class="story-title">${story.title}</h2>
+          <div class="story-sub">${story.sub}</div>
+        </div>
+        <div class="story-body">${story.body}</div>
+        <div class="story-quote">"${story.quote}"</div>
+        <div class="story-actions">
+          <button class="btn" id="btn-reward">Nhận phần thưởng 🎁</button>
+        </div>
+      </div>
+    </div>
+  `);
+  app.appendChild(modal);
+  document.getElementById("btn-reward").onclick = ()=>{
+    state.screen = "reward"; render();
+  };
+}
+
+function renderReward(){
+  renderMap();
+  const n = state.storyIdx + 1;
+  const cheer = CHEERS[state.storyIdx];
+  const imgPath = "images/chuyen"+n+".jpg";
+  const fallbackBig = ["🏺","🧧","📜","✨","🕌","⛵"][state.storyIdx];
+  const modal = el(`
+    <div class="modal-backdrop">
+      <div class="modal" style="border-top:6px solid var(--sun)">
+        <div class="reward-card">
+          <div class="header">🎁 Phần thưởng chặng ${n} <span class="star">★</span></div>
+          <div class="reward-img-wrap" id="img-wrap">
+            <img src="${imgPath}" alt="Phần thưởng chặng ${n}" onerror="this.style.display='none'; document.getElementById('fb-${n}').style.display='flex';"/>
+            <div class="reward-fallback" id="fb-${n}" style="display:none">
+              <div class="big-icon">${fallbackBig}</div>
+              <div class="ribbon">Phần thưởng chặng ${n}</div>
+              <div style="margin-top:8px;font-size:13px;color:var(--ink-2)">Hình kỷ niệm chưa cài, nhưng phần thưởng vẫn đây!</div>
+            </div>
+          </div>
+          <div class="cheer-line">
+            <span class="label">📣 Gai Con cổ vũ</span>
+            ${cheer}
+          </div>
+          <div style="margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+            <button class="btn mint" id="btn-next">${state.storyIdx===STAGES.length-1 && state.completed.every(x=>x)?"👑 Xem màn hoàn thành":"Tiếp tục phiêu lưu →"}</button>
+            <button class="btn ghost" id="btn-map">Về bản đồ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `);
+  app.appendChild(modal);
+  document.getElementById("btn-next").onclick = ()=>{
+    if(state.storyIdx===STAGES.length-1 && state.completed.every(x=>x)){
+      state.screen = "final";
+    } else {
+      state.screen = "map";
+    }
+    render();
+  };
+  document.getElementById("btn-map").onclick = ()=>{state.screen="map"; render()};
+}
+
+function renderFinal(){
+  fireConfetti();
+  const v = el(`
+    <div class="title-screen">
+      <div class="final-card">
+        <div class="crown">👑</div>
+        <h2 style="font-size:28px;margin:8px 0">Hoàn thành xuất sắc, Kim!</h2>
+        <p style="color:var(--ink-2);font-style:italic;margin:6px 0 14px">Kim đã đi qua cả 6 chặng và mở khoá cả 6 câu chuyện lịch sử + phần thưởng.</p>
+        <div style="font-size:15px;line-height:1.7;text-align:left;background:#fff;padding:14px 16px;border-radius:14px;box-shadow:var(--shadow-sm);border:1px solid var(--line)">
+          <b style="color:var(--primary-2)">Nhóm A — ôn nền lớp 6:</b><br>
+          ✖️ Bảng cửu chương · ➕ Số nguyên · 🍰 Phân số & thập phân<br><br>
+          <b style="color:var(--pink-2)">Nhóm B — Toán 7 Chương I:</b><br>
+          ⚙️ 4 phép tính số hữu tỉ · ⚡ Lũy thừa & thứ tự · 🔢 Biểu diễn thập phân<br><br>
+          <span style="color:var(--mint-2);font-weight:700">Kim đã vững nền tảng để bước vào Chương II Số thực — chuyện đó để bản sau nhé.</span>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button class="btn pink" id="btn-replay">↻ Chơi lại từ đầu</button>
+          <button class="btn ghost" id="btn-map">← Bản đồ</button>
+        </div>
+      </div>
+    </div>
+  `);
+  app.appendChild(v);
+  document.getElementById("btn-replay").onclick = ()=>{
+    state.completed = [false,false,false,false,false,false];
+    state.screen = "map"; render();
+  };
+  document.getElementById("btn-map").onclick = ()=>{state.screen="map"; render()};
+}
+
+/* ====== Confetti nhỏ ====== */
+function fireConfetti(){
+  const colors = ["#3b82f6","#ec4899","#10b981","#f59e0b","#8b5cf6","#fb7185"];
+  const layer = document.createElement("div");
+  layer.className = "confetti";
+  for(let i=0;i<60;i++){
+    const c = document.createElement("i");
+    c.style.left = (Math.random()*100)+"%";
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDelay = (Math.random()*0.6)+"s";
+    c.style.animationDuration = (1.8 + Math.random()*1.5)+"s";
+    c.style.transform = "rotate("+Math.floor(Math.random()*360)+"deg)";
+    layer.appendChild(c);
+  }
+  document.body.appendChild(layer);
+  setTimeout(()=>layer.remove(), 3200);
+}
+
+/* ====== INIT ====== */
+window.addEventListener("DOMContentLoaded", ()=>{
+  const ok = selfTest();
+  if(!ok) console.warn("Self-test có lỗi — kiểm tra console");
+  render();
+});
+</script>
+</body>
+</html>
