@@ -1,0 +1,32 @@
+# PROMPT CẬP NHẬT v3 — Dán đoạn dưới dòng kẻ vào Claude Code
+
+(Mở Claude Code trong thư mục dự án: Terminal → cd vào thư mục → gõ claude. Đảm bảo GAME_SPEC_v3.md đã nằm trong thư mục cùng index.html.)
+
+---
+
+Chào Claude Code. Game "Số Học Phiêu Lưu Ký" (index.html) đang chạy tốt. Tôi muốn nâng cấp tiếp theo file GAME_SPEC_v3.md trong thư mục này.
+
+Đọc kỹ GAME_SPEC_v3.md trước. Đây là bản cập nhật mới nhất, thay thế spec cũ.
+
+Việc cần làm — SỬA TIẾP trên index.html đang có, KHÔNG viết lại từ đầu. GIỮ NGUYÊN: phần sinh đề ngẫu nhiên đã test kỹ, cơ chế giải thích khi trả lời sai, giao diện trẻ trung hiện tại, 6 câu chuyện lịch sử, tên nhân vật "Kim". Các thay đổi:
+
+1. Cấu trúc lại thành 4 PHẦN, mỗi phần 3 chặng nhỏ:
+   - Phần 1 — Ôn lớp 6: Số học (GIỮ NGUYÊN nội dung đang có)
+   - Phần 2 — Ôn lớp 6: ƯCLN, BCNN & Chia hết (MỚI: dấu hiệu chia hết, ước–bội, số nguyên tố & phân tích thừa số, tìm ƯCLN/BCNN)
+   - Phần 3 — Ôn lớp 6: Toán đố (MỚI: bài toán có lời văn tình huống đời thường, mức lớp 6)
+   - Phần 4 — Chương I lớp 7: Số hữu tỉ (GIỮ NGUYÊN nội dung đang có)
+   Mỗi phần hiện NHÃN cấp lớp rõ ràng (3 phần ghi "Ôn lớp 6", phần 4 ghi "Lớp 7"). Hoàn thành tuần tự mới mở phần sau.
+
+2. Hai phần mới phải sinh đề ngẫu nhiên và đáp án đúng TUYỆT ĐỐI — kiểm thử kỹ y như cách đã làm với các phần cũ (chạy nhiều nghìn lượt đối chiếu đáp án độc lập). Khi sai vẫn hiện ô giải thích như cơ chế hiện tại.
+
+3. Sau MỖI chặng nhỏ (12 chặng): hiện thẻ động viên gồm 1 ảnh random trong images/chuyen1.jpg..chuyen36.jpg + 1 câu khen random trong kho 20 câu (lấy đúng 20 câu trong spec). Thiếu/lỗi ảnh thì không được vỡ giao diện (chọn ảnh khác hoặc khung CSS thay thế).
+
+4. Sau MỖI phần (~3 chặng, 4 lần trong game): hiện mini-game thẻ cào. Cào ra số tiền random theo tỉ lệ: 1.000đ ~40%, 2.000đ ~35%, 5.000đ ~20%, 20.000đ ~5% (giải hiếm, có hiệu ứng đặc biệt). Cộng dồn vào tổng, hiện "Tổng số tiền Kim đã tích luỹ: X.XXXđ" (có dấu chấm ngăn nghìn). Nói rõ đây là tiền thưởng trong game.
+
+5. Bật localStorage CHỈ để lưu tổng tiền tích lũy (và tiến độ mở khóa nếu cần). Mở lại game vẫn thấy tổng tiền cũ. Có nút đặt lại tổng tiền về 0 kèm hộp xác nhận. Nếu localStorage lỗi thì game vẫn chạy bình thường, không trắng màn.
+
+6. KHÔNG làm mất 6 câu chuyện lịch sử đang có — câu chuyện lịch sử và thẻ động viên random là 2 thứ khác nhau, cùng tồn tại.
+
+Vẫn 1 file index.html, không framework, responsive, chạy mượt điện thoại.
+
+Hãy đọc spec, trình bày ngắn gọn kế hoạch sửa (liệt kê thay đổi chính) rồi mới code. Làm xong tự rà: 4 phần đúng thứ tự + nhãn lớp, đáp án 2 phần mới đúng tuyệt đối, thẻ cào đúng tỉ lệ & cộng dồn, localStorage lưu/đặt lại đúng, 6 câu chuyện lịch sử còn nguyên. Rồi báo tôi tóm tắt đã đổi gì.

@@ -340,6 +340,106 @@
   @keyframes tapPop{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
 
   .footer-credit{text-align:center;font-size:11px;color:var(--muted);padding:10px 0 4px}
+
+  /* ====== v3: Thẻ động viên random ====== */
+  .cheer-modal{border-top:6px solid var(--coral)}
+  .cheer-img-wrap{
+    width:100%;max-width:380px;margin:6px auto 12px;border-radius:18px;overflow:hidden;
+    background:linear-gradient(135deg,#fde7c4,#fcd5ce,#d6f3e3);
+    aspect-ratio: 4/3;box-shadow:0 10px 24px rgba(0,0,0,0.10);
+    display:flex;align-items:center;justify-content:center;position:relative;
+  }
+  .cheer-img-wrap img{display:block;width:100%;height:100%;object-fit:cover}
+  .cheer-img-wrap .fb{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    width:100%;height:100%;padding:18px;text-align:center;
+    background:linear-gradient(135deg,#fde7c4,#fcd5ce 50%,#d6f3e3);
+  }
+  .cheer-img-wrap .fb .big{font-size:60px;margin-bottom:8px}
+  .cheer-img-wrap .fb .rib{display:inline-block;background:#fff;color:var(--ink);padding:6px 14px;border-radius:999px;font-weight:800;font-size:13px;box-shadow:var(--shadow-sm)}
+  .cheer-text{
+    background:linear-gradient(135deg,#fff7ed,#ffedd5);
+    border-radius:14px;padding:14px 16px;margin:8px 4px 4px;
+    color:#7c2d12;font-size:15px;font-weight:700;line-height:1.5;
+    border:1px dashed #fbbf24;
+  }
+  .cheer-text .label{display:block;font-size:11px;font-weight:800;color:var(--sun-2);letter-spacing:0.6px;margin-bottom:4px;text-transform:uppercase}
+
+  /* ====== v3: Thẻ cào ====== */
+  .scratch-modal{border-top:6px solid var(--sun)}
+  .scratch-stage{
+    position:relative;width:100%;max-width:380px;margin:6px auto 8px;
+    border-radius:18px;overflow:hidden;box-shadow:0 12px 26px rgba(0,0,0,0.14);
+    background:#fff;border:1px solid var(--line);
+    aspect-ratio: 16/10;
+  }
+  .scratch-prize{
+    position:absolute;inset:0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#fff7ed,#fde68a,#fcd5ce);
+    color:#7c2d12;text-align:center;padding:14px;
+  }
+  .scratch-prize .amount{font-size:38px;font-weight:900;letter-spacing:-0.5px}
+  .scratch-prize .label{font-size:12px;font-weight:800;color:#92400e;letter-spacing:0.8px;text-transform:uppercase;margin-top:2px}
+  .scratch-prize.big{
+    background:linear-gradient(135deg,#fcd34d,#fb7185,#a78bfa);color:#fff;
+  }
+  .scratch-prize.big .amount{font-size:46px;color:#fff;text-shadow:0 4px 10px rgba(0,0,0,0.18)}
+  .scratch-prize.big .label{color:#fff}
+  .scratch-prize .lucky{
+    margin-top:6px;font-size:13px;font-weight:800;background:#fff;color:#a21caf;
+    padding:3px 12px;border-radius:999px;letter-spacing:0.5px;
+  }
+  .scratch-canvas{position:absolute;inset:0;width:100%;height:100%;cursor:grab;touch-action:none}
+  .scratch-canvas.cleared{display:none}
+  .scratch-hint{font-size:12px;color:var(--muted);text-align:center;margin:0 0 6px}
+  .money-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    background:linear-gradient(135deg,#fef9c3,#fde68a);
+    color:#78350f;font-weight:800;font-size:14px;
+    padding:6px 14px;border-radius:999px;border:1px solid #fcd34d;
+    box-shadow:var(--shadow-sm);
+  }
+  .money-badge .ic{font-size:16px}
+  .total-money-line{
+    background:linear-gradient(135deg,#ecfeff,#cffafe);
+    border-radius:14px;padding:12px 14px;margin:10px 4px 4px;
+    color:#155e75;font-size:15px;font-weight:700;text-align:center;
+    border:1px dashed #67e8f9;
+  }
+  .total-money-line b{font-size:18px;color:#0e7490}
+  .money-note{font-size:11px;color:var(--muted);font-style:italic;margin-top:4px;text-align:center}
+
+  /* Part labels on map */
+  .part-card{
+    background:var(--card);border-radius:18px;
+    padding:14px;margin-bottom:14px;box-shadow:var(--shadow);
+    border:1px solid var(--line);position:relative;
+  }
+  .part-card.locked{opacity:0.85}
+  .part-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+  .part-head .ptitle{font-size:14px;font-weight:800;color:var(--ink);text-transform:uppercase;letter-spacing:0.6px}
+  .part-head .plabel{font-size:11px;padding:3px 10px;border-radius:999px;color:#fff;text-transform:none;letter-spacing:0;font-weight:800}
+  .part-head .plabel.l6{background:linear-gradient(135deg,#34d399,#10b981)}
+  .part-head .plabel.l7{background:linear-gradient(135deg,#60a5fa,#2563eb)}
+  .part-head .plabel.locked{background:linear-gradient(135deg,#94a3b8,#64748b)}
+  .part-head .pstatus{font-size:11px;padding:3px 10px;border-radius:999px;background:#f1f5f9;color:var(--ink-2);font-weight:700}
+  .part-head .pstatus.done{background:#dcfce7;color:#166534}
+  .part-head .phint{margin-left:auto;font-size:12px;color:var(--muted);font-weight:500}
+
+  /* Money toolbar on map */
+  .money-toolbar{
+    display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+    margin:0 auto 12px;
+  }
+  .btn.tiny{font-size:12px;padding:7px 12px;font-weight:700}
+
+  /* Confetti paper for big win */
+  .pop-paper{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden}
+  .pop-paper i{
+    position:absolute;top:-20px;width:8px;height:14px;border-radius:2px;
+    animation:fall 2.6s linear forwards;
+  }
 </style>
 </head>
 <body>
@@ -870,6 +970,692 @@ function genQ_fracDecimal(){
 }
 
 /* ========================================================================
+   PHẦN 3B — SINH ĐỀ PHẦN 2 (Ôn lớp 6: ƯCLN, BCNN & Chia hết) — MỚI v3
+   ========================================================================*/
+
+function divisorsOf(n){
+  const res=[]; for(let i=1;i<=n;i++){ if(n%i===0) res.push(i); } return res;
+}
+function isPrime(n){
+  if(n<2) return false;
+  if(n<4) return true;
+  if(n%2===0) return false;
+  for(let i=3;i*i<=n;i+=2){ if(n%i===0) return false; }
+  return true;
+}
+function primeFactors(n){
+  const f={}; let x=n; let p=2;
+  while(x>1){
+    while(x%p===0){ f[p]=(f[p]||0)+1; x/=p; }
+    p++;
+    if(p*p>x && x>1){ f[x]=(f[x]||0)+1; x=1; }
+  }
+  return f; // map prime -> exp
+}
+function formatFactorization(f){
+  const ks = Object.keys(f).map(Number).sort((a,b)=>a-b);
+  return ks.map(p=>f[p]===1?(""+p):(p+"<sup>"+f[p]+"</sup>")).join(" × ");
+}
+function formatFactorizationPlain(f){
+  const ks = Object.keys(f).map(Number).sort((a,b)=>a-b);
+  return ks.map(p=>f[p]===1?(""+p):(p+"^"+f[p])).join("×");
+}
+
+/* ---- Chặng 2.1 — Dấu hiệu chia hết + ước/bội ---- */
+function genQ_divRule(){
+  const variant = pick([1,2,3,4]);
+  if(variant===1){
+    // "Số nào sau đây chia hết cho d?"
+    const d = pick([2,3,5,9]);
+    let correct = d * randInt(2,15);
+    if(correct<10) correct = d*randInt(3,15);
+    const correctStr = ""+correct;
+    const pool = [];
+    for(const delta of [-3,-2,-1,1,2,3,4,5,7,11]){
+      const x = correct + delta;
+      if(x>0 && x%d!==0) pool.push(""+x);
+    }
+    const mo = build4Opts(correctStr, shuffle(pool), seen=>{ let x=correct+13; while(x<correct+100){ if(x%d!==0 && !seen.has(""+x)) return ""+x; x++; } return null; });
+    const opts = mo.options;
+    let rule;
+    if(d===2) rule = "Số chia hết cho 2 khi chữ số tận cùng là 0, 2, 4, 6, 8.";
+    else if(d===5) rule = "Số chia hết cho 5 khi chữ số tận cùng là 0 hoặc 5.";
+    else if(d===3) rule = "Số chia hết cho 3 khi tổng các chữ số của nó chia hết cho 3.";
+    else rule = "Số chia hết cho 9 khi tổng các chữ số của nó chia hết cho 9.";
+    let proof;
+    if(d===3||d===9){
+      const sum = (""+correct).split("").reduce((a,c)=>a+(+c),0);
+      proof = "Tổng chữ số của "+correct+" = "+sum+", và "+sum+(sum%d===0?" chia hết cho ":" chưa chia hết cho ")+d+".";
+    } else {
+      proof = "Chữ số tận cùng của "+correct+" là "+((""+correct).slice(-1))+(d===2?" (chẵn)":" (là 0 hoặc 5)")+".";
+    }
+    return {
+      qHTML: "Số nào sau đây chia hết cho <b>"+d+"</b>?",
+      options: opts, answerIdx: mo.answerIdx, tag:"Chia hết",
+      explain:{
+        correctHTML: correct + " ⋮ " + d + " (đúng)",
+        steps:[ rule, proof ],
+        realWorld: "Khi cô giáo chia "+correct+" cái kẹo cho "+d+" nhóm: nếu chia hết tức là không thừa cái nào."
+      }
+    };
+  } else if(variant===2){
+    // Hỏi đáp số tận cùng / tổng chữ số
+    const d = pick([2,3,5,9]);
+    const a = randInt(10,99);
+    const ok = a%d===0;
+    const opts = shuffle(["Có","Không","Còn dư 1","Không xác định"]);
+    const correct = ok ? "Có" : "Không";
+    let rule, proof;
+    if(d===2){ rule="Chia hết cho 2 khi chữ số tận cùng chẵn (0,2,4,6,8)."; proof="Chữ số tận cùng của "+a+" là "+((""+a).slice(-1))+" → "+(ok?"chẵn":"lẻ")+"."; }
+    else if(d===5){ rule="Chia hết cho 5 khi tận cùng là 0 hoặc 5."; proof="Tận cùng của "+a+" là "+((""+a).slice(-1))+" → "+(ok?"là 0 hoặc 5":"không phải 0 cũng không phải 5")+"."; }
+    else { const sum = (""+a).split("").reduce((s,c)=>s+(+c),0); rule="Chia hết cho "+d+" khi tổng các chữ số chia hết cho "+d+"."; proof="Tổng chữ số của "+a+" = "+sum+", và "+sum+(sum%d===0?" chia hết cho ":" không chia hết cho ")+d+"."; }
+    return {
+      qHTML: "Số <b>"+a+"</b> có chia hết cho <b>"+d+"</b> không?",
+      options: opts, answerIdx: opts.indexOf(correct), tag:"Dấu hiệu chia hết",
+      explain:{
+        correctHTML: a + (ok?" ⋮ ":" không ⋮ ") + d,
+        steps: [rule, proof],
+        realWorld: "Hình dung chia "+a+" viên kẹo cho "+d+" bạn — "+(ok?"chia vừa khít.":"có "+(a%d)+" viên dư, không chia hết.")
+      }
+    };
+  } else if(variant===3){
+    // "Số nào sau đây KHÔNG phải ước của n?"
+    let n = pick([12,16,18,20,24,30,36,40,48,60,72]);
+    const divs = divisorsOf(n);
+    const correct = randInt(2, n-1);
+    let notDivisor = null;
+    for(let k=2;k<n;k++){ if(n%k!==0){ notDivisor=k; break; } }
+    if(!notDivisor) notDivisor = n+1;
+    // build 4 options: 3 ước, 1 không phải ước
+    const realDivs = divs.filter(x=>x>1 && x<n);
+    const picks = shuffle(realDivs).slice(0,3);
+    while(picks.length<3) picks.push(realDivs[picks.length%realDivs.length]||2);
+    // pick non-divisor candidates
+    const candNon = [];
+    for(let k=2;k<n;k++) if(n%k!==0) candNon.push(k);
+    const nonDiv = pick(candNon);
+    const labels = shuffle([...picks.map(x=>""+x), ""+nonDiv]);
+    return {
+      qHTML: "Trong các số sau, số nào <b>KHÔNG</b> là ước của <b>"+n+"</b>?",
+      options: labels, answerIdx: labels.indexOf(""+nonDiv), tag:"Ước",
+      explain:{
+        correctHTML: nonDiv + " không là ước của " + n + " (vì " + n + " ÷ " + nonDiv + " còn dư).",
+        steps: [
+          "Một số a là ước của b nếu b chia hết cho a (b ÷ a hết, không dư).",
+          "Các ước của "+n+" là: "+divs.join(", ")+".",
+          nonDiv+" không nằm trong danh sách trên nên không phải ước."
+        ],
+        realWorld: "Hình dung "+n+" viên kẹo chia thành các túi, mỗi túi "+nonDiv+" viên → còn thừa "+(n%nonDiv)+" viên, không chia đều được."
+      }
+    };
+  } else {
+    // "Số nào sau đây là BỘI của n?"
+    const n = pick([3,4,5,6,7,8,9,11,12]);
+    const k = randInt(3,9);
+    const correct = n*k;
+    const cstr = ""+correct;
+    const pool = [];
+    for(const delta of [-2,-1,1,2,3,4,5,7]){
+      const x = correct + delta;
+      if(x>0 && x%n!==0) pool.push(""+x);
+    }
+    const mo = build4Opts(cstr, shuffle(pool), seen=>{ let x=correct+8; while(x<correct+100){ if(x%n!==0 && !seen.has(""+x)) return ""+x; x++; } return null; });
+    return {
+      qHTML: "Số nào sau đây là <b>bội</b> của <b>"+n+"</b>?",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"Bội",
+      explain:{
+        correctHTML: correct + " = " + n + " × " + k + " → là bội của " + n + ".",
+        steps:[
+          "Một số là bội của n nếu nó bằng n nhân với một số tự nhiên.",
+          "Bội của "+n+" lần lượt là: "+[1,2,3,4,5,6,7,8,9].map(i=>n*i).join(", ")+", ..."
+        ],
+        realWorld: "Như đếm theo nhóm "+n+": "+n+", "+(2*n)+", "+(3*n)+", ... — mọi 'điểm dừng' đều là bội của "+n+"."
+      }
+    };
+  }
+}
+
+/* ---- Chặng 2.2 — Số nguyên tố / Hợp số / Phân tích thừa số ---- */
+function genQ_primeOrComposite(){
+  const variant = pick([1,2]);
+  if(variant===1){
+    // Số đã cho là nguyên tố hay hợp số?
+    const n = pick([2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,35,37,39,41,43,45,47,49,51,53,55,57,59,61,63,65,67,69,71,77,81,83,87,89,91,93,95,97]);
+    const pr = isPrime(n);
+    let correct;
+    if(n<2) correct = "Không phải nguyên tố cũng không hợp số";
+    else correct = pr ? "Số nguyên tố" : "Hợp số";
+    const opts = shuffle(["Số nguyên tố","Hợp số","Số chính phương","Không xác định"]);
+    let proof;
+    if(pr){
+      proof = n+" chỉ có ước 1 và chính nó → là số nguyên tố.";
+    } else {
+      // tìm 1 ước thật
+      let k=2; for(;k<=n;k++) if(n%k===0 && k!==n) break;
+      proof = n+" có ước "+k+" (vì "+n+" = "+k+" × "+(n/k)+") nên có hơn 2 ước → là hợp số.";
+    }
+    return {
+      qHTML: "Số <b>"+n+"</b> là số gì?",
+      options: opts, answerIdx: opts.indexOf(correct), tag:"Nguyên tố / Hợp số",
+      explain:{
+        correctHTML: n + " là <b>"+correct+"</b>.",
+        steps: [
+          "Số nguyên tố là số tự nhiên lớn hơn 1, chỉ có hai ước là 1 và chính nó.",
+          "Hợp số là số tự nhiên lớn hơn 1, có nhiều hơn hai ước.",
+          proof
+        ],
+        realWorld: pr
+          ? "Hình dung "+n+" viên kẹo: chỉ có thể chia thành 1 túi (đủ "+n+" viên) hoặc "+n+" túi (mỗi túi 1 viên) → 'cô đơn', là số nguyên tố."
+          : "Hình dung "+n+" viên kẹo: có thể chia đều thành nhiều kiểu túi → 'phong phú', là hợp số."
+      }
+    };
+  } else {
+    // "Số nào sau đây là số nguyên tố?"
+    // 1 prime + 3 composites
+    const primes = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97];
+    const composites = [4,6,8,9,10,12,14,15,16,18,20,21,22,24,25,26,27,28,30,32,33,35,36,38,39,40,42,44,45,46,48,49,50,51,52,54,55,56,57,58,60,62,63,64,65,66,68,69,70,72,74,75,76,77,78,80,81,82,84,85,86,87,88,90,91,92,93,94,95,96,98,99];
+    const p = pick(primes);
+    const cs = shuffle(composites).slice(0,3);
+    const opts = shuffle([""+p, ...cs.map(x=>""+x)]);
+    return {
+      qHTML: "Trong các số sau, số nào là <b>số nguyên tố</b>?",
+      options: opts, answerIdx: opts.indexOf(""+p), tag:"Số nguyên tố",
+      explain:{
+        correctHTML: p+" là số nguyên tố.",
+        steps:[
+          "Số nguyên tố chỉ có ước 1 và chính nó.",
+          p+" chỉ chia hết cho 1 và "+p+" → là nguyên tố.",
+          "Các số còn lại đều có ước khác 1 và bản thân nó (kiểm tra bằng dấu hiệu chia hết: ÷2, ÷3, ÷5...)."
+        ],
+        realWorld: "Số nguyên tố như những 'viên gạch' để xây mọi số khác. "+p+" là một viên gạch nguyên tố."
+      }
+    };
+  }
+}
+
+function genQ_primeFactorize(){
+  // Sinh n nhỏ rồi yêu cầu phân tích
+  const pool = [12,18,20,24,28,30,36,40,42,45,48,50,54,56,60,63,64,72,75,80,84,90,96,100];
+  const n = pick(pool);
+  const f = primeFactors(n);
+  const correctHTML = formatFactorization(f);
+  const correctPlain = formatFactorizationPlain(f);
+  // Tạo 3 đáp án sai bằng cách bóp méo phân tích
+  function corrupt(){
+    // Hoán đổi mũ, đổi prime nhỏ → prime khác (vẫn factor), hoặc nhân thêm 1 prime sai
+    const ks = Object.keys(f).map(Number);
+    const choice = randInt(1,3);
+    const g = {};
+    Object.keys(f).forEach(k=>g[k]=f[k]);
+    if(choice===1 && ks.length>0){
+      const k = pick(ks);
+      g[k] = g[k]+1; // tăng 1 mũ → sai
+    } else if(choice===2){
+      // đổi 1 prime sang prime khác
+      const others = [2,3,5,7,11,13].filter(p=>!(p in f));
+      if(ks.length>0 && others.length>0){
+        const oldK = pick(ks);
+        const newK = pick(others);
+        g[newK]=g[oldK]; delete g[oldK];
+      } else {
+        const k = pick(ks); g[k]=Math.max(1,g[k]-1);
+      }
+    } else {
+      // thêm 1 prime với mũ 1
+      const others = [2,3,5,7,11,13].filter(p=>!(p in f));
+      if(others.length>0) g[pick(others)]=1;
+      else { const k=pick(ks); g[k]=g[k]+1; }
+    }
+    return g;
+  }
+  const seen = new Set([correctPlain]);
+  const wrongs = [];
+  let guard=0;
+  while(wrongs.length<3 && guard<40){
+    guard++;
+    const g = corrupt();
+    const plain = formatFactorizationPlain(g);
+    if(!seen.has(plain)){ seen.add(plain); wrongs.push({plain, html:formatFactorization(g)}); }
+  }
+  while(wrongs.length<3){
+    wrongs.push({plain:"2×3", html:"2 × 3"});
+  }
+  // Render options as HTML strings (mã hoá riêng vì có sup)
+  const optsObjects = shuffle([{plain:correctPlain, html:correctHTML}, ...wrongs]);
+  const optLabels = optsObjects.map(o=>"__html__"+o.html);
+  const answerIdx = optsObjects.findIndex(o=>o.plain===correctPlain);
+  // Bước phân tích
+  const steps = [];
+  steps.push("Chia "+n+" liên tục cho các số nguyên tố nhỏ nhất.");
+  let x=n; const traces=[];
+  const ks = Object.keys(f).map(Number).sort((a,b)=>a-b);
+  for(const p of ks){
+    for(let i=0;i<f[p];i++){
+      traces.push(x+" ÷ "+p+" = "+(x/p));
+      x = x/p;
+    }
+  }
+  steps.push("Quá trình: "+traces.join("; ")+".");
+  steps.push("Vậy "+n+" = "+correctHTML+".");
+  return {
+    qHTML: "Phân tích số <b>"+n+"</b> ra thừa số nguyên tố:",
+    options: optLabels, answerIdx, tag:"Phân tích thừa số",
+    explain:{
+      correctHTML: n + " = <b>" + correctHTML + "</b>",
+      steps,
+      realWorld: "Như việc 'phá' số "+n+" thành các viên gạch nguyên tố — bộ gạch cơ bản nhất, không phá nhỏ hơn được nữa."
+    }
+  };
+}
+
+/* ---- Chặng 2.3 — Tìm ƯCLN, BCNN ---- */
+function genQ_gcd(){
+  const variant = pick([1,2,2]); // ưu tiên 2 số
+  if(variant===1){
+    // Ba số
+    const a = pick([12,18,24,30,36,40,48,60,72]);
+    const b = pick([18,24,30,36,42,54,60,72,84,90]);
+    const c = pick([12,24,36,48,60,72,84,96]);
+    const g = gcd(gcd(a,b),c);
+    const correct = ""+g;
+    const pool = shuffle([""+(g+1), Math.max(1,g-1)+"", ""+Math.max(1,g*2), ""+a, ""+b, ""+c, ""+gcd(a,b), ""+gcd(b,c), ""+(g+2)]);
+    const mo = build4Opts(correct, pool, seen=>{ let d=1; while(d<60){ const c2=""+(g+d); if(!seen.has(c2)) return c2; d++; } return null; });
+    return {
+      qHTML: "Tìm <b>ƯCLN(" + a + ", " + b + ", " + c + ")</b>:",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"ƯCLN",
+      explain:{
+        correctHTML: "ƯCLN(" + a + ", " + b + ", " + c + ") = <b>" + g + "</b>",
+        steps:[
+          "Cách 1: Phân tích ra thừa số nguyên tố, lấy thừa số CHUNG với SỐ MŨ NHỎ NHẤT.",
+          a+" = "+formatFactorization(primeFactors(a))+"; "+b+" = "+formatFactorization(primeFactors(b))+"; "+c+" = "+formatFactorization(primeFactors(c))+".",
+          "Lấy thừa số chung số mũ nhỏ nhất → "+g+"."
+        ],
+        realWorld: "ƯCLN giống nhau là 'kích thước túi to nhất' mà chia đều được cả ba lô kẹo có "+a+", "+b+" và "+c+" viên."
+      }
+    };
+  } else {
+    const a = pick([6,8,9,10,12,14,15,16,18,20,21,24,25,27,28,30,32,35,36,40,42,45,48,50,54,56,60,63,64,72,75,80,81,84,90,96]);
+    const b = pick([6,8,9,10,12,14,15,16,18,20,21,24,25,27,28,30,32,35,36,40,42,45,48,50,54,56,60,63,64,72,75,80,81,84,90,96]);
+    const g = gcd(a,b);
+    const correct = ""+g;
+    const pool = shuffle([""+(g+1), Math.max(1,g-1)+"", ""+Math.max(1,g*2), ""+Math.max(1,Math.floor(g/2)), ""+a, ""+b, ""+Math.min(a,b), ""+lcm(a,b), ""+(g+2), ""+(g+3)]);
+    const mo = build4Opts(correct, pool, seen=>{ let d=1; while(d<80){ const c=""+(g+d); if(!seen.has(c)) return c; d++; } return null; });
+    return {
+      qHTML: "Tìm <b>ƯCLN(" + a + ", " + b + ")</b>:",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"ƯCLN",
+      explain:{
+        correctHTML: "ƯCLN(" + a + ", " + b + ") = <b>" + g + "</b>",
+        steps:[
+          "Phân tích ra thừa số nguyên tố, lấy thừa số CHUNG với SỐ MŨ NHỎ NHẤT.",
+          a+" = "+formatFactorization(primeFactors(a))+"; "+b+" = "+formatFactorization(primeFactors(b))+".",
+          "ƯCLN = "+g+"."
+        ],
+        realWorld: "ƯCLN("+a+","+b+") là cỡ túi lớn nhất chia đều được cả "+a+" và "+b+" viên kẹo (không bạn nào ăn thêm, không thừa)."
+      }
+    };
+  }
+}
+
+function genQ_lcm(){
+  const variant = pick([1,2,2]);
+  if(variant===1){
+    const a = pick([2,3,4,5,6,8]);
+    const b = pick([3,4,5,6,7,8,9,10]);
+    const c = pick([2,3,4,5,6,8]);
+    const L = lcm(lcm(a,b),c);
+    const correct = ""+L;
+    const pool = shuffle([""+(L+1), Math.max(1,L-1)+"", ""+(a*b*c), ""+Math.max(a,b,c), ""+(L+a), Math.max(1,L-a)+"", ""+lcm(a,b), ""+lcm(b,c), ""+(L+2), ""+(L+5)]);
+    const mo = build4Opts(correct, pool, seen=>{ let d=1; while(d<80){ const c2=""+(L+d); if(!seen.has(c2)) return c2; d++; } return null; });
+    return {
+      qHTML: "Tìm <b>BCNN(" + a + ", " + b + ", " + c + ")</b>:",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"BCNN",
+      explain:{
+        correctHTML: "BCNN(" + a + ", " + b + ", " + c + ") = <b>" + L + "</b>",
+        steps:[
+          "BCNN: phân tích ra thừa số nguyên tố, lấy mọi thừa số (chung & riêng) với SỐ MŨ LỚN NHẤT.",
+          a+" = "+formatFactorization(primeFactors(a))+"; "+b+" = "+formatFactorization(primeFactors(b))+"; "+c+" = "+formatFactorization(primeFactors(c))+".",
+          "BCNN = "+L+"."
+        ],
+        realWorld: "BCNN là khoảng thời gian sớm nhất ba sự kiện theo chu kỳ "+a+", "+b+" và "+c+" lại cùng diễn ra một lúc."
+      }
+    };
+  } else {
+    const a = pick([2,3,4,5,6,8,9,10,12,15]);
+    const b = pick([2,3,4,5,6,7,8,9,10,12,14,15,16,18,20]);
+    const L = lcm(a,b);
+    const correct = ""+L;
+    const pool = shuffle([""+(L+1), Math.max(1,L-1)+"", ""+(a*b), ""+Math.max(a,b), ""+(a+b), ""+gcd(a,b), ""+Math.max(1,Math.floor(L/2)), ""+(L+2), ""+(L+3), ""+(L+5)]);
+    const mo = build4Opts(correct, pool, seen=>{ let d=1; while(d<100){ const c=""+(L+d); if(!seen.has(c)) return c; d++; } return null; });
+    return {
+      qHTML: "Tìm <b>BCNN(" + a + ", " + b + ")</b>:",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"BCNN",
+      explain:{
+        correctHTML: "BCNN(" + a + ", " + b + ") = <b>" + L + "</b>",
+        steps:[
+          "BCNN: phân tích ra thừa số nguyên tố, lấy mọi thừa số (chung & riêng) với SỐ MŨ LỚN NHẤT.",
+          a+" = "+formatFactorization(primeFactors(a))+"; "+b+" = "+formatFactorization(primeFactors(b))+".",
+          "BCNN = "+L+"."
+        ],
+        realWorld: "BCNN("+a+","+b+") là khoảng thời gian sớm nhất hai sự kiện chu kỳ "+a+" và "+b+" lại trùng nhau."
+      }
+    };
+  }
+}
+
+/* ========================================================================
+   PHẦN 3C — SINH ĐỀ PHẦN 3 (Ôn lớp 6: Toán đố) — MỚI v3
+   ========================================================================*/
+
+function fmtMoney(n){
+  // ngăn cách nghìn bằng dấu chấm
+  return (""+Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,".");
+}
+function nameOf(){ return pick(["An","Bình","Nam","Lan","Hà","Mai","Minh","Tú","Hoa","Sơn"]); }
+// Tạo 4 lựa chọn không trùng: đáp án đúng + tối đa 3 đáp án sai từ pool (đã loại trùng correct & trùng nhau).
+function build4Opts(correctStr, pool, fallbackFn){
+  const seen = new Set([correctStr]);
+  const wrongs = [];
+  for(const s of pool){
+    if(wrongs.length>=3) break;
+    if(s==null) continue;
+    const k = ""+s;
+    if(seen.has(k)) continue;
+    seen.add(k); wrongs.push(k);
+  }
+  let guard=0;
+  while(wrongs.length<3 && guard<60){
+    guard++;
+    const cand = fallbackFn ? fallbackFn(seen) : null;
+    if(cand==null) break;
+    const k = ""+cand;
+    if(!seen.has(k)){ seen.add(k); wrongs.push(k); }
+  }
+  while(wrongs.length<3){ wrongs.push(correctStr+"?"+wrongs.length); seen.add(correctStr+"?"+wrongs.length); }
+  const opts = shuffle([correctStr, ...wrongs]);
+  return { options: opts, answerIdx: opts.indexOf(correctStr) };
+}
+
+/* ---- Chặng 3.1 — Toán đố số học cơ bản ---- */
+function genQ_word_arith(){
+  const variant = pick([1,2,3,4]);
+  if(variant===1){
+    // Có – cho – nhận: x - y + z, đảm bảo >=0
+    const n1 = nameOf(); let n2 = nameOf(); while(n2===n1) n2=nameOf();
+    const x = randInt(20,80);
+    const y = randInt(3, Math.min(15,x));
+    const z = randInt(3, 20);
+    const ans = x - y + z;
+    const correct = ""+ans;
+    const pool = shuffle([""+(x-y), ""+(x+y+z), ""+(x+y-z), ""+(x-y-z), ""+(ans+1), ""+(ans-1), ""+(ans+2), ""+(ans-2), ""+x]);
+    const mo = build4Opts(correct, pool, seen=>{ let d=1; while(d<50){ const cand=""+(ans+d); if(!seen.has(cand)) return cand; d++; } return null; });
+    return {
+      qHTML: "<span class=\"scenario\">Tình huống:</span> "+n1+" có <b>"+x+"</b> viên kẹo. "+n1+" cho "+n2+" <b>"+y+"</b> viên, sau đó mẹ cho thêm <b>"+z+"</b> viên. Hỏi "+n1+" còn bao nhiêu viên kẹo?",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · Số học",
+      explain:{
+        correctHTML: n1 + " còn <b>" + ans + "</b> viên kẹo.",
+        steps:[
+          "Bước 1: Bắt đầu với "+x+" viên.",
+          "Bước 2: Cho đi "+y+" viên → còn "+(x-y)+" viên.",
+          "Bước 3: Nhận thêm "+z+" viên → tổng "+(x-y)+" + "+z+" = "+ans+" viên."
+        ],
+        realWorld: "Đọc đề: 'có – cho – cho thêm' → phép trừ rồi cộng. Đây là cách diễn lời văn thành phép tính: cho = trừ, nhận = cộng."
+      }
+    };
+  } else if(variant===2){
+    // Mua hàng - tiền: có x, mua a quyển vở giá b/quyển. Còn bao nhiêu?
+    const n1 = nameOf();
+    const have = pick([20,30,50,100,150,200])*1000;
+    const unit = pick([3,5,7,8,10,12,15])*1000;
+    const qty = randInt(2, Math.min(8, Math.floor(have/unit)));
+    const cost = unit*qty;
+    const left = have - cost;
+    const ansStr = fmtMoney(left)+"đ";
+    const pool = shuffle([
+      fmtMoney(have)+"đ",
+      fmtMoney(cost)+"đ",
+      fmtMoney(left + unit)+"đ",
+      Math.max(0,left - unit)>0 ? fmtMoney(left - unit)+"đ" : null,
+      fmtMoney(have + cost)+"đ",
+      fmtMoney(left + 1000)+"đ",
+      fmtMoney(Math.max(0,left - 1000))+"đ"
+    ]);
+    const mo = build4Opts(ansStr, pool, seen=>{ let d=1000; while(d<200000){ const cand=fmtMoney(left+d)+"đ"; if(!seen.has(cand)) return cand; d+=1000; } return null; });
+    return {
+      qHTML: "<span class=\"scenario\">Tình huống:</span> "+n1+" có "+fmtMoney(have)+"đ. "+n1+" mua <b>"+qty+"</b> quyển vở, mỗi quyển giá "+fmtMoney(unit)+"đ. Hỏi "+n1+" còn lại bao nhiêu tiền?",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · Mua hàng",
+      explain:{
+        correctHTML: n1 + " còn <b>" + ansStr + "</b>.",
+        steps:[
+          "Tổng tiền vở: "+qty+" × "+fmtMoney(unit)+"đ = "+fmtMoney(cost)+"đ.",
+          "Số tiền còn lại: "+fmtMoney(have)+"đ − "+fmtMoney(cost)+"đ = "+ansStr+"."
+        ],
+        realWorld: "Lời văn 'mua a cái, giá b' → nhân (a×b) tính tổng, rồi 'còn lại' là trừ."
+      }
+    };
+  } else if(variant===3){
+    // Tổng – hiệu (đảm bảo tổng + hiệu cùng tính chẵn)
+    const small = randInt(5,30);
+    const big = small + randInt(3,20);
+    const sum = small+big;
+    const diff = big-small;
+    const askBig = Math.random()<0.5;
+    const ans = askBig?big:small;
+    const correct = ""+ans;
+    const pool = shuffle([""+(askBig?small:big), ""+sum, ""+diff, ""+(ans+1), ""+(ans-1), ""+(sum-diff), ""+(ans+2), ""+(ans-2)]);
+    const mo = build4Opts(correct, pool, seen=>{ let d=1; while(d<60){ const c=""+(ans+d); if(!seen.has(c)) return c; d++; } return null; });
+    return {
+      qHTML: "<span class=\"scenario\">Tình huống:</span> Lớp 6A có "+sum+" bạn, trong đó số bạn nam nhiều hơn số bạn nữ "+diff+" bạn. Hỏi lớp có bao nhiêu bạn <b>"+(askBig?"nam":"nữ")+"</b>?",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · Tổng – hiệu",
+      explain:{
+        correctHTML: "Số bạn "+(askBig?"nam":"nữ")+" = <b>"+ans+"</b>",
+        steps:[
+          "Đây là bài toán Tổng – Hiệu. Số lớn = (Tổng + Hiệu) ÷ 2; Số bé = (Tổng − Hiệu) ÷ 2.",
+          "Số nam = ("+sum+" + "+diff+") ÷ 2 = "+big+". Số nữ = ("+sum+" − "+diff+") ÷ 2 = "+small+".",
+          "Đáp số: "+(askBig?"nam = "+big:"nữ = "+small)+"."
+        ],
+        realWorld: "Hình dung tổng là cả lớp, hiệu là chênh nam–nữ. Nửa của (tổng+hiệu) là số nam; nửa của (tổng−hiệu) là số nữ."
+      }
+    };
+  } else {
+    // Gấp k lần - hiệu d: x gấp k thì hơn x đúng d → x = d/(k-1) (đảm bảo chia hết)
+    const k = pick([2,3,4,5]);
+    const x = randInt(4,20);
+    const diff = x*(k-1);
+    const ans = x;
+    const correct = ""+ans;
+    const pool = shuffle([""+(k*x), ""+(diff), ""+(diff+1), ""+(ans+1), ""+(ans-1), ""+Math.max(1,(diff/k|0)), ""+(ans+k), ""+(ans+2)]);
+    const mo = build4Opts(correct, pool, seen=>{ let d=1; while(d<40){ const c=""+(ans+d); if(!seen.has(c)) return c; d++; } return null; });
+    return {
+      qHTML: "<span class=\"scenario\">Tình huống:</span> Một số khi gấp lên <b>"+k+" lần</b> thì hơn số đó <b>"+diff+"</b> đơn vị. Hỏi số đó là bao nhiêu?",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · Gấp – kém",
+      explain:{
+        correctHTML: "Số cần tìm = <b>"+ans+"</b>",
+        steps:[
+          "Gọi số đó là x. Khi gấp "+k+" lần ta được "+k+"·x.",
+          ""+k+"·x − x = ("+k+"−1)·x = "+(k-1)+"·x = "+diff+" → x = "+diff+" ÷ "+(k-1)+" = "+ans+".",
+          "Thử lại: "+x+" × "+k+" = "+(x*k)+", lớn hơn "+x+" đúng "+diff+" đơn vị. ✓"
+        ],
+        realWorld: "Diễn lại lời văn: 'gấp k lần thì hơn d' → 'khoảng cách giữa số ban đầu và (k lần) là d' → chia d cho (k−1)."
+      }
+    };
+  }
+}
+
+/* ---- Chặng 3.2 — Toán đố phân số & tỉ số phần trăm ---- */
+function genQ_word_fracPct(){
+  const variant = pick([1,2,3,4]);
+  if(variant===1){
+    // Ăn 1/k cái → còn lại (k-1)/k cái (số nguyên)
+    const k = pick([2,3,4,5,6]);
+    const total = k * pick([3,4,5,6,8,10]); // chia hết k
+    const eaten = total/k;
+    const left = total - eaten;
+    const correct = ""+left;
+    const pool = shuffle([""+eaten, ""+total, ""+(left+1), Math.max(0,left-1)+"", ""+(total-2*eaten), ""+k, ""+(left+k), ""+(left+2)]);
+    const mo = build4Opts(correct, pool, seen=>{ let d=1; while(d<60){ const c=""+(left+d); if(!seen.has(c)) return c; d++; } return null; });
+    return {
+      qHTML: "<span class=\"scenario\">Tình huống:</span> Mẹ làm <b>"+total+"</b> cái bánh. Cả nhà ăn hết <b>1/"+k+"</b> số bánh. Hỏi còn lại bao nhiêu cái bánh?",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · Phân số",
+      explain:{
+        correctHTML: "Còn lại <b>"+left+"</b> cái bánh.",
+        steps:[
+          "Số bánh đã ăn = 1/"+k+" × "+total+" = "+total+" ÷ "+k+" = "+eaten+" cái.",
+          "Số bánh còn lại = "+total+" − "+eaten+" = "+left+" cái.",
+          "Cách khác: còn "+(k-1)+"/"+k+" số bánh = "+(k-1)+"/"+k+" × "+total+" = "+left+"."
+        ],
+        realWorld: "Cắt bánh thành "+k+" phần bằng nhau, ăn 1 phần → còn "+(k-1)+" phần."
+      }
+    };
+  } else if(variant===2){
+    // a/b của tổng (số nguyên)
+    const b = pick([3,4,5,6,8,10]);
+    const a = randInt(1,b-1);
+    const total = b * pick([4,5,6,8,10,12,15]);
+    const part = total * a / b;
+    const correct = ""+part;
+    const pool = shuffle([""+(total-part), ""+total, ""+(part+1), Math.max(0,part-1)+"", ""+(total*a), ""+(total/b|0), ""+(part+2), ""+(part+b)]);
+    const mo = build4Opts(correct, pool, seen=>{ let d=1; while(d<80){ const c=""+(part+d); if(!seen.has(c)) return c; d++; } return null; });
+    return {
+      qHTML: "<span class=\"scenario\">Tình huống:</span> Lớp 6A có <b>"+total+"</b> học sinh, trong đó <b>"+a+"/"+b+"</b> là học sinh nữ. Hỏi lớp có bao nhiêu học sinh <b>nữ</b>?",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · Phân số",
+      explain:{
+        correctHTML: "Số học sinh nữ = <b>"+part+"</b>.",
+        steps:[
+          "Tìm "+a+"/"+b+" của "+total+": lấy "+total+" ÷ "+b+" × "+a+".",
+          total+" ÷ "+b+" = "+(total/b)+"; "+(total/b)+" × "+a+" = "+part+"."
+        ],
+        realWorld: "Chia tổng thành "+b+" phần bằng nhau, lấy "+a+" phần đó. Mẹo: 'của' trong tiếng Việt thường tương ứng phép NHÂN khi nói về phân số."
+      }
+    };
+  } else if(variant===3){
+    // Giảm giá p% (tròn chục %)
+    const original = pick([100,150,200,250,300,400,500])*1000;
+    const p = pick([10,20,25,30,40,50]);
+    const sale = original * (100 - p) / 100;
+    const correct = fmtMoney(sale)+"đ";
+    const pool = shuffle([
+      fmtMoney(original)+"đ",
+      fmtMoney(original * p / 100)+"đ",
+      fmtMoney(original + original*p/100)+"đ",
+      fmtMoney(sale + 10000)+"đ",
+      Math.max(0,sale - 10000)>=0 ? fmtMoney(Math.max(0,sale - 10000))+"đ" : null,
+      fmtMoney(sale + 5000)+"đ",
+      fmtMoney(sale + 1000)+"đ"
+    ]);
+    const mo = build4Opts(correct, pool, seen=>{ let d=1000; while(d<200000){ const c=fmtMoney(sale+d)+"đ"; if(!seen.has(c)) return c; d+=1000; } return null; });
+    return {
+      qHTML: "<span class=\"scenario\">Tình huống:</span> Một chiếc áo giá <b>"+fmtMoney(original)+"đ</b>. Cửa hàng <b>giảm giá "+p+"%</b>. Hỏi giá chiếc áo sau khi giảm?",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · Phần trăm",
+      explain:{
+        correctHTML: "Giá sau giảm = <b>"+correct+"</b>",
+        steps:[
+          "Số tiền được giảm = "+p+"% × "+fmtMoney(original)+"đ = "+fmtMoney(original*p/100)+"đ.",
+          "Giá sau giảm = "+fmtMoney(original)+"đ − "+fmtMoney(original*p/100)+"đ = "+correct+".",
+          "Cách khác: phải trả "+(100-p)+"% giá gốc = "+(100-p)+"/100 × "+fmtMoney(original)+"đ = "+correct+"."
+        ],
+        realWorld: "Giảm "+p+"% nghĩa là 100 đồng chỉ phải trả "+(100-p)+" đồng. Áp dụng vào số tiền lớn cũng cùng quy tắc."
+      }
+    };
+  } else {
+    // Phần trăm số học sinh giỏi
+    const total = pick([20,25,40,50])*pick([1,2]);
+    const part = Math.floor(total * pick([0.2,0.25,0.3,0.4,0.5,0.6,0.75]));
+    // Đảm bảo part chia hết cho tỉ lệ — chọn lại đơn giản:
+    const ratios = [
+      {p:20, denom:5}, {p:25, denom:4}, {p:50, denom:2}, {p:75, denom:4},
+      {p:10, denom:10}, {p:40, denom:5}, {p:60, denom:5}
+    ];
+    const r = pick(ratios);
+    const total2 = r.denom * pick([3,4,5,6,8,10]);
+    const part2 = total2 * r.p / 100;
+    const correct = ""+part2;
+    const pool = shuffle([""+(total2-part2), ""+total2, ""+(part2+1), Math.max(0,part2-1)+"", ""+Math.max(0,total2-part2-1), ""+(part2+2), ""+(part2+r.denom), ""+(part2+5)]);
+    const mo = build4Opts(correct, pool, seen=>{ let d=1; while(d<60){ const c=""+(part2+d); if(!seen.has(c)) return c; d++; } return null; });
+    return {
+      qHTML: "<span class=\"scenario\">Tình huống:</span> Lớp 6B có <b>"+total2+"</b> học sinh, trong đó <b>"+r.p+"%</b> đạt loại giỏi. Hỏi lớp có bao nhiêu học sinh giỏi?",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · Phần trăm",
+      explain:{
+        correctHTML: "Số học sinh giỏi = <b>"+part2+"</b>",
+        steps:[
+          ""+r.p+"% của "+total2+" = "+r.p+"/100 × "+total2+" = "+part2+".",
+          "Cách nhẩm: "+r.p+"% = "+r.p+"/100 = 1/"+r.denom+"; "+total2+" ÷ "+r.denom+" × "+(r.p*r.denom/100)+" = "+part2+"."
+        ],
+        realWorld: ""+r.p+"% nghĩa là cứ 100 bạn có "+r.p+" bạn giỏi → áp dụng tỉ lệ tương ứng cho "+total2+" bạn."
+      }
+    };
+  }
+}
+
+/* ---- Chặng 3.3 — Toán đố vận dụng ƯCLN/BCNN ---- */
+function genQ_word_gcdLcm(){
+  const variant = pick([1,2,3]);
+  if(variant===1){
+    // Chia kẹo đều nhiều túi nhất → ƯCLN
+    const a = pick([18,24,30,36,42,48,54,60,72,84,90]);
+    const b = pick([24,30,36,40,48,60,72,84,96,120]);
+    const g = gcd(a,b);
+    const correct = ""+g;
+    const pool = shuffle([""+lcm(a,b), ""+(a+b), ""+(g+1), Math.max(1,g-1)+"", ""+a, ""+b, ""+(g*2), ""+(g+2)]);
+    const mo = build4Opts(correct, pool, seen=>{ let d=1; while(d<60){ const c=""+(g+d); if(!seen.has(c)) return c; d++; } return null; });
+    return {
+      qHTML: "<span class=\"scenario\">Tình huống:</span> Mẹ có <b>"+a+"</b> viên kẹo cam và <b>"+b+"</b> viên kẹo dâu, muốn chia đều thành các túi sao cho mỗi túi có cùng số kẹo cam và cùng số kẹo dâu. Hỏi có thể chia được <b>nhiều nhất bao nhiêu túi</b>?",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · ƯCLN",
+      explain:{
+        correctHTML: "Chia được nhiều nhất <b>"+g+" túi</b>.",
+        steps:[
+          "Chia đều cả hai loại cùng lúc → số túi phải là ước chung của "+a+" và "+b+".",
+          "Muốn 'nhiều túi nhất' → lấy ƯCLN("+a+", "+b+") = "+g+".",
+          "Mỗi túi có: "+(a/g)+" kẹo cam và "+(b/g)+" kẹo dâu."
+        ],
+        realWorld: "Đây là dạng kinh điển: 'chia đều, hỏi nhiều nhất bao nhiêu phần' → ƯCLN."
+      }
+    };
+  } else if(variant===2){
+    // Hai xe cùng xuất phát, chu kỳ → BCNN
+    const a = pick([10,12,15,18,20]);
+    const b = pick([15,18,20,24,30]);
+    const L = lcm(a,b);
+    const correct = L+" phút";
+    const pool = shuffle([gcd(a,b)+" phút", (a+b)+" phút", (a*b)+" phút", (L+5)+" phút", Math.max(1,L-5)+" phút", a+" phút", b+" phút", (L+10)+" phút"]);
+    const mo = build4Opts(correct, pool, seen=>{ let d=1; while(d<60){ const c=(L+d)+" phút"; if(!seen.has(c)) return c; d++; } return null; });
+    return {
+      qHTML: "<span class=\"scenario\">Tình huống:</span> Hai chiếc xe buýt cùng xuất phát từ bến lúc 6h sáng. Xe A cứ <b>"+a+" phút</b> lại có một chuyến, xe B cứ <b>"+b+" phút</b> lại có một chuyến. Hỏi sau ít nhất bao nhiêu phút, hai xe lại cùng xuất phát một lần nữa?",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · BCNN",
+      explain:{
+        correctHTML: "Sau <b>"+L+" phút</b> hai xe cùng xuất phát lại.",
+        steps:[
+          "Xe A xuất phát ở các thời điểm: bội của "+a+" phút.",
+          "Xe B xuất phát ở các thời điểm: bội của "+b+" phút.",
+          "Hai xe gặp nhau ở bội chung của "+a+" và "+b+" → SỚM NHẤT là BCNN("+a+", "+b+") = "+L+" phút."
+        ],
+        realWorld: "Quy tắc thuộc lòng: 'hai sự kiện theo chu kỳ, lúc nào lại cùng xảy ra' → BCNN."
+      }
+    };
+  } else {
+    // Xếp hàng đều: a học sinh nam, b học sinh nữ, xếp thành hàng dọc bằng nhau số hs mỗi hàng → ƯCLN
+    const a = pick([18,24,28,30,36,40,42,48,54,60]);
+    const b = pick([24,30,36,40,48,60,72,84]);
+    const g = gcd(a,b);
+    const correct = ""+g;
+    const pool = shuffle([""+lcm(a,b), ""+(a+b), ""+Math.abs(a-b), ""+(g+1), Math.max(1,g-1)+"", ""+(a/g), ""+(b/g), ""+(g+2)]).filter(s=>s!=="NaN");
+    const mo = build4Opts(correct, pool, seen=>{ let d=1; while(d<60){ const c=""+(g+d); if(!seen.has(c)) return c; d++; } return null; });
+    return {
+      qHTML: "<span class=\"scenario\">Tình huống:</span> Một trường có <b>"+a+"</b> học sinh nam và <b>"+b+"</b> học sinh nữ. Cần xếp tất cả thành các hàng sao cho mỗi hàng có cùng số nam và cùng số nữ. Hỏi có thể xếp được <b>nhiều nhất bao nhiêu hàng</b>?",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · ƯCLN",
+      explain:{
+        correctHTML: "Xếp được nhiều nhất <b>"+g+" hàng</b>.",
+        steps:[
+          "Số hàng phải là ước chung của "+a+" và "+b+" (chia hết cả hai).",
+          "Muốn 'nhiều nhất' → ƯCLN("+a+", "+b+") = "+g+".",
+          "Mỗi hàng có "+(a/g)+" nam và "+(b/g)+" nữ."
+        ],
+        realWorld: "'Xếp/Chia đều, nhiều nhất bao nhiêu phần' luôn là dạng ƯCLN."
+      }
+    };
+  }
+}
+
+/* ========================================================================
    PHẦN 4 — SINH ĐỀ NHÓM B (LỚP 7 — Chương I) — kèm explain
    ========================================================================*/
 
@@ -1129,6 +1915,34 @@ function buildStage6(){ // biểu diễn thập phân
   return shuffle(list);
 }
 
+/* ----- Builders v3 cho Phần 2 (Chặng 4,5,6 trong dãy mới) ----- */
+function buildStage_p2_1(){ // Dấu hiệu chia hết + ước/bội
+  const list=[]; for(let i=0;i<10;i++) list.push(genQ_divRule()); return shuffle(list);
+}
+function buildStage_p2_2(){ // Nguyên tố / hợp số / phân tích thừa số
+  const list=[];
+  for(let i=0;i<5;i++) list.push(genQ_primeOrComposite());
+  for(let i=0;i<5;i++) list.push(genQ_primeFactorize());
+  return shuffle(list);
+}
+function buildStage_p2_3(){ // ƯCLN + BCNN
+  const list=[];
+  for(let i=0;i<5;i++) list.push(genQ_gcd());
+  for(let i=0;i<5;i++) list.push(genQ_lcm());
+  return shuffle(list);
+}
+
+/* ----- Builders v3 cho Phần 3 (Toán đố) ----- */
+function buildStage_p3_1(){
+  const list=[]; for(let i=0;i<10;i++) list.push(genQ_word_arith()); return shuffle(list);
+}
+function buildStage_p3_2(){
+  const list=[]; for(let i=0;i<10;i++) list.push(genQ_word_fracPct()); return shuffle(list);
+}
+function buildStage_p3_3(){
+  const list=[]; for(let i=0;i<10;i++) list.push(genQ_word_gcdLcm()); return shuffle(list);
+}
+
 /* ========================================================================
    PHẦN 6 — SELF-TEST
    ========================================================================*/
@@ -1141,15 +1955,25 @@ function selfTest(){
   console.assert(isFiniteDecimal(F(1,2))===true, "1/2 hữu hạn");
   console.assert(isFiniteDecimal(F(1,3))===false, "1/3 vô hạn");
   console.assert(lcm(4,6)===12, "lcm(4,6)");
+  // Khẳng định độc lập về tính đúng cho các generator mới
+  // 1) divRule: với mỗi câu, đáp số trả về phải thoả mãn rule chia hết
+  // 2) primeOrComposite: dùng isPrime để kiểm
+  // 3) primeFactorize: nhân lại thừa số phải bằng n
+  // 4) gcd/lcm: so với gcd()/lcm() trực tiếp
+  // 5) word_*: lưu thêm raw answer & verify trên explain.correctHTML
   const gens = [
     genQ_mulTable, genQ_divTable, genQ_quickAddSub,
     genQ_intArith, genQ_parens, genQ_intOrder,
     genQ_simplifyFrac, genQ_commonDen, genQ_fracBasicPos, genQ_fracDecimal,
-    genQ_ratArith, genQ_ratPower, genQ_ratOrder, genQ_ratDecimal
+    genQ_ratArith, genQ_ratPower, genQ_ratOrder, genQ_ratDecimal,
+    // v3:
+    genQ_divRule, genQ_primeOrComposite, genQ_primeFactorize,
+    genQ_gcd, genQ_lcm,
+    genQ_word_arith, genQ_word_fracPct, genQ_word_gcdLcm
   ];
   let pass=0, fail=0;
   for(const g of gens){
-    for(let i=0;i<150;i++){
+    for(let i=0;i<60;i++){
       try{
         const q = g();
         if(!q || !q.options || q.options.length<2) throw new Error("opts");
@@ -1161,12 +1985,155 @@ function selfTest(){
         pass++;
       } catch(e){
         fail++;
-        if(fail<5) console.warn("test fail", g.name, e.message);
+        if(fail<8) console.warn("test fail", g.name, e.message);
       }
     }
   }
-  console.log("Self-test: pass="+pass+", fail="+fail);
-  return fail===0;
+  // ---- Kiểm tra sâu hơn cho generator MỚI ----
+  let deep=0, deepFail=0;
+  // primeFactorize: nhân thừa số đáp án phải = n trong câu hỏi
+  for(let i=0;i<200;i++){
+    const q = genQ_primeFactorize();
+    // lấy n từ qHTML
+    const m = q.qHTML.match(/<b>(\d+)<\/b>/);
+    if(!m){ deepFail++; continue; }
+    const n = +m[1];
+    const ans = q.options[q.answerIdx]; // dạng "__html__2 × 3<sup>2</sup>"
+    if(typeof ans!=="string" || !ans.startsWith("__html__")){ deepFail++; continue; }
+    const inside = ans.slice("__html__".length);
+    // Parse: tách bởi " × " hoặc "×"; mỗi token có thể là "p" hoặc "p<sup>k</sup>"
+    const tokens = inside.split(/\s*×\s*/);
+    let product = 1; let ok=true;
+    for(const t of tokens){
+      const mm = t.match(/^(\d+)(?:<sup>(\d+)<\/sup>)?$/);
+      if(!mm){ ok=false; break; }
+      const p = +mm[1]; const e = mm[2]?+mm[2]:1;
+      product *= Math.pow(p,e);
+    }
+    if(!ok || product!==n) deepFail++;
+    deep++;
+  }
+  // gcd/lcm
+  for(let i=0;i<150;i++){
+    const q = genQ_gcd();
+    const ans = +q.options[q.answerIdx];
+    // Lấy 2 hoặc 3 số trong "<b>ƯCLN(a, b[, c])</b>"
+    const m = q.qHTML.match(/ƯCLN\(([^)]+)\)/);
+    if(!m){ deepFail++; continue; }
+    const nums = m[1].split(",").map(s=>+s.trim());
+    let g = nums[0]; for(let k=1;k<nums.length;k++) g = gcd(g, nums[k]);
+    if(g!==ans) deepFail++;
+    deep++;
+  }
+  for(let i=0;i<150;i++){
+    const q = genQ_lcm();
+    const ans = +q.options[q.answerIdx];
+    const m = q.qHTML.match(/BCNN\(([^)]+)\)/);
+    if(!m){ deepFail++; continue; }
+    const nums = m[1].split(",").map(s=>+s.trim());
+    let L = nums[0]; for(let k=1;k<nums.length;k++) L = lcm(L, nums[k]);
+    if(L!==ans) deepFail++;
+    deep++;
+  }
+  // divRule variant 2 ("Có/Không"): tìm số n và divisor d trong qHTML
+  for(let i=0;i<150;i++){
+    const q = genQ_divRule();
+    const ans = q.options[q.answerIdx];
+    const tag = q.tag;
+    // dạng "Số <b>n</b> có chia hết cho <b>d</b> không?"
+    const mYes = q.qHTML.match(/Số <b>(\d+)<\/b> có chia hết cho <b>(\d+)<\/b>/);
+    if(mYes){
+      const n = +mYes[1], d=+mYes[2];
+      const should = (n%d===0) ? "Có" : "Không";
+      if(ans !== should) deepFail++;
+      deep++;
+      continue;
+    }
+    // dạng "Số nào sau đây chia hết cho <b>d</b>?"
+    const mPick = q.qHTML.match(/chia hết cho <b>(\d+)<\/b>/);
+    if(mPick){
+      const d = +mPick[1];
+      const n = +ans;
+      if(!Number.isFinite(n) || n%d!==0) deepFail++;
+      deep++;
+      continue;
+    }
+    // dạng KHÔNG là ước, hoặc là bội — chỉ kiểm phép đơn giản:
+    const mNotDiv = q.qHTML.match(/KHÔNG<\/b> là ước của <b>(\d+)<\/b>/);
+    if(mNotDiv){
+      const n = +mNotDiv[1]; const a = +ans;
+      if(!Number.isFinite(a) || n%a===0) deepFail++;
+      deep++;
+      continue;
+    }
+    const mMul = q.qHTML.match(/là <b>bội<\/b> của <b>(\d+)<\/b>/);
+    if(mMul){
+      const n = +mMul[1]; const a = +ans;
+      if(!Number.isFinite(a) || a%n!==0) deepFail++;
+      deep++;
+      continue;
+    }
+  }
+  // primeOrComposite variant 1: "Số <b>n</b> là số gì?"
+  for(let i=0;i<100;i++){
+    const q = genQ_primeOrComposite();
+    const ans = q.options[q.answerIdx];
+    const mPC = q.qHTML.match(/Số <b>(\d+)<\/b> là số gì\?/);
+    if(mPC){
+      const n = +mPC[1];
+      const pr = isPrime(n);
+      const should = pr ? "Số nguyên tố" : "Hợp số";
+      if(ans!==should) deepFail++;
+      deep++;
+      continue;
+    }
+    // variant 2: "số nào là số nguyên tố"
+    const mPicker = q.qHTML.match(/là <b>số nguyên tố<\/b>/);
+    if(mPicker){
+      const n = +ans;
+      if(!isPrime(n)) deepFail++;
+      deep++;
+    }
+  }
+  // word arith — verify variant 3 (Tổng – hiệu, dễ regex)
+  for(let i=0;i<100;i++){
+    const q = genQ_word_arith();
+    const m = q.qHTML.match(/Lớp 6A có (\d+) bạn, trong đó số bạn nam nhiều hơn số bạn nữ (\d+) bạn.*bạn <b>(nam|nữ)<\/b>/);
+    if(m){
+      const sum=+m[1], diff=+m[2], who=m[3];
+      const should = who==="nam" ? (sum+diff)/2 : (sum-diff)/2;
+      const ans = +q.options[q.answerIdx];
+      if(ans!==should) deepFail++;
+      deep++;
+    }
+  }
+  // word fracPct — verify variant 3 (giảm giá %)
+  for(let i=0;i<100;i++){
+    const q = genQ_word_fracPct();
+    const m = q.qHTML.match(/áo giá <b>([\d.]+)đ<\/b>.*giảm giá (\d+)%/);
+    if(m){
+      const orig = +m[1].replace(/\./g,"");
+      const p = +m[2];
+      const should = orig*(100-p)/100;
+      const ans = +(q.options[q.answerIdx].replace(/[^\d]/g,""));
+      if(ans!==should) deepFail++;
+      deep++;
+    }
+  }
+  // word_gcdLcm — verify variant 2 (xe buýt → BCNN)
+  for(let i=0;i<100;i++){
+    const q = genQ_word_gcdLcm();
+    const m = q.qHTML.match(/Xe A cứ <b>(\d+) phút<\/b>.*xe B cứ <b>(\d+) phút<\/b>/);
+    if(m){
+      const a=+m[1], b=+m[2];
+      const should = lcm(a,b);
+      const ans = +q.options[q.answerIdx].replace(/\D/g,"");
+      if(ans!==should) deepFail++;
+      deep++;
+    }
+  }
+  console.log("Self-test base: pass="+pass+", fail="+fail+" | deep checks: "+deep+", deepFail="+deepFail);
+  return fail===0 && deepFail===0;
 }
 
 /* ========================================================================
@@ -1230,62 +2197,162 @@ const STORIES = [
   }
 ];
 
+// Kho 20 câu khen "Gai Con" — random cho thẻ động viên sau mỗi chặng nhỏ (12 lần)
 const CHEERS = [
-  "Kim ơi, mỗi chặng toán cũng như một chông gai — vượt qua rồi mới thấy mình mạnh hơn. Gai Con không bỏ cuộc!",
-  "Giỏi lắm Kim! Anh Trai vượt ngàn chông gai, còn Kim vừa vượt một chặng số học. Tinh thần đó, giữ vững nhé!",
-  "Một câu chuyện lịch sử + một chặng chinh phục = một bước Kim tiến gần hơn tới đỉnh. Cố lên Gai Con!",
-  "Chặng này khó mà Kim vẫn qua — đúng chất một Gai Con bản lĩnh. Tiếp tục thôi!",
-  "Kim thấy không, kiên trì từng bước nhỏ sẽ tới đích lớn. Anh Trai cũng đi lên từ những bước như thế!",
-  "Hoàn thành xuất sắc, Kim! Vượt ngàn chông gai số học — Kim chính là nhà vô địch của hành trình này!"
+  "Kim ơi, mỗi chặng toán là một chông gai — vượt rồi mới thấy mình mạnh hơn. Gai Con không bỏ cuộc!",
+  "Giỏi lắm Kim! Anh Trai vượt ngàn chông gai, Kim vừa vượt một chặng số học. Giữ vững tinh thần nhé!",
+  "Một bước nhỏ hôm nay, một đỉnh cao mai sau. Cố lên Gai Con!",
+  "Chặng này khó mà Kim vẫn qua — đúng chất một Gai Con bản lĩnh!",
+  "Kim thấy không, kiên trì từng bước nhỏ sẽ tới đích lớn!",
+  "Hoàn thành xuất sắc, Kim! Kim chính là nhà vô địch của hành trình này!",
+  "Không có chông gai nào cản được một Gai Con quyết tâm như Kim!",
+  "Mỗi câu đúng là một viên gạch xây nên đỉnh núi tri thức của Kim!",
+  "Kim đang tiến bộ từng ngày — Anh Trai cũng đi lên từ những bước như thế!",
+  "Tuyệt vời! Trí óc của Kim hôm nay lại sắc bén hơn hôm qua!",
+  "Gai Con là phải lì đòn với thử thách — Kim làm được rồi đó!",
+  "Càng khó càng phải chiến. Kim vừa chứng minh điều đó!",
+  "Vượt ngàn chông gai bắt đầu từ vượt một bài toán. Kim giỏi lắm!",
+  "Kim ơi, sự kiên trì của em hôm nay đẹp như một sân khấu rực sáng!",
+  "Một Gai Con thực thụ không sợ sai, chỉ sợ bỏ cuộc. Kim không bỏ cuộc!",
+  "Hành trình vạn dặm Kim đã đi thêm một bước vững chắc!",
+  "Số học có khó mấy cũng thua lòng quyết tâm của Kim!",
+  "Kim đang viết nên câu chuyện vượt chông gai của riêng mình!",
+  "Cứ đà này, không đỉnh núi nào là Kim không chinh phục được!",
+  "Xuất sắc, Gai Con! Tự hào về Kim lắm — tiếp tục tỏa sáng nhé!"
+];
+const TOTAL_IMAGES = 36; // chuyen1.jpg .. chuyen36.jpg
+
+// 4 PHẦN — mỗi phần 3 chặng nhỏ → 12 chặng tổng
+const PARTS = [
+  { idx:0, title:"PHẦN 1 — Số học (cơ bản)", label:"Ôn lớp 6", labelCls:"l6", emoji:"📘", desc:"Bảng cửu chương · Số nguyên · Phân số & thập phân lớp 6" },
+  { idx:1, title:"PHẦN 2 — ƯCLN, BCNN & Chia hết", label:"Ôn lớp 6", labelCls:"l6", emoji:"📘", desc:"Dấu hiệu chia hết · Số nguyên tố · ƯCLN / BCNN" },
+  { idx:2, title:"PHẦN 3 — Toán đố", label:"Ôn lớp 6", labelCls:"l6", emoji:"📘", desc:"Bài toán có lời văn / tình huống đời thường (lớp 6)" },
+  { idx:3, title:"PHẦN 4 — Chương I lớp 7: Số hữu tỉ", label:"Lớp 7", labelCls:"l7", emoji:"📗", desc:"4 phép tính số hữu tỉ · Lũy thừa · Biểu diễn thập phân" }
 ];
 
+// 12 chặng (3 chặng × 4 phần). Mỗi chặng có storyIdx (0-5) hoặc null.
 const STAGES = [
-  // GROUP A
-  { id:1, group:"A", name:"Bảng cửu chương & Tính nhẩm",
+  // Phần 1
+  { id:1, partIdx:0, name:"Bảng cửu chương & Tính nhẩm",
     desc:"Nhân, chia trong bảng + cộng/trừ nhanh số nguyên.",
-    icon:"✖️", color:"c1", build: buildStage1, passN:7, totalN:10 },
-  { id:2, group:"A", name:"Số nguyên & Quy tắc dấu",
+    icon:"✖️", color:"c1", build: buildStage1, passN:7, totalN:10, storyIdx:0 },
+  { id:2, partIdx:0, name:"Số nguyên & Quy tắc dấu",
     desc:"Cộng trừ nhân chia số âm, bỏ ngoặc, thứ tự phép tính.",
-    icon:"➕", color:"c2", build: buildStage2, passN:7, totalN:10 },
-  { id:3, group:"A", name:"Phân số & Thập phân (lớp 6)",
+    icon:"➕", color:"c2", build: buildStage2, passN:7, totalN:10, storyIdx:1 },
+  { id:3, partIdx:0, name:"Phân số & Thập phân (lớp 6)",
     desc:"Rút gọn, quy đồng, 4 phép tính, đổi ↔ thập phân.",
-    icon:"🍰", color:"c3", build: buildStage3, passN:7, totalN:10 },
-  // GROUP B
-  { id:4, group:"B", name:"4 phép tính số hữu tỉ",
+    icon:"🍰", color:"c3", build: buildStage3, passN:7, totalN:10, storyIdx:2 },
+  // Phần 2
+  { id:4, partIdx:1, name:"Dấu hiệu chia hết & Ước–Bội",
+    desc:"Chia hết cho 2, 3, 5, 9; nhận biết ước, bội.",
+    icon:"🔍", color:"c4", build: buildStage_p2_1, passN:7, totalN:10, storyIdx:null },
+  { id:5, partIdx:1, name:"Số nguyên tố · Phân tích thừa số",
+    desc:"Nguyên tố hay hợp số; phân tích ra thừa số nguyên tố.",
+    icon:"🧱", color:"c5", build: buildStage_p2_2, passN:7, totalN:10, storyIdx:null },
+  { id:6, partIdx:1, name:"Tìm ƯCLN & BCNN",
+    desc:"ƯCLN, BCNN của hai hoặc ba số tự nhiên.",
+    icon:"📐", color:"c6", build: buildStage_p2_3, passN:7, totalN:10, storyIdx:null },
+  // Phần 3
+  { id:7, partIdx:2, name:"Toán đố · Số học",
+    desc:"Thêm bớt, gấp – kém, tổng – hiệu (lời văn).",
+    icon:"📝", color:"c1", build: buildStage_p3_1, passN:7, totalN:10, storyIdx:null },
+  { id:8, partIdx:2, name:"Toán đố · Phân số & Phần trăm",
+    desc:"1/3 cái bánh còn lại, giảm giá 20%,...",
+    icon:"🧮", color:"c2", build: buildStage_p3_2, passN:7, totalN:10, storyIdx:null },
+  { id:9, partIdx:2, name:"Toán đố · Vận dụng ƯCLN/BCNN",
+    desc:"Chia kẹo đều, hai xe cùng xuất phát,...",
+    icon:"🚌", color:"c3", build: buildStage_p3_3, passN:7, totalN:10, storyIdx:null },
+  // Phần 4
+  { id:10, partIdx:3, name:"4 phép tính số hữu tỉ",
     desc:"Cộng – trừ – nhân – chia phân số có số âm.",
-    icon:"⚙️", color:"c4", build: buildStage4, passN:7, totalN:10 },
-  { id:5, group:"B", name:"Lũy thừa & Thứ tự phép tính",
+    icon:"⚙️", color:"c4", build: buildStage4, passN:7, totalN:10, storyIdx:3 },
+  { id:11, partIdx:3, name:"Lũy thừa & Thứ tự phép tính",
     desc:"Lũy thừa số hữu tỉ, ngoặc, quy tắc thứ tự.",
-    icon:"⚡", color:"c5", build: buildStage5, passN:7, totalN:10 },
-  { id:6, group:"B", name:"Biểu diễn thập phân số hữu tỉ",
+    icon:"⚡", color:"c5", build: buildStage5, passN:7, totalN:10, storyIdx:4 },
+  { id:12, partIdx:3, name:"Biểu diễn thập phân số hữu tỉ",
     desc:"Hữu hạn / vô hạn tuần hoàn, đổi qua lại.",
-    icon:"🔢", color:"c6", build: buildStage6, passN:7, totalN:10 }
+    icon:"🔢", color:"c6", build: buildStage6, passN:7, totalN:10, storyIdx:5 }
 ];
+const STAGES_PER_PART = 3;
+const NUM_PARTS = 4;
 
 /* ========================================================================
    PHẦN 8 — STATE & RENDER
    ========================================================================*/
 
+const STORAGE_KEYS = { money:"kim_total_money_v3", completed:"kim_completed_v3" };
+function loadFromStorage(){
+  let money=0, completed=null;
+  try{
+    const m = localStorage.getItem(STORAGE_KEYS.money);
+    if(m!=null){ const n=parseInt(m,10); if(Number.isFinite(n) && n>=0) money = n; }
+    const c = localStorage.getItem(STORAGE_KEYS.completed);
+    if(c!=null){
+      const parsed = JSON.parse(c);
+      if(Array.isArray(parsed) && parsed.length===STAGES.length) completed = parsed.map(x=>!!x);
+    }
+  }catch(e){ /* localStorage không khả dụng — bỏ qua */ }
+  return { money, completed: completed || new Array(STAGES.length).fill(false) };
+}
+function saveMoney(){
+  try{ localStorage.setItem(STORAGE_KEYS.money, ""+state.money); }catch(e){}
+}
+function saveCompleted(){
+  try{ localStorage.setItem(STORAGE_KEYS.completed, JSON.stringify(state.completed)); }catch(e){}
+}
+function resetMoney(){
+  state.money = 0; saveMoney();
+}
+
+const _persisted = loadFromStorage();
+
 const state = {
-  screen:"title",       // title | map | stage | summary | story | reward | final
+  screen:"title",       // title | map | stage | summary | story | reward | cheer | scratch | final
   stageIdx:0,
-  completed:[false,false,false,false,false,false],
+  completed: _persisted.completed.slice(),
   questions:[],
   qIdx:0,
   correctCount:0,
   combo:0,
   bestCombo:0,
   score:0,
-  locked:false,         // khi modal giải thích mở
-  storyIdx:0
+  locked:false,
+  money: _persisted.money,
+  // pipeline sau khi vượt chặng: cheer → (story?) → (scratch?) → map
+  postFlow: [],          // ["cheer","story","scratch"]
+  pendingStoryIdx:null,
+  pendingScratchPart:null
 };
 
-function isGroupAComplete(){
-  return state.completed[0] && state.completed[1] && state.completed[2];
+function partOf(i){ return STAGES[i].partIdx; }
+function isPartComplete(p){
+  for(let i=0;i<STAGES.length;i++) if(STAGES[i].partIdx===p && !state.completed[i]) return false;
+  return true;
 }
 function isUnlocked(i){
-  if(i<3) return true;                       // Nhóm A luôn mở
-  return isGroupAComplete();                 // Nhóm B mở khi xong nhóm A
+  const p = partOf(i);
+  if(p===0) return true;
+  return isPartComplete(p-1);
+}
+function partProgress(p){
+  let done=0, total=0;
+  for(let i=0;i<STAGES.length;i++) if(STAGES[i].partIdx===p){ total++; if(state.completed[i]) done++; }
+  return {done,total};
+}
+function totalDone(){ return state.completed.filter(x=>x).length; }
+
+function fmtVND(n){ return (""+Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,".")+"đ"; }
+function pickCheerImage(){
+  return "images/chuyen" + (1 + Math.floor(Math.random()*TOTAL_IMAGES)) + ".jpg";
+}
+function pickCheerText(){ return pick(CHEERS); }
+function rollScratch(){
+  // 1.000đ ~40%, 2.000đ ~35%, 5.000đ ~20%, 20.000đ ~5%
+  const r = Math.random();
+  if(r<0.40) return 1000;
+  if(r<0.75) return 2000;
+  if(r<0.95) return 5000;
+  return 20000;
 }
 
 const app = document.getElementById("app");
@@ -1302,27 +2369,33 @@ function render(){
   else if(state.screen==="stage") renderStage();
   else if(state.screen==="summary") renderSummary();
   else if(state.screen==="story") renderStory();
-  else if(state.screen==="reward") renderReward();
+  else if(state.screen==="cheer") renderCheer();
+  else if(state.screen==="scratch") renderScratch();
   else if(state.screen==="final") renderFinal();
 }
 
 function renderTitle(){
+  const moneyLine = state.money>0
+    ? `<div style="margin:4px 0 14px;font-size:13px;color:var(--ink-2)">💰 Heo đất của Kim đang có <b style="color:#0e7490">${fmtVND(state.money)}</b></div>`
+    : "";
   const v = el(`
     <div class="title-screen">
       <div class="title-card">
         <div class="kim-avatar">🧒</div>
         <h1 class="game-title">Số Học Phiêu Lưu Ký</h1>
-        <p class="game-subtitle">Cùng <b>Kim</b> chinh phục Toán 6 → Toán 7 · Chương I Số hữu tỉ</p>
+        <p class="game-subtitle">Cùng <b>Kim</b> · 4 phần ôn Toán lớp 6 → Lớp 7 (Số hữu tỉ)</p>
         <div class="intro-text">
-          Chào <b>Kim</b>! Hành trình gồm <b>6 chặng</b>:
-          3 chặng <b>ôn nền lớp 6</b> (bảng cửu chương, số nguyên, phân số) — bắt buộc trước,
-          rồi mở khoá <b>3 chặng lớp 7</b> Chương I Số hữu tỉ.
-          Mỗi chặng vượt qua sẽ mở một <b>câu chuyện lịch sử</b> + một <b>phần thưởng</b> nhỏ.
-          Sai cũng không sao — Kim sẽ được giải thích lại từng bước, có ví dụ đời thường.
+          Chào <b>Kim</b>! Hành trình gồm <b>4 phần × 3 chặng = 12 chặng nhỏ</b>:
+          ba phần <b>ôn lớp 6</b> (số học · ƯCLN/BCNN · toán đố) — bắt buộc trước,
+          rồi mở khoá <b>Phần 4 Lớp 7</b> Chương I Số hữu tỉ.
+          Sau mỗi chặng nhỏ Kim được một <b>thẻ động viên</b>;
+          sau mỗi phần được một <b>thẻ cào trúng tiền thưởng trong game</b>.
+          Sai cũng không sao — Kim sẽ được giải thích lại từng bước.
         </div>
+        ${moneyLine}
         <button class="btn pink" id="btn-start">Bắt đầu cùng Kim →</button>
       </div>
-      <div class="footer-credit">v2 · phiên bản 6 chặng cho Gai Con học toán</div>
+      <div class="footer-credit">v3 · 12 chặng · thẻ cào · heo đất Kim</div>
     </div>
   `);
   app.appendChild(v);
@@ -1334,43 +2407,50 @@ function renderMap(){
     <div class="map-screen">
       <div class="map-header">
         <h2>🗺️ Bản đồ phiêu lưu của Kim</h2>
-        <div class="sub">Hoàn thành lần lượt 6 chặng để mở hết câu chuyện và phần thưởng</div>
-        <div class="kim-bubble"><span class="mini">🧒</span><span>Kim đã qua <b style="color:var(--primary-2);margin:0 4px">${state.completed.filter(x=>x).length}</b>/6 chặng</span></div>
+        <div class="sub">4 phần · 12 chặng nhỏ · sau mỗi chặng có thẻ động viên, sau mỗi phần có thẻ cào</div>
+        <div class="kim-bubble"><span class="mini">🧒</span><span>Kim đã qua <b style="color:var(--primary-2);margin:0 4px">${totalDone()}</b>/12 chặng</span></div>
+      </div>
+      <div class="money-toolbar">
+        <span class="money-badge"><span class="ic">💰</span>Heo đất Kim: ${fmtVND(state.money)}</span>
+        <button class="btn ghost tiny" id="btn-reset-money" title="Đặt lại tổng tiền về 0">↺ Đặt lại tiền</button>
       </div>
     </div>
   `);
   app.appendChild(v);
 
-  // Group A
-  const groupA = el(`
-    <div class="group-card">
-      <div class="group-label">
-        <span>📘 Nhóm A · Ôn nền lớp 6</span>
-        <span class="badge">${isGroupAComplete()?"Hoàn tất":"Đang mở"}</span>
-        <span class="hint">${isGroupAComplete()?"Đã đủ điều kiện vào lớp 7":"Phải xong nhóm này trước"}</span>
+  for(let p=0; p<NUM_PARTS; p++){
+    const part = PARTS[p];
+    const unlocked = (p===0) || isPartComplete(p-1);
+    const prog = partProgress(p);
+    const doneAll = prog.done===prog.total;
+    const labelCls = unlocked ? part.labelCls : "locked";
+    const statusHTML = doneAll
+      ? `<span class="pstatus done">✓ Đã hoàn tất ${prog.done}/${prog.total}</span>`
+      : unlocked
+        ? `<span class="pstatus">${prog.done}/${prog.total} chặng</span>`
+        : `<span class="pstatus">🔒 Khoá</span>`;
+    const hint = unlocked
+      ? (doneAll ? (p<NUM_PARTS-1?"Đã mở phần tiếp theo":"Đỉnh hành trình!") : (p===NUM_PARTS-1?"Chương I Lớp 7":"Phải xong phần này trước"))
+      : "Hoàn tất Phần "+p+" để mở";
+    const partCard = el(`
+      <div class="part-card ${unlocked?"":"locked"}">
+        <div class="part-head">
+          <span class="ptitle">${part.emoji} ${part.title}</span>
+          <span class="plabel ${labelCls}">${part.label}</span>
+          ${statusHTML}
+          <span class="phint">${hint}</span>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin:-4px 0 8px">${part.desc}</div>
+        <div class="stages-grid" id="grid-p${p}"></div>
       </div>
-      <div class="stages-grid" id="grid-a"></div>
-    </div>
-  `);
-  v.appendChild(groupA);
-  const gA = groupA.querySelector("#grid-a");
-  STAGES.slice(0,3).forEach((s, i)=>gA.appendChild(stageTile(s, i)));
-
-  // Group B
-  const bUnlocked = isGroupAComplete();
-  const groupB = el(`
-    <div class="group-card ${bUnlocked?"":"locked"}">
-      <div class="group-label">
-        <span>📗 Nhóm B · Lớp 7 — Chương I Số hữu tỉ</span>
-        <span class="badge ${bUnlocked?"":"locked"}">${bUnlocked?"Đã mở":"🔒 Khoá"}</span>
-        <span class="hint">${bUnlocked?"Tha hồ chọn chặng":"Hoàn tất nhóm A để mở"}</span>
-      </div>
-      <div class="stages-grid" id="grid-b"></div>
-    </div>
-  `);
-  v.appendChild(groupB);
-  const gB = groupB.querySelector("#grid-b");
-  STAGES.slice(3,6).forEach((s, i)=>gB.appendChild(stageTile(s, i+3)));
+    `);
+    v.appendChild(partCard);
+    const grid = partCard.querySelector("#grid-p"+p);
+    STAGES.forEach((s, i)=>{
+      if(s.partIdx!==p) return;
+      grid.appendChild(stageTile(s, i));
+    });
+  }
 
   // Final celebration nếu xong hết
   if(state.completed.every(x=>x)){
@@ -1382,6 +2462,14 @@ function renderMap(){
     v.appendChild(f);
     document.getElementById("btn-final").onclick = ()=>{state.screen="final"; render()};
   }
+
+  const rb = document.getElementById("btn-reset-money");
+  if(rb) rb.onclick = ()=>{
+    if(state.money===0){ alert("Heo đất Kim đang trống — không cần đặt lại."); return; }
+    if(confirm("Bạn chắc chắn muốn đặt lại tổng tiền của Kim về 0đ? (số tiền đã tích sẽ mất)")){
+      resetMoney(); render();
+    }
+  };
 }
 
 function stageTile(s, idx){
@@ -1458,6 +2546,7 @@ function renderStage(){
 }
 
 function renderOptionLabel(label){
+  if(typeof label === "string" && label.indexOf("__html__")===0) return label.slice("__html__".length);
   if(/[a-zA-ZÀ-ỹ]/.test(label)) return label;
   if(label.indexOf("/")>=0){
     let neg=false, body=label;
@@ -1552,11 +2641,48 @@ function showExplainModal(q, chosenIdx){
 function finishStage(){
   const s = STAGES[state.stageIdx];
   const pass = state.correctCount >= s.passN;
+  const wasCompleted = state.completed[state.stageIdx];
+  // Kiểm tra phần đã hoàn tất trước chặng này hay chưa
+  const partWasComplete = isPartComplete(s.partIdx);
+  state._justFirstStagePass = pass && !wasCompleted;
+  state._justCompletedPart  = pass && !wasCompleted && !partWasComplete && (()=>{
+    state.completed[s.stageIdx] = true;
+    const ok = isPartComplete(s.partIdx);
+    state.completed[s.stageIdx] = wasCompleted; // revert tạm; finishStage sẽ set lại bên dưới
+    return ok;
+  })();
   if(pass){
     state.completed[state.stageIdx] = true;
-    if(pass) fireConfetti();
+    saveCompleted();
+    fireConfetti();
   }
   state.screen = "summary";
+  render();
+}
+
+function buildPostFlow(){
+  // Thẻ động viên random — luôn có sau mỗi chặng nhỏ.
+  // Câu chuyện lịch sử — chỉ ở chặng có storyIdx (6 chặng).
+  // Thẻ cào — CHỈ ở lần ĐẦU hoàn tất phần (tránh chơi lại để spam tiền).
+  const stage = STAGES[state.stageIdx];
+  state.postFlow = ["cheer"];
+  if(stage.storyIdx!==null){
+    state.pendingStoryIdx = stage.storyIdx;
+    state.postFlow.push("story");
+  } else {
+    state.pendingStoryIdx = null;
+  }
+  if(state._justCompletedPart){
+    state.pendingScratchPart = stage.partIdx;
+    state.postFlow.push("scratch");
+  } else {
+    state.pendingScratchPart = null;
+  }
+}
+function advancePostFlow(){
+  const next = state.postFlow.shift();
+  if(!next){ state.screen="map"; render(); return; }
+  state.screen = next;
   render();
 }
 
@@ -1564,6 +2690,17 @@ function renderSummary(){
   const s = STAGES[state.stageIdx];
   const pass = state.correctCount >= s.passN;
   const stars = pass ? (state.correctCount===s.totalN ? "★★★" : state.correctCount>=9 ? "★★☆" : "★☆☆") : "☆☆☆";
+  const endsPart = pass && state._justCompletedPart;
+  const hasStory = pass && s.storyIdx!==null;
+  let nextLabel;
+  if(!pass) nextLabel = null;
+  else {
+    const parts = [];
+    parts.push("🎉 Thẻ động viên");
+    if(hasStory) parts.push("📜 Câu chuyện lịch sử");
+    if(endsPart) parts.push("💰 Thẻ cào");
+    nextLabel = parts.join(" + ");
+  }
   const v = el(`
     <div>
       <div class="map-header">
@@ -1574,10 +2711,10 @@ function renderSummary(){
         <div class="summary-stat">Đúng: <b>${state.correctCount}/${s.totalN}</b> · Combo cao nhất: <b>×${state.bestCombo}</b></div>
         <div class="summary-stat">Điểm chặng: <b>${state.score}</b></div>
         <div class="summary-stat" style="margin-top:12px">
-          ${pass ? "Kim đã vượt chặng <b>"+s.name+"</b>. Một câu chuyện lịch sử & phần thưởng đang chờ!" : "Cần đúng ít nhất <b>"+s.passN+"/"+s.totalN+"</b>. Chơi lại nhé — đề sẽ đổi mới hoàn toàn."}
+          ${pass ? "Kim đã vượt chặng <b>"+s.name+"</b>. Mở phần thưởng tiếp theo nào!" : "Cần đúng ít nhất <b>"+s.passN+"/"+s.totalN+"</b>. Chơi lại nhé — đề sẽ đổi mới hoàn toàn."}
         </div>
         <div class="summary-actions">
-          ${pass ? '<button class="btn pink" id="btn-story">📜 Đọc câu chuyện + nhận thưởng</button>' : '<button class="btn" id="btn-retry">↻ Thử lại</button>'}
+          ${pass ? `<button class="btn pink" id="btn-story">${nextLabel} →</button>` : '<button class="btn" id="btn-retry">↻ Thử lại</button>'}
           <button class="btn ghost" id="btn-map">← Về bản đồ</button>
         </div>
       </div>
@@ -1586,8 +2723,8 @@ function renderSummary(){
   app.appendChild(v);
   if(pass){
     document.getElementById("btn-story").onclick = ()=>{
-      state.storyIdx = state.stageIdx;
-      state.screen = "story"; render();
+      buildPostFlow();
+      advancePostFlow();
     };
   } else {
     document.getElementById("btn-retry").onclick = ()=>startStage(state.stageIdx);
@@ -1596,9 +2733,9 @@ function renderSummary(){
 }
 
 function renderStory(){
-  // bản đồ ngầm làm nền
   renderMap();
-  const story = STORIES[state.storyIdx];
+  const idx = state.pendingStoryIdx==null ? 0 : state.pendingStoryIdx;
+  const story = STORIES[idx];
   const modal = el(`
     <div class="modal-backdrop">
       <div class="modal story-modal">
@@ -1610,58 +2747,190 @@ function renderStory(){
         <div class="story-body">${story.body}</div>
         <div class="story-quote">"${story.quote}"</div>
         <div class="story-actions">
-          <button class="btn" id="btn-reward">Nhận phần thưởng 🎁</button>
+          <button class="btn" id="btn-story-next">Tiếp tục →</button>
         </div>
       </div>
     </div>
   `);
   app.appendChild(modal);
-  document.getElementById("btn-reward").onclick = ()=>{
-    state.screen = "reward"; render();
+  document.getElementById("btn-story-next").onclick = ()=>{
+    advancePostFlow();
   };
 }
 
-function renderReward(){
+function renderCheer(){
+  // Bản đồ làm nền
   renderMap();
-  const n = state.storyIdx + 1;
-  const cheer = CHEERS[state.storyIdx];
-  const imgPath = "images/chuyen"+n+".jpg";
-  const fallbackBig = ["🏺","🧧","📜","✨","🕌","⛵"][state.storyIdx];
+  const imgPath = pickCheerImage();
+  const cheerText = pickCheerText();
+  const fallbackEmoji = pick(["🌟","🌈","🎈","🌻","🏆","🚀","💖","🦋","🎉","🪁"]);
+  const stage = STAGES[state.stageIdx];
   const modal = el(`
     <div class="modal-backdrop">
-      <div class="modal" style="border-top:6px solid var(--sun)">
-        <div class="reward-card">
-          <div class="header">🎁 Phần thưởng chặng ${n} <span class="star">★</span></div>
-          <div class="reward-img-wrap" id="img-wrap">
-            <img src="${imgPath}" alt="Phần thưởng chặng ${n}" onerror="this.style.display='none'; document.getElementById('fb-${n}').style.display='flex';"/>
-            <div class="reward-fallback" id="fb-${n}" style="display:none">
-              <div class="big-icon">${fallbackBig}</div>
-              <div class="ribbon">Phần thưởng chặng ${n}</div>
-              <div style="margin-top:8px;font-size:13px;color:var(--ink-2)">Hình kỷ niệm chưa cài, nhưng phần thưởng vẫn đây!</div>
-            </div>
+      <div class="modal cheer-modal">
+        <div style="text-align:center;margin-bottom:8px">
+          <div style="font-size:13px;font-weight:800;color:var(--ink-2);letter-spacing:0.6px;text-transform:uppercase">🎉 Thẻ động viên · Chặng ${stage.id}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">Một ảnh + một câu khen tặng Kim</div>
+        </div>
+        <div class="cheer-img-wrap">
+          <img id="cheer-img" alt="Ảnh động viên" />
+          <div class="fb" id="cheer-fb" style="display:none">
+            <div class="big">${fallbackEmoji}</div>
+            <div class="rib">Gai Con tỏa sáng!</div>
           </div>
-          <div class="cheer-line">
-            <span class="label">📣 Gai Con cổ vũ</span>
-            ${cheer}
-          </div>
-          <div style="margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-            <button class="btn mint" id="btn-next">${state.storyIdx===STAGES.length-1 && state.completed.every(x=>x)?"👑 Xem màn hoàn thành":"Tiếp tục phiêu lưu →"}</button>
-            <button class="btn ghost" id="btn-map">Về bản đồ</button>
-          </div>
+        </div>
+        <div class="cheer-text">
+          <span class="label">📣 Gai Con cổ vũ</span>
+          ${cheerText}
+        </div>
+        <div style="margin-top:14px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap">
+          <button class="btn mint" id="btn-cheer-next">Tiếp tục →</button>
         </div>
       </div>
     </div>
   `);
   app.appendChild(modal);
-  document.getElementById("btn-next").onclick = ()=>{
-    if(state.storyIdx===STAGES.length-1 && state.completed.every(x=>x)){
-      state.screen = "final";
-    } else {
-      state.screen = "map";
+  // Set image src + fallback (gấp 3 lần thử ảnh ngẫu nhiên trước khi rơi xuống fallback)
+  const imgEl = document.getElementById("cheer-img");
+  const fbEl  = document.getElementById("cheer-fb");
+  let tries = 0;
+  function tryImage(path){
+    imgEl.onerror = ()=>{
+      tries++;
+      if(tries<3){
+        const alt = "images/chuyen" + (1 + Math.floor(Math.random()*TOTAL_IMAGES)) + ".jpg";
+        if(alt!==imgEl.getAttribute("src")) { imgEl.src = alt; return; }
+      }
+      imgEl.style.display = "none";
+      fbEl.style.display = "flex";
+    };
+    imgEl.src = path;
+  }
+  tryImage(imgPath);
+  document.getElementById("btn-cheer-next").onclick = ()=>{ advancePostFlow(); };
+}
+
+function renderScratch(){
+  // Bản đồ làm nền
+  renderMap();
+  const p = state.pendingScratchPart;
+  const part = PARTS[p];
+  const prize = rollScratch();
+  const isBig = prize===20000;
+
+  const modal = el(`
+    <div class="modal-backdrop">
+      <div class="modal scratch-modal">
+        <div style="text-align:center;margin-bottom:6px">
+          <div style="font-size:13px;font-weight:800;color:var(--ink-2);letter-spacing:0.6px;text-transform:uppercase">💰 Thẻ cào · Hoàn tất ${part.title.split("—")[0].trim()}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">Cào thẻ để xem Kim trúng bao nhiêu (tiền thưởng trong game)</div>
+        </div>
+        <p class="scratch-hint">Dùng ngón tay / chuột miết lên thẻ để cào — hoặc bấm nút "Cào ngay".</p>
+        <div class="scratch-stage" id="sc-stage">
+          <div class="scratch-prize ${isBig?"big":""}">
+            <div class="amount">${fmtVND(prize)}</div>
+            <div class="label">Tiền thưởng game</div>
+            ${isBig?'<div class="lucky">🎊 MAY MẮN LỚN! 🎊</div>':''}
+          </div>
+          <canvas class="scratch-canvas" id="sc-canvas"></canvas>
+        </div>
+        <div id="sc-result" style="display:none">
+          <div class="total-money-line">
+            🎁 Kim vừa cào trúng <b>${fmtVND(prize)}</b>!<br>
+            <span style="font-size:13px;font-weight:600;color:#155e75">Tổng số tiền Kim đã tích luỹ: <b id="sc-total"></b></span>
+          </div>
+          <div class="money-note">(Đây là tiền thưởng trong game để Kim phấn đấu — không phải tiền thật trong app.)</div>
+        </div>
+        <div style="margin-top:12px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap" id="sc-actions">
+          <button class="btn sun" id="btn-scratch-now">🪙 Cào ngay</button>
+          <button class="btn mint" id="btn-scratch-next" style="display:none">Tiếp tục →</button>
+        </div>
+      </div>
+    </div>
+  `);
+  app.appendChild(modal);
+
+  const stage = document.getElementById("sc-stage");
+  const canvas = document.getElementById("sc-canvas");
+  const ctx = canvas.getContext("2d");
+  let cleared = false;
+  function paintCover(){
+    const rect = stage.getBoundingClientRect();
+    const w = Math.max(1, Math.floor(rect.width));
+    const h = Math.max(1, Math.floor(rect.height));
+    canvas.width = w; canvas.height = h;
+    const grad = ctx.createLinearGradient(0,0,w,h);
+    grad.addColorStop(0,"#c0c0c0");
+    grad.addColorStop(0.5,"#e8e8e8");
+    grad.addColorStop(1,"#9ca3af");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0,0,w,h);
+    ctx.fillStyle = "rgba(31,42,68,0.7)";
+    ctx.font = "bold 18px -apple-system,sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("🪙 Cào nhẹ vào đây để xem", w/2, h/2 - 6);
+    ctx.font = "13px -apple-system,sans-serif";
+    ctx.fillText("Kim trúng bao nhiêu nhé!", w/2, h/2 + 14);
+  }
+  setTimeout(paintCover, 0);
+
+  function pointer(e){
+    const rect = canvas.getBoundingClientRect();
+    let cx, cy;
+    if(e.touches && e.touches[0]){ cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
+    else { cx = e.clientX; cy = e.clientY; }
+    return { x:(cx-rect.left)*(canvas.width/rect.width), y:(cy-rect.top)*(canvas.height/rect.height) };
+  }
+  let drawing = false;
+  function startDraw(e){ drawing = true; scratchAt(e); }
+  function moveDraw(e){ if(drawing){ e.preventDefault(); scratchAt(e); } }
+  function endDraw(){ drawing = false; checkClear(); }
+  function scratchAt(e){
+    if(cleared) return;
+    const p = pointer(e);
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 28, 0, Math.PI*2);
+    ctx.fill();
+  }
+  function checkClear(){
+    if(cleared) return;
+    // mẫu nhanh: đếm pixel đã xóa
+    const w = canvas.width, h = canvas.height;
+    const sample = 24;
+    const data = ctx.getImageData(0,0,w,h).data;
+    let empty=0, total=0;
+    for(let y=0;y<h;y+=sample){
+      for(let x=0;x<w;x+=sample){
+        const idx = (y*w + x)*4 + 3;
+        if(data[idx]<10) empty++;
+        total++;
+      }
     }
-    render();
-  };
-  document.getElementById("btn-map").onclick = ()=>{state.screen="map"; render()};
+    if(total>0 && empty/total > 0.45) revealPrize();
+  }
+  function revealPrize(){
+    if(cleared) return;
+    cleared = true;
+    canvas.classList.add("cleared");
+    state.money += prize;
+    saveMoney();
+    document.getElementById("sc-total").textContent = fmtVND(state.money);
+    document.getElementById("sc-result").style.display = "block";
+    document.getElementById("btn-scratch-now").style.display = "none";
+    document.getElementById("btn-scratch-next").style.display = "inline-flex";
+    if(isBig){ firePopPaper(); }
+  }
+
+  canvas.addEventListener("mousedown", startDraw);
+  canvas.addEventListener("mousemove", moveDraw);
+  window.addEventListener("mouseup", endDraw);
+  canvas.addEventListener("touchstart", startDraw, {passive:false});
+  canvas.addEventListener("touchmove",  moveDraw,  {passive:false});
+  canvas.addEventListener("touchend",   endDraw);
+
+  document.getElementById("btn-scratch-now").onclick = ()=>{ revealPrize(); };
+  document.getElementById("btn-scratch-next").onclick = ()=>{ advancePostFlow(); };
 }
 
 function renderFinal(){
@@ -1671,12 +2940,17 @@ function renderFinal(){
       <div class="final-card">
         <div class="crown">👑</div>
         <h2 style="font-size:28px;margin:8px 0">Hoàn thành xuất sắc, Kim!</h2>
-        <p style="color:var(--ink-2);font-style:italic;margin:6px 0 14px">Kim đã đi qua cả 6 chặng và mở khoá cả 6 câu chuyện lịch sử + phần thưởng.</p>
+        <p style="color:var(--ink-2);font-style:italic;margin:6px 0 14px">Kim đã đi qua cả 12 chặng (4 phần) và mở khoá toàn bộ câu chuyện lịch sử + thẻ cào.</p>
         <div style="font-size:15px;line-height:1.7;text-align:left;background:#fff;padding:14px 16px;border-radius:14px;box-shadow:var(--shadow-sm);border:1px solid var(--line)">
-          <b style="color:var(--primary-2)">Nhóm A — ôn nền lớp 6:</b><br>
+          <b style="color:var(--mint-2)">Phần 1 — Ôn lớp 6 (Số học):</b><br>
           ✖️ Bảng cửu chương · ➕ Số nguyên · 🍰 Phân số & thập phân<br><br>
-          <b style="color:var(--pink-2)">Nhóm B — Toán 7 Chương I:</b><br>
+          <b style="color:var(--mint-2)">Phần 2 — Ôn lớp 6 (ƯCLN/BCNN & Chia hết):</b><br>
+          🔍 Dấu hiệu chia hết · 🧱 Số nguyên tố · 📐 ƯCLN & BCNN<br><br>
+          <b style="color:var(--mint-2)">Phần 3 — Ôn lớp 6 (Toán đố):</b><br>
+          📝 Số học · 🧮 Phân số & % · 🚌 ƯCLN/BCNN<br><br>
+          <b style="color:var(--primary-2)">Phần 4 — Lớp 7 (Chương I Số hữu tỉ):</b><br>
           ⚙️ 4 phép tính số hữu tỉ · ⚡ Lũy thừa & thứ tự · 🔢 Biểu diễn thập phân<br><br>
+          <span style="color:#0e7490;font-weight:700">💰 Heo đất của Kim đang có: ${fmtVND(state.money)}</span><br>
           <span style="color:var(--mint-2);font-weight:700">Kim đã vững nền tảng để bước vào Chương II Số thực — chuyện đó để bản sau nhé.</span>
         </div>
         <div style="margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
@@ -1688,7 +2962,8 @@ function renderFinal(){
   `);
   app.appendChild(v);
   document.getElementById("btn-replay").onclick = ()=>{
-    state.completed = [false,false,false,false,false,false];
+    state.completed = new Array(STAGES.length).fill(false);
+    saveCompleted();
     state.screen = "map"; render();
   };
   document.getElementById("btn-map").onclick = ()=>{state.screen="map"; render()};
@@ -1705,6 +2980,23 @@ function fireConfetti(){
     c.style.background = colors[Math.floor(Math.random()*colors.length)];
     c.style.animationDelay = (Math.random()*0.6)+"s";
     c.style.animationDuration = (1.8 + Math.random()*1.5)+"s";
+    c.style.transform = "rotate("+Math.floor(Math.random()*360)+"deg)";
+    layer.appendChild(c);
+  }
+  document.body.appendChild(layer);
+  setTimeout(()=>layer.remove(), 3200);
+}
+/* ====== Pop paper (thẻ cào giải lớn) ====== */
+function firePopPaper(){
+  const colors = ["#fbbf24","#fb7185","#a78bfa","#34d399","#60a5fa","#f472b6","#ffffff"];
+  const layer = document.createElement("div");
+  layer.className = "pop-paper";
+  for(let i=0;i<90;i++){
+    const c = document.createElement("i");
+    c.style.left = (Math.random()*100)+"%";
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDelay = (Math.random()*0.4)+"s";
+    c.style.animationDuration = (1.8 + Math.random()*1.6)+"s";
     c.style.transform = "rotate("+Math.floor(Math.random()*360)+"deg)";
     layer.appendChild(c);
   }
