@@ -1,0 +1,31 @@
+PROMPT v3.2 — Dán đoạn dưới dòng kẻ vào Claude Code
+
+(Mở Claude Code trong thư mục dự án. Đảm bảo GAME_SPEC_v3_2.md đã nằm trong thư mục cùng index.html.)
+
+---
+
+Chào Claude Code. Game "Số Học Phiêu Lưu Ký" (index.html) cần bản vá v3.2 gộp 2 việc, mô tả đầy đủ trong file GAME_SPEC_v3_2.md trong thư mục này. Đọc kỹ file đó trước. SỬA TIẾP index.html, KHÔNG viết lại từ đầu.
+
+VIỆC A — Thẻ cào luôn trao mỗi khi hoàn thành một PHẦN
+Hiện tại logic chống-spam (_justCompletedPart hoặc tương tự) chặn thẻ cào lần đầu trao xong sẽ không trao lại. Người chơi học lại không được thưởng — không hợp với game học cho trẻ.
+Bỏ điều kiện chống-spam đó. Thay bằng: mỗi lần hoàn thành chặng cuối của một Phần (chặng 3/6/9/12) → trao thẻ cào, kể cả phần đó đã từng hoàn thành trước đó. Tỉ lệ giải giữ nguyên (1.000đ 40%, 2.000đ 35%, 5.000đ 20%, 20.000đ 5%). Tiền cộng dồn và lưu localStorage như cũ. Logic mở khóa phần tiếp/đánh dấu đã hoàn tất trên bản đồ giữ nguyên.
+Test mô phỏng: chơi xong Phần 1 (thẻ cào lần 1) → quay lại chơi lại Phần 1 → đến chặng 3 phải có thẻ cào lần 2; tổng tiền cộng dồn của cả 2 lần. In ra xác nhận.
+
+VIỆC B — Mở rộng database câu hỏi: tăng lên 6–8 generator/chặng
+Hiện mỗi chặng có 1–4 generator nên chơi lại có cảm giác chỉ đổi số. Tăng lên 6–8 generator DẠNG BÀI khác nhau cho MỖI chặng trong 12 chặng (không chỉ đổi số, mà thêm các kiểu đặt câu hỏi khác nhau). Mỗi câu hỏi sinh ra: random chọn generator trong kho của chặng, cố gắng không để 2 câu cùng dạng nằm liền kề.
+Định hướng dạng bài cho từng chặng đã liệt kê trong mục B của GAME_SPEC_v3_2.md — đọc theo. Có thể bổ sung thêm dạng nếu phù hợp.
+Giữ nguyên: độ khó (mức lớp 6 / lớp 7 tương ứng), số câu mỗi chặng, cơ chế giải thích khi sai, đáp án đúng tuyệt đối.
+
+Yêu cầu chất lượng (không lùi):
+- Đáp án đúng tuyệt đối cho TOÀN BỘ generator cũ + mới. Test vài nghìn lượt mỗi generator, đối chiếu bằng tính độc lập (gcd/lcm chuẩn, công thức đối chiếu...).
+- 4 phương án trắc nghiệm không trùng nhau, không bị trùng đáp án đúng do tính nhầm.
+- Phần giải thích khi sai áp dụng đầy đủ cho mọi generator mới (đáp án đúng + cách làm + ví dụ đời thường khi phù hợp).
+
+KHÔNG được làm hỏng các tính năng đã có: 12 câu chuyện lịch sử (6 cũ + 6 ở v3.1), thẻ động viên random sau mỗi chặng, localStorage lưu tiền, nút Đặt lại tiền, 4 phần × 3 chặng, mở khóa tuần tự, giao diện hiện tại. Vẫn 1 file index.html, không framework, responsive.
+
+Hãy đọc spec, trình bày ngắn gọn kế hoạch (cách bỏ điều kiện chống-spam + danh sách generator mới sẽ thêm cho từng chặng) rồi mới sửa. Làm xong tự rà:
+- Thẻ cào: kích hoạt 2 lần khi chơi lại Phần 1 (test mô phỏng).
+- Database: liệt kê số generator trước/sau mỗi chặng (phải đạt 6–8/chặng).
+- Đáp án đúng tuyệt đối qua test mở rộng cho tất cả generator.
+- Mọi tính năng cũ không hỏng.
+Báo tôi tóm tắt kết quả + nguyên nhân từng việc.

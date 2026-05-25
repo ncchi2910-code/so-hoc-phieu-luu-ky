@@ -1873,75 +1873,1138 @@ function genQ_ratDecimal(){
 }
 
 /* ========================================================================
-   PHẦN 5 — DANH SÁCH ĐỀ CHO 6 CHẶNG
+   PHẦN 3.5 — GENERATOR MỞ RỘNG v3.2 (đa dạng dạng bài cho 12 chặng)
+   Mỗi generator gắn thêm trường `verify` (ẩn, không render) để test độc lập
+   đối chiếu đáp án. Trường này không ảnh hưởng giao diện.
    ========================================================================*/
 
-function buildStage1(){ // bảng cửu chương + tính nhẩm
-  const list = [];
-  for(let i=0;i<4;i++) list.push(genQ_mulTable());
-  for(let i=0;i<3;i++) list.push(genQ_divTable());
-  for(let i=0;i<3;i++) list.push(genQ_quickAddSub());
-  return shuffle(list);
+function cmpSign(a,b){ return a<b ? "<" : a>b ? ">" : "="; }
+function cmpOpts(sign){ const o=shuffle(["<",">","=","Không so sánh được"]); return {options:o, answerIdx:o.indexOf(sign)}; }
+function fracHTML(n,d){
+  if(d===1) return n<0 ? "(−"+Math.abs(n)+")" : ""+n;
+  return '<span class="frac"><span class="num">'+(n<0?"−"+Math.abs(n):n)+'</span><span class="den">'+d+'</span></span>';
 }
-function buildStage2(){ // số nguyên & quy tắc dấu
-  const list = [];
-  for(let i=0;i<5;i++) list.push(genQ_intArith());
-  for(let i=0;i<3;i++) list.push(genQ_parens());
-  for(let i=0;i<2;i++) list.push(genQ_intOrder());
-  return shuffle(list);
+// Danh sách phân số tối giản cho thập phân HỮU HẠN (tử/mẫu/thập phân kiểu Việt)
+const FINITE_FRACS = [
+  [1,2,"0,5"],[1,4,"0,25"],[3,4,"0,75"],[1,5,"0,2"],[2,5,"0,4"],[3,5,"0,6"],[4,5,"0,8"],
+  [1,8,"0,125"],[3,8,"0,375"],[5,8,"0,625"],[7,8,"0,875"],[1,10,"0,1"],[3,10,"0,3"],[7,10,"0,7"],
+  [9,10,"0,9"],[1,16,"0,0625"],[1,20,"0,05"],[3,20,"0,15"],[1,25,"0,04"],[3,25,"0,12"]
+];
+
+/* ---------- Chặng 1 (mở rộng): bảng cửu chương & tính nhẩm ---------- */
+function genQ_missingFactor(){
+  const a = randInt(2,9), b = randInt(2,9);
+  const c = a*b, ans = b;
+  const correct = ""+ans;
+  const pool = shuffle([""+(b+1),""+Math.max(1,b-1),""+a,""+(b+2),""+Math.max(1,c-a)]).filter(x=>x!==correct);
+  const mo = build4Opts(correct, pool, seen=>{let d=1;while(d<12){const k=""+(b+d);if(!seen.has(k))return k;d++}return null;});
+  return {
+    qHTML: "Tìm số còn thiếu: <b>"+a+" × ? = "+c+"</b>",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Tìm thừa số",
+    explain:{
+      correctHTML: a+" × <b>"+ans+"</b> = "+c,
+      steps:[
+        "Muốn tìm thừa số chưa biết, lấy tích chia cho thừa số đã biết: "+c+" ÷ "+a+" = "+ans+".",
+        "Thử lại: "+a+" × "+ans+" = "+c+". ✓"
+      ],
+      realWorld:"Kim có "+c+" cây bút xếp đều vào "+a+" hộp → mỗi hộp "+ans+" cây."
+    },
+    verify:{k:"arith", op:"/", a:c, b:a}
+  };
 }
-function buildStage3(){ // phân số & thập phân lớp 6
-  const list = [];
-  for(let i=0;i<2;i++) list.push(genQ_simplifyFrac());
-  for(let i=0;i<2;i++) list.push(genQ_commonDen());
-  for(let i=0;i<4;i++) list.push(genQ_fracBasicPos());
-  for(let i=0;i<2;i++) list.push(genQ_fracDecimal());
-  return shuffle(list);
+function genQ_missingTerm(){
+  const variant = pick([1,2,3]);
+  const a = randInt(2,20);
+  let qExpr, ans, real, steps, verify;
+  if(variant===1){
+    const c = a + randInt(1,20); ans = c - a; qExpr = "? + "+a+" = "+c;
+    real = "Kim có một số kẹo, được cho thêm "+a+" viên thành "+c+" viên → lúc đầu có "+ans+" viên.";
+    steps = ["Số hạng chưa biết = Tổng − số hạng đã biết = "+c+" − "+a+" = "+ans+"."];
+    verify = {k:"arith", op:"-", a:c, b:a};
+  } else if(variant===2){
+    const c = a + randInt(1,20); ans = c - a; qExpr = a+" + ? = "+c;
+    real = "Kim có "+a+" viên kẹo, cần thêm bao nhiêu để đủ "+c+" viên? → "+ans+" viên.";
+    steps = ["Số hạng chưa biết = Tổng − số hạng đã biết = "+c+" − "+a+" = "+ans+"."];
+    verify = {k:"arith", op:"-", a:c, b:a};
+  } else {
+    const c = randInt(1,20); ans = c + a; qExpr = "? − "+a+" = "+c;
+    real = "Kim tiêu "+a+" nghìn thì còn "+c+" nghìn → lúc đầu có "+ans+" nghìn.";
+    steps = ["Số bị trừ chưa biết = Hiệu + số trừ = "+c+" + "+a+" = "+ans+"."];
+    verify = {k:"arith", op:"+", a:c, b:a};
+  }
+  const correct = ""+ans;
+  const pool = shuffle([""+(ans+1),""+Math.max(0,ans-1),""+a,""+(ans+2),""+Math.max(0,ans-2)]).filter(x=>x!==correct);
+  const mo = build4Opts(correct, pool, seen=>{let d=1;while(d<15){const k=""+(ans+d);if(!seen.has(k))return k;d++}return null;});
+  return {
+    qHTML: "Tìm số còn thiếu: <b>"+qExpr+"</b>",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Tìm số chưa biết",
+    explain:{ correctHTML: qExpr.replace("?","<b>"+ans+"</b>"), steps, realWorld: real },
+    verify
+  };
 }
-function buildStage4(){ // cộng trừ nhân chia số hữu tỉ
-  const list = [];
-  for(let i=0;i<10;i++) list.push(genQ_ratArith());
-  return shuffle(list);
+function genQ_compareCalc(){
+  function side(){
+    const t = pick(["mul","add","sub","num"]);
+    if(t==="mul"){ const a=randInt(2,9),b=randInt(2,9); return {v:a*b, html:a+" × "+b}; }
+    if(t==="add"){ const a=randInt(5,40),b=randInt(5,40); return {v:a+b, html:a+" + "+b}; }
+    if(t==="sub"){ const a=randInt(20,60),b=randInt(1,20); return {v:a-b, html:a+" − "+b}; }
+    const a=randInt(10,80); return {v:a, html:""+a};
+  }
+  let L = side(), R = side();
+  if(Math.random()<0.18){ R = {v:L.v, html:L.v+" × 1"}; }
+  const sign = cmpSign(L.v, R.v);
+  const mo = cmpOpts(sign);
+  return {
+    qHTML: "Điền dấu thích hợp: <b>"+L.html+"</b> ⬚ <b>"+R.html+"</b>",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"So sánh",
+    explain:{
+      correctHTML: L.html+" "+sign+" "+R.html,
+      steps:[
+        "Tính từng vế: "+L.html+" = "+L.v+"; "+R.html+" = "+R.v+".",
+        "So sánh hai kết quả: "+L.v+" "+sign+" "+R.v+"."
+      ],
+      realWorld:"So sánh hai 'rổ' đồ vật: đếm tổng mỗi rổ rồi xem rổ nào nhiều hơn."
+    },
+    verify:{k:"cmp", a:L.v, b:R.v}
+  };
 }
-function buildStage5(){ // lũy thừa + thứ tự
-  const list = [];
-  for(let i=0;i<5;i++) list.push(genQ_ratPower());
-  for(let i=0;i<5;i++) list.push(genQ_ratOrder());
-  return shuffle(list);
-}
-function buildStage6(){ // biểu diễn thập phân
-  const list = [];
-  for(let i=0;i<10;i++) list.push(genQ_ratDecimal());
-  return shuffle(list);
+function genQ_chainCalc(){
+  const a=randInt(10,40), b=randInt(2,20), c=randInt(2,20);
+  const form = pick([1,2]);
+  let terms, html;
+  if(form===1){ terms=[a,b,-c]; html=a+" + "+b+" − "+c; }
+  else { terms=[a,-b,c]; html=a+" − "+b+" + "+c; }
+  const ans = terms.reduce((s,t)=>s+t,0);
+  const correct = intHTML(ans);
+  const pool = shuffle([intHTML(ans+1),intHTML(ans-1),intHTML(a+b+c),intHTML(a-b-c),intHTML(ans+2)]).filter(x=>x!==correct);
+  const mo = build4Opts(correct, pool, seen=>{let d=1;while(d<20){const k=intHTML(ans+d);if(!seen.has(k))return k;d++}return null;});
+  return {
+    qHTML: "Tính nhẩm: <b>"+html+"</b> = ?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Tính nhẩm dãy",
+    explain:{
+      correctHTML: html+" = <b>"+intHTML(ans)+"</b>",
+      steps:["Tính lần lượt từ trái sang phải.", html+" = "+intHTML(ans)+"."],
+      realWorld:"Như cộng dồn rồi bớt: bắt đầu với "+a+", thêm/bớt từng bước đến kết quả cuối."
+    },
+    verify:{k:"sum", terms}
+  };
 }
 
-/* ----- Builders v3 cho Phần 2 (Chặng 4,5,6 trong dãy mới) ----- */
-function buildStage_p2_1(){ // Dấu hiệu chia hết + ước/bội
-  const list=[]; for(let i=0;i<10;i++) list.push(genQ_divRule()); return shuffle(list);
+/* ---------- Chặng 2 (mở rộng): số nguyên & quy tắc dấu ---------- */
+function genQ_findX(){
+  const variant = pick([1,2,3]);
+  const x = randInt(-12,12), a = randInt(1,15);
+  let html, ans=x, real, steps, verify;
+  if(variant===1){ const b=x+a; html="x + "+a+" = "+intHTML(b);
+    steps=["Chuyển vế: x = "+intHTML(b)+" − "+a+" = "+intHTML(x)+"."]; verify={k:"arith",op:"-",a:b,b:a};
+    real="Số x cộng "+a+" được "+intHTML(b)+" → x = "+intHTML(x)+".";
+  } else if(variant===2){ const b=x-a; html="x − "+a+" = "+intHTML(b);
+    steps=["Chuyển vế: x = "+intHTML(b)+" + "+a+" = "+intHTML(x)+"."]; verify={k:"arith",op:"+",a:b,b:a};
+    real="Số x bớt "+a+" còn "+intHTML(b)+" → x = "+intHTML(x)+".";
+  } else { const b=a-x; html=intHTML(a)+" − x = "+intHTML(b);
+    steps=["Chuyển vế: x = "+intHTML(a)+" − "+intHTML(b)+" = "+intHTML(x)+"."]; verify={k:"arith",op:"-",a:a,b:b};
+    real=a+" trừ đi x còn "+intHTML(b)+" → x = "+intHTML(x)+".";
+  }
+  const correct = intHTML(ans);
+  const pool = shuffle([intHTML(ans+1),intHTML(ans-1),intHTML(-ans),intHTML(ans+2),intHTML(ans-2)]).filter(s=>s!==correct);
+  const mo = build4Opts(correct, pool, seen=>{let d=1;while(d<25){const k=intHTML(ans+d);if(!seen.has(k))return k;d++}return null;});
+  return {
+    qHTML: "Tìm x, biết: <b>"+html+"</b>",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Tìm x",
+    explain:{ correctHTML:"x = <b>"+intHTML(x)+"</b>", steps, realWorld: real },
+    verify
+  };
 }
-function buildStage_p2_2(){ // Nguyên tố / hợp số / phân tích thừa số
-  const list=[];
-  for(let i=0;i<5;i++) list.push(genQ_primeOrComposite());
-  for(let i=0;i<5;i++) list.push(genQ_primeFactorize());
-  return shuffle(list);
+function genQ_compareInt(){
+  let a = randInt(-30,30), b = randInt(-30,30);
+  if(Math.random()<0.15) b = a;
+  const sign = cmpSign(a,b);
+  const mo = cmpOpts(sign);
+  return {
+    qHTML: "Điền dấu thích hợp: <b>"+intHTML(a)+"</b> ⬚ <b>"+intHTML(b)+"</b>",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"So sánh số nguyên",
+    explain:{
+      correctHTML: intHTML(a)+" "+sign+" "+intHTML(b),
+      steps:[
+        "Trên trục số, số bên phải lớn hơn. Số âm luôn nhỏ hơn 0 và nhỏ hơn mọi số dương.",
+        intHTML(a)+" "+sign+" "+intHTML(b)+"."
+      ],
+      realWorld:"Nợ 30 nghìn (−30) 'ít tiền hơn' nợ 10 nghìn (−10): càng nợ nhiều, số càng nhỏ."
+    },
+    verify:{k:"cmp", a, b}
+  };
 }
-function buildStage_p2_3(){ // ƯCLN + BCNN
-  const list=[];
-  for(let i=0;i<5;i++) list.push(genQ_gcd());
-  for(let i=0;i<5;i++) list.push(genQ_lcm());
-  return shuffle(list);
+function genQ_absValue(){
+  const variant = pick([1,2]);
+  if(variant===1){
+    const a = randInt(-30,30), ans = Math.abs(a), correct = ""+ans;
+    const pool = shuffle([intHTML(a),""+(ans+1),""+Math.max(0,ans-1),""+(ans+2),intHTML(-ans)]).filter(s=>s!==correct);
+    const mo = build4Opts(correct, pool, seen=>{let d=1;while(d<20){const k=""+(ans+d);if(!seen.has(k))return k;d++}return null;});
+    return {
+      qHTML:"Tính: <b>|"+intHTML(a)+"|</b> = ?",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"Giá trị tuyệt đối",
+      explain:{
+        correctHTML:"|"+intHTML(a)+"| = <b>"+ans+"</b>",
+        steps:["Giá trị tuyệt đối là khoảng cách tới 0 trên trục số, luôn ≥ 0.","|"+intHTML(a)+"| = "+ans+"."],
+        realWorld:"Dù đi sang trái hay phải "+ans+" bước, khoảng cách tới điểm 0 vẫn là "+ans+"."
+      },
+      verify:{k:"abs", a}
+    };
+  } else {
+    const a = randInt(-15,15), b = randInt(-15,15), ans = a + Math.abs(b), correct = intHTML(ans);
+    const pool = shuffle([intHTML(a+b),intHTML(ans+1),intHTML(ans-1),intHTML(a-Math.abs(b)),intHTML(-ans)]).filter(s=>s!==correct);
+    const mo = build4Opts(correct, pool, seen=>{let d=1;while(d<20){const k=intHTML(ans+d);if(!seen.has(k))return k;d++}return null;});
+    return {
+      qHTML:"Tính: <b>"+intHTML(a)+" + |"+intHTML(b)+"|</b> = ?",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"Giá trị tuyệt đối",
+      explain:{
+        correctHTML: intHTML(a)+" + |"+intHTML(b)+"| = "+intHTML(a)+" + "+Math.abs(b)+" = <b>"+intHTML(ans)+"</b>",
+        steps:["Tính |"+intHTML(b)+"| = "+Math.abs(b)+" trước.","Rồi "+intHTML(a)+" + "+Math.abs(b)+" = "+intHTML(ans)+"."],
+        realWorld:"Trị tuyệt đối bỏ dấu trừ, biến 'nợ' thành 'khoảng cách' dương rồi mới cộng."
+      },
+      verify:{k:"absexpr", a, b}
+    };
+  }
+}
+function genQ_twoParens(){
+  const a=randInt(-9,9), b=randInt(-9,9), c=randInt(-9,9), d=randInt(-9,9);
+  const outer = pick(["+","−"]);
+  const left = a+b, right = c+d;
+  const ans = outer==="+" ? left+right : left-right;
+  const expr = "("+intHTML(a)+" + "+intHTML(b)+") "+outer+" ("+intHTML(c)+" + "+intHTML(d)+")";
+  const correct = intHTML(ans);
+  const pool = shuffle([
+    intHTML(outer==="+"? left-right : left+right),
+    intHTML(ans+1), intHTML(ans-1), intHTML(-ans), intHTML(ans+2)
+  ]).filter(s=>s!==correct);
+  const mo = build4Opts(correct, pool, seen=>{let dd=1;while(dd<25){const k=intHTML(ans+dd);if(!seen.has(k))return k;dd++}return null;});
+  return {
+    qHTML: "Tính giá trị: <b>"+expr+"</b> = ?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Dãy có ngoặc",
+    explain:{
+      correctHTML: expr+" = ("+intHTML(left)+") "+outer+" ("+intHTML(right)+") = <b>"+intHTML(ans)+"</b>",
+      steps:[
+        "Tính trong từng ngoặc trước: "+intHTML(a)+" + "+intHTML(b)+" = "+intHTML(left)+"; "+intHTML(c)+" + "+intHTML(d)+" = "+intHTML(right)+".",
+        (outer==="−"?"Bỏ ngoặc có dấu trừ phía trước thì đổi dấu bên trong: ":"")+intHTML(left)+" "+outer+" ("+intHTML(right)+") = "+intHTML(ans)+"."
+      ],
+      realWorld:"Gộp từng nhóm trước rồi mới cộng/trừ hai nhóm với nhau."
+    },
+    verify:{k:"twoParens", a,b,c,d,outer}
+  };
 }
 
-/* ----- Builders v3 cho Phần 3 (Toán đố) ----- */
-function buildStage_p3_1(){
-  const list=[]; for(let i=0;i<10;i++) list.push(genQ_word_arith()); return shuffle(list);
+/* ---------- Chặng 3 (mở rộng): phân số & thập phân lớp 6 ---------- */
+function genQ_compareFrac(){
+  function pf(){ const d=pick([2,3,4,5,6,8,10,12]); let n=randInt(1,d); return F(n,d); }
+  let A=pf(), B=pf();
+  const sign = cmpSign(A.toNum(), B.toNum());
+  const mo = cmpOpts(sign);
+  const L = lcm(A.d,B.d);
+  return {
+    qHTML: "Điền dấu thích hợp: "+A.toHTML()+" ⬚ "+B.toHTML(),
+    options: mo.options, answerIdx: mo.answerIdx, tag:"So sánh phân số",
+    explain:{
+      correctHTML: A.toLabel()+" "+sign+" "+B.toLabel(),
+      steps:[
+        "Quy đồng về cùng mẫu "+L+": "+A.toLabel()+" = "+(A.n*(L/A.d))+"/"+L+"; "+B.toLabel()+" = "+(B.n*(L/B.d))+"/"+L+".",
+        "So sánh tử: "+(A.n*(L/A.d))+" "+sign+" "+(B.n*(L/B.d))+" → "+A.toLabel()+" "+sign+" "+B.toLabel()+"."
+      ],
+      realWorld:"Cắt hai cái bánh thành cùng số miếng ("+L+" miếng) rồi đếm bên nào nhiều miếng hơn."
+    },
+    verify:{k:"cmpfrac", an:A.n, ad:A.d, bn:B.n, bd:B.d}
+  };
 }
-function buildStage_p3_2(){
-  const list=[]; for(let i=0;i<10;i++) list.push(genQ_word_fracPct()); return shuffle(list);
+function genQ_equivFrac(){
+  const d=pick([2,3,4,5,6,7]); const n=randInt(1,d-1);
+  const k=pick([2,3,4,5]);
+  const correct=(n*k)+"/"+(d*k);
+  const pool=shuffle([
+    (n*k)+"/"+(d*(k+1)),
+    (n*(k+1))+"/"+(d*k),
+    (n*k+1)+"/"+(d*k),
+    (n+k)+"/"+(d+k),
+    (n*2)+"/"+(d*3)
+  ]).filter(s=>s!==correct);
+  const mo=build4Opts(correct, pool, seen=>{let j=2;while(j<12){const k2=(n*j)+"/"+(d*j+1);if(!seen.has(k2))return k2;j++}return null;});
+  return {
+    qHTML:"Phân số nào sau đây <b>bằng</b> "+F(n,d).toHTML()+"?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Phân số bằng nhau",
+    explain:{
+      correctHTML: F(n,d).toLabel()+" = <b>"+correct+"</b>",
+      steps:[
+        "Nhân (hoặc chia) cả tử và mẫu với cùng một số khác 0 thì được phân số bằng nó.",
+        "Nhân cả tử và mẫu của "+n+"/"+d+" với "+k+": "+(n*k)+"/"+(d*k)+"."
+      ],
+      realWorld:"Cùng một phần bánh có thể viết bằng nhiều cách: cắt mịn hơn thì số miếng tăng đều cả lấy lẫn chia."
+    },
+    verify:{k:"eqfrac", baseN:n, baseD:d}
+  };
 }
-function buildStage_p3_3(){
-  const list=[]; for(let i=0;i<10;i++) list.push(genQ_word_gcdLcm()); return shuffle(list);
+function genQ_largestFrac(){
+  const set=[]; const seen=new Set();
+  let guard=0;
+  while(set.length<4 && guard<200){
+    guard++;
+    const d=pick([2,3,4,5,6,8,10,12]); const n=randInt(1,d);
+    const f=F(n,d); const key=f.toLabel();
+    if(seen.has(key)) continue;
+    if(set.some(x=>x.toNum()===f.toNum())) continue;
+    seen.add(key); set.push(f);
+  }
+  let mx=set[0]; set.forEach(f=>{ if(f.toNum()>mx.toNum()) mx=f; });
+  const labels=set.map(f=>f.toLabel());
+  return {
+    qHTML:"Trong các phân số sau, phân số nào <b>lớn nhất</b>?",
+    options: labels, answerIdx: labels.indexOf(mx.toLabel()), tag:"So sánh phân số",
+    explain:{
+      correctHTML:"Lớn nhất là <b>"+mx.toLabel()+"</b>",
+      steps:[
+        "Đổi các phân số về cùng mẫu (hoặc ra số thập phân) để so sánh.",
+        "Giá trị xấp xỉ: "+set.map(f=>f.toLabel()+" ≈ "+fmtNum(f.toNum(),3)).join("; ")+".",
+        "Lớn nhất là "+mx.toLabel()+"."
+      ],
+      realWorld:"Phân số nào chiếm phần bánh nhiều nhất thì lớn nhất."
+    },
+    verify:{k:"maxfrac", fracs:set.map(f=>[f.n,f.d])}
+  };
 }
+
+/* ---------- Chặng 4 (mở rộng): dấu hiệu chia hết & ước/bội ---------- */
+function genQ_isMultipleYN(){
+  const y = pick([3,4,5,6,7,8,9,11,12]);
+  let x;
+  if(Math.random()<0.5){ x = y*randInt(2,12); }
+  else { x = y*randInt(2,12) + randInt(1,y-1); }
+  const ok = x % y === 0;
+  const correct = ok ? "Có" : "Không";
+  const o = shuffle(["Có","Không","Chỉ khi x lẻ","Không xác định"]);
+  return {
+    qHTML:"<b>"+x+"</b> có là bội của <b>"+y+"</b> không?",
+    options:o, answerIdx:o.indexOf(correct), tag:"Bội số",
+    explain:{
+      correctHTML: x+(ok?" là ":" không là ")+"bội của "+y,
+      steps:[
+        "x là bội của y nếu x chia hết cho y (x ÷ y không dư).",
+        x+" ÷ "+y+" = "+Math.floor(x/y)+(ok?" (dư 0) → là bội.":" dư "+(x%y)+" → không là bội.")
+      ],
+      realWorld:"Đếm theo nhịp "+y+": "+y+", "+(2*y)+", "+(3*y)+", ... "+(ok?(x+" có trong dãy này."):(x+" không rơi đúng nhịp nào."))
+    },
+    verify:{k:"ismultiple", x, y}
+  };
+}
+function genQ_countDivisors(){
+  const n = pick([12,16,18,20,24,28,30,36,40,42,45,48,60,72]);
+  const divs = divisorsOf(n), ans = divs.length, correct = ""+ans;
+  const pool = shuffle([""+(ans+1),""+Math.max(1,ans-1),""+(ans+2),""+Math.max(1,ans-2),""+(ans+3)]).filter(s=>s!==correct);
+  const mo = build4Opts(correct, pool, seen=>{let d=1;while(d<10){const k=""+(ans+d);if(!seen.has(k))return k;d++}return null;});
+  return {
+    qHTML:"Số <b>"+n+"</b> có tất cả bao nhiêu <b>ước</b> (số tự nhiên)?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Đếm ước",
+    explain:{
+      correctHTML: n+" có <b>"+ans+"</b> ước.",
+      steps:[
+        "Các ước của "+n+" là: "+divs.join(", ")+".",
+        "Đếm được "+ans+" ước.",
+        "Mẹo: "+n+" = "+formatFactorization(primeFactors(n))+", số ước = tích của (mỗi số mũ + 1)."
+      ],
+      realWorld:"Đếm số cách chia đều "+n+" viên kẹo thành các túi bằng nhau (kể cả 1 túi và "+n+" túi)."
+    },
+    verify:{k:"countdiv", n}
+  };
+}
+function genQ_smallestMultipleAbove(){
+  const n = pick([3,4,6,7,8,9,11,12,13]);
+  const M = randInt(2,9)*n + randInt(1,n-1);
+  const ans = (Math.floor(M/n)+1)*n, correct = ""+ans;
+  const pool = shuffle([""+(ans-n),""+(ans+n),""+(M+1),""+(Math.floor(M/n)*n),""+(ans+1)]).filter(s=>s!==correct && +s>0);
+  const mo = build4Opts(correct, pool, seen=>{let d=1;while(d<n*5){const k=""+(ans+d);if(!seen.has(k))return k;d++}return null;});
+  return {
+    qHTML:"Bội <b>nhỏ nhất</b> của <b>"+n+"</b> mà <b>lớn hơn "+M+"</b> là số nào?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Bội số",
+    explain:{
+      correctHTML:"Bội nhỏ nhất của "+n+" lớn hơn "+M+" là <b>"+ans+"</b>.",
+      steps:[
+        "Các bội của "+n+": "+n+", "+(2*n)+", "+(3*n)+", ...",
+        "Bội của "+n+" ngay sau "+M+" là "+(Math.floor(M/n)+1)+" × "+n+" = "+ans+"."
+      ],
+      realWorld:"Như xe buýt chạy mỗi "+n+" phút: sau phút thứ "+M+" thì chuyến kế tiếp là phút "+ans+"."
+    },
+    verify:{k:"smallmultabove", n, M}
+  };
+}
+function genQ_multiSignDivisible(){
+  const combos = [[2,3,6],[2,5,10],[3,5,15],[2,9,18],[5,9,45],[4,3,12]];
+  const c = pick(combos), d1=c[0], d2=c[1], LL=c[2];
+  const k = randInt(2,9), correct = LL*k, cstr = ""+correct;
+  const pool=[];
+  for(const delta of [d1,-d1,d2,-d2,1,-1,2,LL]){ const x=correct+delta; if(x>0 && !(x%d1===0 && x%d2===0)) pool.push(""+x); }
+  const mo = build4Opts(cstr, shuffle(pool), seen=>{let x=correct+1;while(x<correct+200){if(!(x%d1===0&&x%d2===0)&&!seen.has(""+x))return ""+x;x++}return null;});
+  return {
+    qHTML:"Số nào sau đây chia hết cho <b>cả "+d1+" và "+d2+"</b>?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Chia hết",
+    explain:{
+      correctHTML: correct+" chia hết cho cả "+d1+" và "+d2+".",
+      steps:[
+        "Số chia hết cho cả "+d1+" và "+d2+" thì chia hết cho BCNN("+d1+","+d2+") = "+LL+".",
+        correct+" = "+LL+" × "+k+" → chia hết cho "+LL+", nên chia hết cho cả "+d1+" và "+d2+"."
+      ],
+      realWorld:"Vừa xếp đều nhóm "+d1+", vừa xếp đều nhóm "+d2+" → số đó là bội chung của hai số."
+    },
+    verify:{k:"divboth", d1, d2}
+  };
+}
+function genQ_fillDigit(){
+  const d = pick([3,9]), h = randInt(1,9), u = randInt(0,9);
+  const valids=[]; for(let m=0;m<=9;m++){ if((h+m+u)%d===0) valids.push(m); }
+  const m = pick(valids), correct = ""+m;
+  const invalids=[]; for(let x=0;x<=9;x++){ if((h+x+u)%d!==0) invalids.push(""+x); }
+  const mo = build4Opts(correct, shuffle(invalids), null);
+  return {
+    qHTML:"Tìm chữ số ⬚ để số <b>"+h+"⬚"+u+"</b> chia hết cho <b>"+d+"</b> (chọn một giá trị đúng):",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Điền chữ số",
+    explain:{
+      correctHTML:"⬚ = <b>"+m+"</b> → số "+h+""+m+""+u+" chia hết cho "+d,
+      steps:[
+        "Số chia hết cho "+d+" khi tổng các chữ số chia hết cho "+d+".",
+        "Tổng = "+h+" + ⬚ + "+u+". Chọn ⬚ = "+m+" → tổng "+(h+m+u)+" chia hết cho "+d+"."
+      ],
+      realWorld:"Thử từng chữ số 0–9 vào ô trống, cộng các chữ số lại xem có chia hết không."
+    },
+    verify:{k:"filldigit", h, u, d}
+  };
+}
+
+/* ---------- Chặng 5 (mở rộng): số nguyên tố & phân tích ---------- */
+function genQ_isPrimeYN(){
+  const n = pick([2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,9,15,21,25,27,33,35,39,49,51,55,57,63,65,77,91,93,95]);
+  const pr = isPrime(n), correct = pr ? "Có" : "Không";
+  const o = shuffle(["Có","Không","Chỉ là số lẻ","Không xác định"]);
+  let proof;
+  if(pr) proof = n+" chỉ chia hết cho 1 và "+n+" → là số nguyên tố.";
+  else { let kk=2; for(;kk<n;kk++) if(n%kk===0) break; proof = n+" chia hết cho "+kk+" ("+n+" = "+kk+" × "+(n/kk)+") → không phải số nguyên tố."; }
+  return {
+    qHTML:"Số <b>"+n+"</b> có phải là <b>số nguyên tố</b> không?",
+    options:o, answerIdx:o.indexOf(correct), tag:"Số nguyên tố",
+    explain:{
+      correctHTML: n+(pr?" là ":" không là ")+"số nguyên tố.",
+      steps:["Số nguyên tố là số tự nhiên > 1, chỉ có hai ước là 1 và chính nó.", proof],
+      realWorld: pr ? ("Chia "+n+" viên kẹo đều chỉ có 2 cách: 1 túi hoặc "+n+" túi.") : ("Chia "+n+" viên kẹo còn nhiều cách khác → có ước khác 1 và chính nó.")
+    },
+    verify:{k:"isprime", n}
+  };
+}
+function genQ_largestPrimeFactor(){
+  const n=pick([12,18,20,24,28,30,36,40,42,45,48,50,54,56,60,63,70,72,75,84,90,98,99]);
+  const f=primeFactors(n), primesArr=Object.keys(f).map(Number), ans=Math.max.apply(null,primesArr), correct=""+ans;
+  const distract=primesArr.filter(p=>p!==ans).map(p=>""+p);
+  const pool=shuffle(distract.concat([""+(ans+1),""+Math.max(2,ans-1),""+n,""+Math.floor(n/ans)]));
+  const mo=build4Opts(correct, pool, seen=>{let d=1;while(d<20){const k=""+(ans+d);if(!seen.has(k))return k;d++}return null;});
+  return {
+    qHTML:"Thừa số nguyên tố <b>lớn nhất</b> của <b>"+n+"</b> là số nào?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Phân tích thừa số",
+    explain:{
+      correctHTML: n+" = "+formatFactorization(f)+" → thừa số nguyên tố lớn nhất là <b>"+ans+"</b>.",
+      steps:["Phân tích "+n+" ra thừa số nguyên tố: "+n+" = "+formatFactorization(f)+".","Trong các thừa số nguyên tố, lớn nhất là "+ans+"."],
+      realWorld:"Phá "+n+" thành các 'viên gạch' nguyên tố rồi tìm viên lớn nhất."
+    },
+    verify:{k:"maxprimefactor", n}
+  };
+}
+function genQ_primeBetween(){
+  const A=pick([1,2,5,10,20,30]), B=A+pick([10,12,15,20]);
+  let cnt=0; const list=[];
+  for(let x=A;x<=B;x++) if(isPrime(x)){ cnt++; list.push(x); }
+  const correct=""+cnt;
+  const pool=shuffle([""+(cnt+1),""+Math.max(0,cnt-1),""+(cnt+2),""+Math.max(0,cnt-2),""+(cnt+3)]).filter(s=>s!==correct);
+  const mo=build4Opts(correct,pool,seen=>{let d=1;while(d<10){const k=""+(cnt+d);if(!seen.has(k))return k;d++}return null;});
+  return {
+    qHTML:"Có bao nhiêu <b>số nguyên tố</b> trong các số từ <b>"+A+"</b> đến <b>"+B+"</b>?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Số nguyên tố",
+    explain:{
+      correctHTML:"Có <b>"+cnt+"</b> số nguyên tố: "+(list.length?list.join(", "):"(không có)")+".",
+      steps:["Xét lần lượt từng số từ "+A+" đến "+B+", giữ lại số chỉ có ước 1 và chính nó.","Các số nguyên tố: "+(list.length?list.join(", "):"không có")+" → "+cnt+" số."],
+      realWorld:"Lọc 'viên gạch nguyên tố' trong một đoạn số."
+    },
+    verify:{k:"primecount", A, B}
+  };
+}
+function genQ_whichComposite(){
+  const primes=[2,3,5,7,11,13,17,19,23,29,31,37,41,43,47];
+  const composites=[4,6,8,9,10,12,14,15,16,18,20,21,22,24,25,26,27,28,33,35];
+  const cmp=pick(composites), ps=shuffle(primes).slice(0,3);
+  const o=shuffle([""+cmp,ps[0]+"",ps[1]+"",ps[2]+""]);
+  let kk=2; for(;kk<cmp;kk++) if(cmp%kk===0) break;
+  return {
+    qHTML:"Trong các số sau, số nào là <b>hợp số</b>?",
+    options:o, answerIdx:o.indexOf(""+cmp), tag:"Hợp số",
+    explain:{
+      correctHTML: cmp+" là hợp số.",
+      steps:["Hợp số là số tự nhiên > 1 có nhiều hơn hai ước.", cmp+" = "+kk+" × "+(cmp/kk)+" → có ước khác 1 và chính nó.","Ba số còn lại đều là số nguyên tố."],
+      realWorld:"Hợp số chia đều được theo nhiều kiểu túi, khác với số nguyên tố."
+    },
+    verify:{k:"iscomposite"}
+  };
+}
+
+/* ---------- Chặng 6 (mở rộng): ƯCLN & BCNN ---------- */
+function genQ_coprimeYN(){
+  const a=pick([6,8,9,10,12,14,15,16,18,20,21,25,27,35]);
+  const b=pick([7,8,9,10,11,12,13,14,15,16,21,22,25,33,35,49]);
+  const g=gcd(a,b), ok=g===1, correct=ok?"Có":"Không";
+  const o=shuffle(["Có","Không","Chỉ khi cả hai lẻ","Không xác định"]);
+  return {
+    qHTML:"Hai số <b>"+a+"</b> và <b>"+b+"</b> có <b>nguyên tố cùng nhau</b> không?",
+    options:o, answerIdx:o.indexOf(correct), tag:"Nguyên tố cùng nhau",
+    explain:{
+      correctHTML: a+" và "+b+(ok?" nguyên tố cùng nhau (ƯCLN = 1).":" KHÔNG nguyên tố cùng nhau (ƯCLN = "+g+")."),
+      steps:["Hai số nguyên tố cùng nhau khi ƯCLN của chúng bằng 1.","ƯCLN("+a+", "+b+") = "+g+(ok?" = 1 → có.":" ≠ 1 → không.")],
+      realWorld:"Nguyên tố cùng nhau nghĩa là không có 'cỡ túi chung' nào lớn hơn 1 chia đều được cả hai."
+    },
+    verify:{k:"coprime", a, b}
+  };
+}
+function genQ_findOtherFromGcdLcm(){
+  const g=pick([2,3,4,5,6]);
+  const pairs=[[1,2],[1,3],[2,3],[3,4],[1,4],[2,5],[3,5],[1,5],[4,5],[1,6]];
+  const pr=pick(pairs), m=pr[0], n=pr[1];
+  const a=g*m, b=g*n, L=g*m*n, ans=b, correct=""+ans;
+  const pool=shuffle([""+a,""+L,""+g,""+(b+g),""+Math.max(1,b-g),""+(b+1)]).filter(s=>s!==correct);
+  const mo=build4Opts(correct,pool,seen=>{let d=1;while(d<40){const k=""+(b+d);if(!seen.has(k))return k;d++}return null;});
+  return {
+    qHTML:"Biết ƯCLN của hai số là <b>"+g+"</b>, BCNN là <b>"+L+"</b>, và một số là <b>"+a+"</b>. Tìm số còn lại.",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"ƯCLN · BCNN",
+    explain:{
+      correctHTML:"Số còn lại = <b>"+ans+"</b>",
+      steps:["Tính chất: ƯCLN(a, b) × BCNN(a, b) = a × b.","Số còn lại = (ƯCLN × BCNN) ÷ số đã biết = ("+g+" × "+L+") ÷ "+a+" = "+(g*L)+" ÷ "+a+" = "+ans+"."],
+      realWorld:"Quy tắc vàng: tích hai số = ƯCLN × BCNN. Biết ba đại lượng, suy ra cái thứ tư."
+    },
+    verify:{k:"otherfromgl", g, L, a}
+  };
+}
+function genQ_commonDivisorPick(){
+  const a=pick([12,18,24,30,36,48,60]), b=pick([18,24,36,48,60,72,90]);
+  const g=gcd(a,b);
+  const commons=divisorsOf(g).filter(x=>x>1);
+  const cd=commons.length?pick(commons):1;
+  const non=[];
+  for(let x=2;x<=Math.max(a,b);x++){ if(!(a%x===0&&b%x===0)) non.push(""+x); if(non.length>30) break; }
+  const mo=build4Opts(""+cd, shuffle(non), seen=>{let x=2;while(x<200){if(!(a%x===0&&b%x===0)&&!seen.has(""+x))return ""+x;x++}return null;});
+  return {
+    qHTML:"Số nào sau đây là <b>ước chung</b> của <b>"+a+"</b> và <b>"+b+"</b>?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Ước chung",
+    explain:{
+      correctHTML: cd+" là ước chung của "+a+" và "+b+" (cả hai đều chia hết cho "+cd+").",
+      steps:["Ước chung là số mà CẢ HAI số đều chia hết.","ƯCLN("+a+", "+b+") = "+g+"; mọi ước của "+g+" đều là ước chung. "+cd+" là ước của "+g+"."],
+      realWorld:"Cỡ túi chia đều được cả hai lô kẹo "+a+" và "+b+" viên."
+    },
+    verify:{k:"commondiv", a, b}
+  };
+}
+function genQ_commonMultiplePick(){
+  const a=pick([3,4,5,6,8]), b=pick([4,5,6,8,9,10,12]);
+  const L=lcm(a,b), k=randInt(1,4), cm=L*k;
+  const non=[];
+  for(let x=2;x<=L*4;x++){ if(!(x%a===0&&x%b===0)) non.push(""+x); if(non.length>40) break; }
+  const mo=build4Opts(""+cm, shuffle(non), seen=>{let x=2;while(x<L*6){if(!(x%a===0&&x%b===0)&&!seen.has(""+x))return ""+x;x++}return null;});
+  return {
+    qHTML:"Số nào sau đây là <b>bội chung</b> của <b>"+a+"</b> và <b>"+b+"</b>?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Bội chung",
+    explain:{
+      correctHTML: cm+" là bội chung của "+a+" và "+b+" (chia hết cho cả hai).",
+      steps:["Bội chung là số chia hết cho CẢ HAI số.","BCNN("+a+", "+b+") = "+L+"; mọi bội của "+L+" đều là bội chung. "+cm+" = "+L+" × "+k+"."],
+      realWorld:"Thời điểm cả hai sự kiện chu kỳ "+a+" và "+b+" cùng xảy ra."
+    },
+    verify:{k:"commonmult", a, b}
+  };
+}
+
+/* ---------- Chặng 7 (mở rộng): toán đố số học ---------- */
+function genQ_word_trees(){
+  const d=pick([2,3,4,5]), segs=randInt(4,12), L=d*segs, ans=segs+1, correct=""+ans;
+  const pool=shuffle([""+segs,""+(segs+2),""+(ans+1),""+Math.max(1,ans-1),""+L]).filter(s=>s!==correct);
+  const mo=build4Opts(correct,pool,seen=>{let x=1;while(x<40){const k=""+(ans+x);if(!seen.has(k))return k;x++}return null;});
+  return {
+    qHTML:"<span class=\"scenario\">Tình huống:</span> Người ta trồng cây dọc một đoạn đường dài <b>"+L+" m</b>, hai cây liền nhau cách nhau <b>"+d+" m</b>, có trồng cây ở <b>cả hai đầu</b> đường. Hỏi cần bao nhiêu cây?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · Trồng cây",
+    explain:{
+      correctHTML:"Cần <b>"+ans+"</b> cây.",
+      steps:["Số khoảng giữa các cây = "+L+" ÷ "+d+" = "+segs+".","Trồng cả hai đầu → số cây = số khoảng + 1 = "+segs+" + 1 = "+ans+"."],
+      realWorld:"Như cắm cọc hàng rào: đếm số khoảng rồi cộng 1 vì hai đầu đều có cọc."
+    },
+    verify:{k:"trees", L, d}
+  };
+}
+function genQ_word_ages(){
+  const childName=nameOf(), diff=pick([20,22,24,25,26,28,30]), childAge=randInt(6,16), sum=childAge*2+diff, ans=childAge, correct=""+ans;
+  const pool=shuffle([""+(childAge+diff),""+sum,""+diff,""+(ans+1),""+Math.max(1,ans-1),""+((sum+diff)/2|0)]).filter(s=>s!==correct);
+  const mo=build4Opts(correct,pool,seen=>{let x=1;while(x<30){const k=""+(ans+x);if(!seen.has(k))return k;x++}return null;});
+  return {
+    qHTML:"<span class=\"scenario\">Tình huống:</span> Tổng số tuổi của hai mẹ con là <b>"+sum+"</b> tuổi. Mẹ hơn "+childName+" <b>"+diff+"</b> tuổi. Hỏi "+childName+" bao nhiêu tuổi?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · Tổng – hiệu",
+    explain:{
+      correctHTML: childName+" <b>"+ans+"</b> tuổi.",
+      steps:["Bài toán Tổng – Hiệu: tuổi con (số bé) = (Tổng − Hiệu) ÷ 2.","= ("+sum+" − "+diff+") ÷ 2 = "+(sum-diff)+" ÷ 2 = "+ans+".","Thử lại: tuổi mẹ = "+ans+" + "+diff+" = "+(ans+diff)+"; "+ans+" + "+(ans+diff)+" = "+sum+". ✓"],
+      realWorld:"Bớt phần 'mẹ hơn' ra khỏi tổng rồi chia đôi → ra tuổi con."
+    },
+    verify:{k:"agechild", sum, diff}
+  };
+}
+function genQ_word_consecutive(){
+  const variant=pick([1,2]);
+  if(variant===1){
+    const small=randInt(5,40), S=small+(small+1), ans=small, correct=""+ans;
+    const pool=shuffle([""+(small+1),""+S,""+(ans+2),""+Math.max(1,ans-1),""+((S/2)|0)]).filter(s=>s!==correct);
+    const mo=build4Opts(correct,pool,seen=>{let x=1;while(x<30){const k=""+(ans+x);if(!seen.has(k))return k;x++}return null;});
+    return {
+      qHTML:"<span class=\"scenario\">Tình huống:</span> Hai số tự nhiên <b>liên tiếp</b> có tổng bằng <b>"+S+"</b>. Tìm số <b>bé</b> hơn.",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · Số liên tiếp",
+      explain:{
+        correctHTML:"Số bé = <b>"+ans+"</b>",
+        steps:["Hai số liên tiếp là n và n+1, tổng = 2n + 1 = "+S+".","2n = "+(S-1)+" → n = "+ans+". Hai số: "+ans+" và "+(ans+1)+"."],
+        realWorld:"Hai bậc thang cạnh nhau: biết tổng số bậc, tìm bậc dưới."
+      },
+      verify:{k:"consec2", S}
+    };
+  } else {
+    const mid=randInt(6,40), S=3*mid, ans=mid-1, correct=""+ans;
+    const pool=shuffle([""+mid,""+(mid+1),""+S,""+(ans+2),""+Math.max(1,ans-2)]).filter(s=>s!==correct);
+    const mo=build4Opts(correct,pool,seen=>{let x=1;while(x<30){const k=""+(ans+x);if(!seen.has(k))return k;x++}return null;});
+    return {
+      qHTML:"<span class=\"scenario\">Tình huống:</span> Ba số tự nhiên <b>liên tiếp</b> có tổng bằng <b>"+S+"</b>. Tìm số <b>bé nhất</b>.",
+      options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · Số liên tiếp",
+      explain:{
+        correctHTML:"Số bé nhất = <b>"+ans+"</b>",
+        steps:["Ba số liên tiếp: n, n+1, n+2; tổng = 3n + 3 = "+S+".","3n = "+(S-3)+" → n = "+ans+". Ba số: "+ans+", "+(ans+1)+", "+(ans+2)+".","Mẹo: số ở giữa = tổng ÷ 3 = "+mid+"."],
+        realWorld:"Số ở giữa luôn bằng trung bình → tổng chia 3."
+      },
+      verify:{k:"consec3", S}
+    };
+  }
+}
+function genQ_word_share(){
+  const n1=nameOf(), k=randInt(3,9), per=randInt(4,15), rem=randInt(1,k-1), total=k*per+rem, ans=rem, correct=""+ans;
+  const pool=shuffle([""+per,""+(rem+1),""+Math.max(0,rem-1),""+k,"0",""+(rem+2)]).filter(s=>s!==correct);
+  const mo=build4Opts(correct,pool,seen=>{let x=1;while(x<30){const key=""+(rem+x);if(!seen.has(key))return key;x++}return null;});
+  return {
+    qHTML:"<span class=\"scenario\">Tình huống:</span> "+n1+" có <b>"+total+"</b> viên kẹo, chia đều cho <b>"+k+"</b> bạn. Hỏi sau khi chia đều, còn <b>thừa</b> bao nhiêu viên?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · Chia có dư",
+    explain:{
+      correctHTML:"Còn thừa <b>"+ans+"</b> viên.",
+      steps:[total+" ÷ "+k+" = "+per+" dư "+rem+".","Mỗi bạn được "+per+" viên ("+k+" × "+per+" = "+(k*per)+"), còn thừa "+total+" − "+(k*per)+" = "+rem+" viên."],
+      realWorld:"Chia đều rồi xem còn lại mấy viên không đủ chia thêm một vòng."
+    },
+    verify:{k:"remainder", total, divisor:k}
+  };
+}
+function genQ_word_timesPlus(){
+  const k=pick([2,3,4]), x=randInt(5,20), m=randInt(1,15), N=k*x+m, ans=x, correct=""+ans;
+  const pool=shuffle([""+N,""+(k*x),""+m,""+(ans+1),""+Math.max(1,ans-1),""+(N-m)]).filter(s=>s!==correct);
+  const mo=build4Opts(correct,pool,seen=>{let d=1;while(d<30){const key=""+(ans+d);if(!seen.has(key))return key;d++}return null;});
+  const n1=nameOf();
+  return {
+    qHTML:"<span class=\"scenario\">Tình huống:</span> Số bi của "+n1+" gấp <b>"+k+" lần</b> rồi <b>thêm "+m+"</b> viên thì được <b>"+N+"</b> viên. Hỏi "+n1+" có bao nhiêu viên bi?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · Tìm số",
+    explain:{
+      correctHTML: n1+" có <b>"+ans+"</b> viên bi.",
+      steps:["Gọi số bi là x. Theo đề: "+k+"·x + "+m+" = "+N+".",k+"·x = "+N+" − "+m+" = "+(N-m)+" → x = "+(N-m)+" ÷ "+k+" = "+ans+"."],
+      realWorld:"Làm ngược lời văn: bỏ phần 'thêm "+m+"' rồi chia cho "+k+"."
+    },
+    verify:{k:"timesplus", K:k, m, N}
+  };
+}
+
+/* ---------- Chặng 8 (mở rộng): toán đố phân số & % ---------- */
+function genQ_word_increasePct(){
+  const original=pick([100,150,200,250,300,400,500])*1000, p=pick([10,20,25,30,50]), newp=original*(100+p)/100, correct=fmtMoney(newp)+"đ";
+  const pool=shuffle([fmtMoney(original)+"đ",fmtMoney(original*p/100)+"đ",fmtMoney(original*(100-p)/100)+"đ",fmtMoney(newp+10000)+"đ",fmtMoney(Math.max(0,newp-10000))+"đ"]).filter(s=>s!==correct);
+  const mo=build4Opts(correct,pool,seen=>{let d=1000;while(d<300000){const c=fmtMoney(newp+d)+"đ";if(!seen.has(c))return c;d+=1000}return null;});
+  return {
+    qHTML:"<span class=\"scenario\">Tình huống:</span> Một món đồ giá <b>"+fmtMoney(original)+"đ</b>, sau đó <b>tăng giá "+p+"%</b>. Hỏi giá mới là bao nhiêu?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · Phần trăm",
+    explain:{
+      correctHTML:"Giá mới = <b>"+correct+"</b>",
+      steps:["Số tiền tăng = "+p+"% × "+fmtMoney(original)+"đ = "+fmtMoney(original*p/100)+"đ.","Giá mới = "+fmtMoney(original)+"đ + "+fmtMoney(original*p/100)+"đ = "+correct+".","Cách khác: giá mới = "+(100+p)+"% giá gốc."],
+      realWorld:"Tăng "+p+"% nghĩa là cứ 100 đồng thành "+(100+p)+" đồng."
+    },
+    verify:{k:"pctchange", orig:original, p, sign:1}
+  };
+}
+function genQ_word_distanceFrac(){
+  const b=pick([3,4,5,6,8]), a=randInt(1,b-1), total=b*pick([4,6,8,10,12,15]), gone=total*a/b, left=total-gone;
+  const askLeft=Math.random()<0.5, ans=askLeft?left:gone, correct=ans+" km";
+  const pool=shuffle([(askLeft?gone:left)+" km",total+" km",(ans+1)+" km",Math.max(0,ans-1)+" km",(ans+2)+" km"]).filter(s=>s!==correct);
+  const mo=build4Opts(correct,pool,seen=>{let d=1;while(d<60){const c=(ans+d)+" km";if(!seen.has(c))return c;d++}return null;});
+  return {
+    qHTML:"<span class=\"scenario\">Tình huống:</span> Quãng đường từ nhà tới quê dài <b>"+total+" km</b>. Gia đình đã đi được <b>"+a+"/"+b+"</b> quãng đường. Hỏi "+(askLeft?"còn lại":"đã đi được")+" bao nhiêu km?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · Phân số",
+    explain:{
+      correctHTML:(askLeft?"Còn lại":"Đã đi")+" <b>"+ans+" km</b>.",
+      steps:["Đã đi = "+a+"/"+b+" × "+total+" = "+total+" ÷ "+b+" × "+a+" = "+gone+" km.","Còn lại = "+total+" − "+gone+" = "+left+" km.","Cần tìm: "+(askLeft?left:gone)+" km."],
+      realWorld:"Chia quãng đường thành "+b+" phần bằng nhau, đã đi "+a+" phần."
+    },
+    verify:{k:"distfrac", total, a, b, askLeft}
+  };
+}
+function genQ_word_interest(){
+  const P=pick([10,20,50,100])*1000000, r=pick([5,6,8,10]), interest=P*r/100, total=P+interest;
+  const askTotal=Math.random()<0.5, ans=askTotal?total:interest, correct=fmtMoney(ans)+"đ";
+  const pool=shuffle([fmtMoney(askTotal?interest:total)+"đ",fmtMoney(P)+"đ",fmtMoney(ans+1000000)+"đ",fmtMoney(Math.max(0,ans-1000000))+"đ"]).filter(s=>s!==correct);
+  const mo=build4Opts(correct,pool,seen=>{let d=1000000;while(d<60000000){const c=fmtMoney(ans+d)+"đ";if(!seen.has(c))return c;d+=1000000}return null;});
+  return {
+    qHTML:"<span class=\"scenario\">Tình huống:</span> Bố gửi tiết kiệm <b>"+fmtMoney(P)+"đ</b> với lãi suất <b>"+r+"%/năm</b>. Sau <b>1 năm</b>, "+(askTotal?"bố nhận về tổng cộng":"số tiền lãi là")+" bao nhiêu?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · Phần trăm",
+    explain:{
+      correctHTML:(askTotal?"Tổng nhận về":"Tiền lãi")+" = <b>"+correct+"</b>",
+      steps:["Tiền lãi 1 năm = "+r+"% × "+fmtMoney(P)+"đ = "+fmtMoney(interest)+"đ.","Tổng = gốc + lãi = "+fmtMoney(P)+"đ + "+fmtMoney(interest)+"đ = "+fmtMoney(total)+"đ.","Cần tìm: "+correct+"."],
+      realWorld:"Lãi suất "+r+"%/năm: cứ 100 đồng gửi, sau 1 năm được thêm "+r+" đồng."
+    },
+    verify:{k:"interest", P, r, askTotal}
+  };
+}
+function genQ_word_percentOf(){
+  const ratios=[[1,4,25],[1,2,50],[3,4,75],[1,5,20],[2,5,40],[3,5,60],[4,5,80],[1,10,10],[3,10,30],[7,10,70],[1,1,100]];
+  const r=pick(ratios), num=r[0], den=r[1], pct=r[2], Y=den*pick([2,3,4,5,8,10]), X=Y*num/den, ans=pct, correct=ans+"%";
+  const pool=shuffle([(ans+5)+"%",Math.max(0,ans-5)+"%",(ans+10)+"%",(100-ans)+"%",(ans+1)+"%"]).filter(s=>s!==correct);
+  const mo=build4Opts(correct,pool,seen=>{let d=1;while(d<60){const c=(ans+d)+"%";if(!seen.has(c))return c;d++}return null;});
+  return {
+    qHTML:"<span class=\"scenario\">Tình huống:</span> Lớp có <b>"+Y+"</b> học sinh, trong đó <b>"+X+"</b> bạn tham gia câu lạc bộ. Hỏi số bạn tham gia chiếm bao nhiêu <b>phần trăm</b> cả lớp?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · Phần trăm",
+    explain:{
+      correctHTML: X+" trên "+Y+" = <b>"+ans+"%</b>",
+      steps:["Tỉ số phần trăm = (X ÷ Y) × 100% = ("+X+" ÷ "+Y+") × 100% = "+ans+"%.","Vì "+X+"/"+Y+" = "+num+"/"+den+" = "+ans+"/100."],
+      realWorld:""+ans+"% nghĩa là cứ 100 bạn thì có "+ans+" bạn tham gia."
+    },
+    verify:{k:"percentof", X, Y}
+  };
+}
+function genQ_word_twoStepFrac(){
+  const a=pick([2,3,4]), b=pick([2,3]), m=pick([2,3,4,5]), total=a*b*m;
+  const eaten=total/a, afterEat=total-eaten, given=afterEat/b, left=afterEat-given, ans=left, correct=""+ans;
+  const pool=shuffle([""+afterEat,""+eaten,""+given,""+total,""+(ans+1),""+Math.max(0,ans-1)]).filter(s=>s!==correct);
+  const mo=build4Opts(correct,pool,seen=>{let d=1;while(d<60){const k=""+(ans+d);if(!seen.has(k))return k;d++}return null;});
+  return {
+    qHTML:"<span class=\"scenario\">Tình huống:</span> Có <b>"+total+"</b> cái bánh. Buổi sáng ăn hết <b>1/"+a+"</b> số bánh, buổi chiều cho hàng xóm <b>1/"+b+"</b> số bánh <b>còn lại</b>. Hỏi cuối cùng còn bao nhiêu cái bánh?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · Phân số",
+    explain:{
+      correctHTML:"Còn lại <b>"+ans+"</b> cái bánh.",
+      steps:["Sáng ăn 1/"+a+" × "+total+" = "+eaten+" cái → còn "+afterEat+" cái.","Chiều cho 1/"+b+" × "+afterEat+" = "+given+" cái → còn "+afterEat+" − "+given+" = "+left+" cái."],
+      realWorld:"Chú ý: phân số buổi chiều tính trên 'số còn lại', không phải tổng ban đầu."
+    },
+    verify:{k:"twostepfrac", total, a, b}
+  };
+}
+
+/* ---------- Chặng 9 (mở rộng): toán đố ƯCLN/BCNN ---------- */
+function genQ_word_lights(){
+  const a=pick([4,6,8,9,10,12]), b=pick([6,8,9,10,12,15]), L=lcm(a,b), correct=L+" giây";
+  const pool=shuffle([gcd(a,b)+" giây",(a*b)+" giây",(a+b)+" giây",(L+a)+" giây",Math.max(1,L-a)+" giây"]).filter(s=>s!==correct);
+  const mo=build4Opts(correct,pool,seen=>{let d=1;while(d<60){const c=(L+d)+" giây";if(!seen.has(c))return c;d++}return null;});
+  return {
+    qHTML:"<span class=\"scenario\">Tình huống:</span> Hai bóng đèn cùng bật sáng lúc đầu. Đèn xanh cứ <b>"+a+" giây</b> nháy một lần, đèn đỏ cứ <b>"+b+" giây</b> nháy một lần. Hỏi sau ít nhất bao nhiêu giây hai đèn lại <b>cùng nháy</b> một lúc?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · BCNN",
+    explain:{
+      correctHTML:"Sau <b>"+L+" giây</b> hai đèn cùng nháy.",
+      steps:["Đèn xanh nháy ở các giây là bội của "+a+"; đèn đỏ ở bội của "+b+".","Cùng nháy ở bội chung → sớm nhất là BCNN("+a+", "+b+") = "+L+" giây."],
+      realWorld:"'Cùng lúc, sớm nhất' của hai chu kỳ → BCNN."
+    },
+    verify:{k:"lcmword", a, b}
+  };
+}
+function genQ_word_tiles(){
+  const a=pick([24,36,48,60,72]), b=pick([36,48,60,72,84,96]), g=gcd(a,b), correct=g+" cm";
+  const pool=shuffle([lcm(a,b)+" cm",(a+b)+" cm",(g+1)+" cm",Math.max(1,g-1)+" cm",(g*2)+" cm",a+" cm"]).filter(s=>s!==correct);
+  const mo=build4Opts(correct,pool,seen=>{let d=1;while(d<60){const c=(g+d)+" cm";if(!seen.has(c))return c;d++}return null;});
+  return {
+    qHTML:"<span class=\"scenario\">Tình huống:</span> Một nền nhà hình chữ nhật <b>"+a+" cm</b> × <b>"+b+" cm</b> được lát kín bằng các viên gạch hình <b>vuông</b> bằng nhau (không cắt gạch). Hỏi cạnh viên gạch <b>lớn nhất</b> có thể là bao nhiêu?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · ƯCLN",
+    explain:{
+      correctHTML:"Cạnh viên gạch lớn nhất = <b>"+g+" cm</b>.",
+      steps:["Cạnh gạch phải chia hết cả "+a+" và "+b+" → là ước chung.","'Lớn nhất' → ƯCLN("+a+", "+b+") = "+g+" cm."],
+      realWorld:"'Ô vuông lớn nhất lát kín hình chữ nhật' là dạng ƯCLN kinh điển."
+    },
+    verify:{k:"gcdword", a, b}
+  };
+}
+function genQ_word_lineUpMin(){
+  const a=pick([6,8,9,10,12]), b=pick([8,9,10,12,15]), L=lcm(a,b), correct=L+" học sinh";
+  const pool=shuffle([gcd(a,b)+" học sinh",(a*b)+" học sinh",(a+b)+" học sinh",(L+a)+" học sinh",Math.max(1,L-a)+" học sinh"]).filter(s=>s!==correct);
+  const mo=build4Opts(correct,pool,seen=>{let d=1;while(d<60){const c=(L+d)+" học sinh";if(!seen.has(c))return c;d++}return null;});
+  return {
+    qHTML:"<span class=\"scenario\">Tình huống:</span> Số học sinh khối 6 khi xếp hàng <b>"+a+"</b> hoặc hàng <b>"+b+"</b> đều <b>vừa đủ</b>, không thừa bạn nào. Hỏi khối 6 có <b>ít nhất</b> bao nhiêu học sinh (biết số đó lớn hơn 0)?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · BCNN",
+    explain:{
+      correctHTML:"Ít nhất <b>"+L+"</b> học sinh.",
+      steps:["Số học sinh chia hết cho cả "+a+" và "+b+" → là bội chung.","'Ít nhất' → BCNN("+a+", "+b+") = "+L+"."],
+      realWorld:"'Xếp kiểu nào cũng vừa đủ, ít nhất bao nhiêu' → BCNN."
+    },
+    verify:{k:"lcmword", a, b}
+  };
+}
+function genQ_word_flowers(){
+  const a=pick([18,24,30,36,42,48]), b=pick([24,30,36,48,60]), g=gcd(a,b), correct=g+" bó";
+  const pool=shuffle([lcm(a,b)+" bó",(a+b)+" bó",(g+1)+" bó",Math.max(1,g-1)+" bó",(g*2)+" bó"]).filter(s=>s!==correct);
+  const mo=build4Opts(correct,pool,seen=>{let d=1;while(d<60){const c=(g+d)+" bó";if(!seen.has(c))return c;d++}return null;});
+  return {
+    qHTML:"<span class=\"scenario\">Tình huống:</span> Có <b>"+a+"</b> bông hồng và <b>"+b+"</b> bông cúc. Muốn chia thành các bó giống nhau, mỗi bó có cùng số hồng và cùng số cúc. Hỏi chia được <b>nhiều nhất</b> bao nhiêu bó?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · ƯCLN",
+    explain:{
+      correctHTML:"Nhiều nhất <b>"+g+"</b> bó.",
+      steps:["Số bó là ước chung của "+a+" và "+b+".","'Nhiều nhất' → ƯCLN("+a+", "+b+") = "+g+". Mỗi bó có "+(a/g)+" hồng và "+(b/g)+" cúc."],
+      realWorld:"'Chia đều hai loại, nhiều nhất bao nhiêu phần' → ƯCLN."
+    },
+    verify:{k:"gcdword", a, b}
+  };
+}
+function genQ_word_runners(){
+  const a=pick([20,24,30,36,40]), b=pick([24,30,36,40,45,60]), L=lcm(a,b), correct=L+" giây";
+  const pool=shuffle([gcd(a,b)+" giây",(a*b)+" giây",(a+b)+" giây",(L+a)+" giây",Math.max(1,L-b)+" giây"]).filter(s=>s!==correct);
+  const mo=build4Opts(correct,pool,seen=>{let d=1;while(d<80){const c=(L+d)+" giây";if(!seen.has(c))return c;d++}return null;});
+  return {
+    qHTML:"<span class=\"scenario\">Tình huống:</span> Hai bạn chạy quanh một đường tròn, xuất phát cùng lúc cùng vạch. An chạy hết một vòng mất <b>"+a+" giây</b>, Bình mất <b>"+b+" giây</b>. Hỏi sau ít nhất bao nhiêu giây hai bạn lại <b>cùng về vạch xuất phát</b>?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Toán đố · BCNN",
+    explain:{
+      correctHTML:"Sau <b>"+L+" giây</b>.",
+      steps:["An về vạch ở các giây là bội của "+a+"; Bình ở bội của "+b+".","Cùng về vạch → BCNN("+a+", "+b+") = "+L+" giây."],
+      realWorld:"Hai chu kỳ trùng nhau lần đầu → BCNN."
+    },
+    verify:{k:"lcmword", a, b}
+  };
+}
+
+/* ---------- Chặng 10 (mở rộng): 4 phép tính số hữu tỉ ---------- */
+function genQ_ratFindX(){
+  function sf(){ const d=pick([2,3,4,5,6]); let n=randInt(-6,6); if(n===0)n=1; return F(n,d); }
+  const x=sf(), a=sf(), variant=pick([1,2]);
+  let html, ans=x, steps, verify;
+  if(variant===1){ const b=x.add(a); html="x + "+a.toHTML()+" = "+b.toHTML();
+    steps=["Chuyển vế: x = "+b.toLabel()+" − "+a.toLabel()+".","Quy đồng và trừ → x = "+x.toLabel()+"."];
+    verify={k:"fracsub", an:b.n, ad:b.d, bn:a.n, bd:a.d};
+  } else { const b=x.sub(a); html="x − "+a.toHTML()+" = "+b.toHTML();
+    steps=["Chuyển vế: x = "+b.toLabel()+" + "+a.toLabel()+".","Quy đồng và cộng → x = "+x.toLabel()+"."];
+    verify={k:"fracadd", an:b.n, ad:b.d, bn:a.n, bd:a.d};
+  }
+  const distract=[ans.neg(), ans.add(a), ans.sub(a), F(ans.n+1, ans.d)];
+  const mo=makeOptionsFrac(ans, shuffle(distract.filter(dd=>!dd.eq(ans))));
+  return {
+    qHTML:"Tìm x: <b>"+html+"</b>",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Số hữu tỉ · Tìm x",
+    explain:{ correctHTML:"x = <b>"+ans.toLabel()+"</b>", steps, realWorld:"Chuyển vế đổi dấu rồi quy đồng — như cân thăng bằng, làm gì một bên thì làm y hệt bên kia." },
+    verify
+  };
+}
+function genQ_ratCompare(){
+  function sf(){ const d=pick([2,3,4,5,6,8]); let n=randInt(-8,8); if(n===0)n=1; return F(n,d); }
+  let A=sf(), B=sf();
+  const sign=cmpSign(A.toNum(),B.toNum());
+  const mo=cmpOpts(sign);
+  return {
+    qHTML:"Điền dấu thích hợp: "+A.toHTML()+" ⬚ "+B.toHTML(),
+    options: mo.options, answerIdx: mo.answerIdx, tag:"So sánh số hữu tỉ",
+    explain:{
+      correctHTML: A.toLabel()+" "+sign+" "+B.toLabel(),
+      steps:["Quy đồng (hoặc đổi ra thập phân) rồi so sánh.","Số âm luôn nhỏ hơn số dương; với hai số âm, số có trị tuyệt đối lớn hơn thì NHỎ hơn.",A.toLabel()+" "+sign+" "+B.toLabel()+"."],
+      realWorld:"Trên trục số, số bên phải lớn hơn."
+    },
+    verify:{k:"cmpfrac", an:A.n, ad:A.d, bn:B.n, bd:B.d}
+  };
+}
+function genQ_ratEvalExpr(){
+  function sf(){ const d=pick([2,3,4]); let n=randInt(-4,4); if(n===0)n=1; return F(n,d); }
+  const a=sf(), b=sf(), c=randInt(2,4);
+  const bc=b.mul(F(c)), ans=a.add(bc);
+  const expr=a.toHTML()+" + "+b.toHTML()+" × "+c;
+  const distract=[a.add(b).mul(F(c)), ans.neg(), a.mul(F(c)).add(b), ans.add(F(1))];
+  const mo=makeOptionsFrac(ans, shuffle(distract.filter(dd=>{try{return !dd.eq(ans)}catch(e){return false}})));
+  return {
+    qHTML:"Tính giá trị: <b>"+expr+"</b> = ?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Số hữu tỉ · Thứ tự",
+    explain:{
+      correctHTML: expr+" = <b>"+ans.toLabel()+"</b>",
+      steps:["Nhân trước, cộng sau: "+b.toLabel()+" × "+c+" = "+bc.toLabel()+".","Rồi "+a.toLabel()+" + "+bc.toLabel()+" = "+ans.toLabel()+"."],
+      realWorld:"Quy tắc thứ tự không đổi dù là phân số: nhân/chia trước, cộng/trừ sau."
+    },
+    verify:{k:"frac_a_plus_bc", an:a.n, ad:a.d, bn:b.n, bd:b.d, c}
+  };
+}
+function genQ_ratSimplest(){
+  const baseD=pick([2,3,4,5,7]); let baseN=randInt(1,baseD*2); while(gcd(baseN,baseD)!==1) baseN++;
+  const sgn=pick([1,-1]), k=pick([2,3,4,6]);
+  const n=sgn*baseN*k, d=baseD*k, ans=F(n,d);
+  const distract=[F(-n,d), F(n,d*2), F(n*2,d), F(sgn*baseN, baseD+1)];
+  const mo=makeOptionsFrac(ans, shuffle(distract.filter(x=>{try{return !x.eq(ans)}catch(e){return false}})));
+  return {
+    qHTML:"Rút gọn về phân số tối giản: "+fracHTML(n,d),
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Số hữu tỉ · Rút gọn",
+    explain:{
+      correctHTML: fracHTML(n,d)+" = <b>"+ans.toLabel()+"</b>",
+      steps:["Tìm ƯCLN của trị tuyệt đối tử và mẫu rồi chia cả hai.","ƯCLN("+Math.abs(n)+", "+d+") = "+gcd(n,d)+" → "+fracHTML(n,d)+" = "+ans.toLabel()+". Giữ nguyên dấu."],
+      realWorld:"Rút gọn không làm đổi giá trị, chỉ viết gọn hơn — dấu âm vẫn giữ."
+    },
+    verify:{k:"reduce", n, d}
+  };
+}
+function genQ_ratReciprocalOpposite(){
+  function sf(){ const d=pick([2,3,4,5,7]); let n=randInt(-7,7); if(n===0)n=1; return F(n,d); }
+  const x=sf(), askOpp=Math.random()<0.5;
+  let ans, label;
+  if(askOpp){ ans=x.neg(); label="số đối"; }
+  else { ans=F(x.d, x.n); label="số nghịch đảo"; }
+  const distract=[x, x.neg(), F(x.d, x.n<0?-Math.abs(x.n):Math.abs(x.n)), F(x.n+1, x.d)];
+  const mo=makeOptionsFrac(ans, shuffle(distract.filter(dd=>{try{return !dd.eq(ans)}catch(e){return false}})));
+  return {
+    qHTML:"Tìm <b>"+label+"</b> của "+x.toHTML()+":",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Số hữu tỉ",
+    explain:{
+      correctHTML:(askOpp?"Số đối":"Số nghịch đảo")+" của "+x.toLabel()+" là <b>"+ans.toLabel()+"</b>",
+      steps: askOpp
+        ? ["Số đối là số cùng giá trị tuyệt đối nhưng khác dấu (đổi dấu).","Số đối của "+x.toLabel()+" là "+ans.toLabel()+". (Tổng hai số đối = 0)"]
+        : ["Số nghịch đảo của a/b là b/a (lật ngược tử–mẫu, giữ dấu).","Nghịch đảo của "+x.toLabel()+" là "+ans.toLabel()+". (Tích hai số nghịch đảo = 1)"],
+      realWorld: askOpp ? "Số đối: +5 và −5 'triệt tiêu' nhau về 0." : "Nghịch đảo: 2/3 và 3/2 nhân nhau bằng 1."
+    },
+    verify: askOpp ? {k:"opposite", n:x.n, d:x.d} : {k:"reciprocal", n:x.n, d:x.d}
+  };
+}
+
+/* ---------- Chặng 11 (mở rộng): lũy thừa & thứ tự ---------- */
+function genQ_powerOfPower(){
+  const a=pick([2,3]), m=pick([2,3]), n=pick([2,3]);
+  const ansExp=m*n, val=Math.pow(a,ansExp), ans=F(val);
+  const distract=[F(Math.pow(a,m+n)), F(val*a), F(Math.pow(a,Math.max(1,ansExp-1)))];
+  const mo=makeOptionsFrac(ans, shuffle(distract.filter(dd=>!dd.eq(ans))));
+  return {
+    qHTML:"Tính: ("+a+"<sup>"+m+"</sup>)<sup>"+n+"</sup> = ?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Lũy thừa",
+    explain:{
+      correctHTML:"("+a+"^"+m+")^"+n+" = "+a+"^("+m+"×"+n+") = "+a+"^"+ansExp+" = <b>"+val+"</b>",
+      steps:["Lũy thừa của lũy thừa: GIỮ cơ số, NHÂN hai số mũ.","("+a+"^"+m+")^"+n+" = "+a+"^"+(m*n)+" = "+val+"."],
+      realWorld:"Nhân nhóm các thừa số: ("+a+"^"+m+") lặp lại "+n+" lần."
+    },
+    verify:{k:"powval", a, exp:ansExp}
+  };
+}
+function genQ_powerProductForm(){
+  const a=randInt(2,9), isMul=Math.random()<0.5;
+  let m=randInt(2,6), n=randInt(2,6);
+  if(!isMul && m<n){ const t=m;m=n;n=t; }
+  const ansExp=isMul? m+n : m-n;
+  const opExpr=a+"<sup>"+m+"</sup> "+(isMul?"×":"÷")+" "+a+"<sup>"+n+"</sup>";
+  function powHtml(e){ return e<=0? "1" : (e===1? (""+a) : a+"<sup>"+e+"</sup>"); }
+  const exps=[ansExp];
+  const cand=[(isMul? m*n : m+n), ansExp+1, ansExp+2, ansExp+3, (isMul? Math.abs(m-n) : m*n)];
+  for(const e of cand){ if(exps.length>=4) break; if(e>=1 && exps.indexOf(e)<0) exps.push(e); }
+  let g=4; while(exps.length<4){ if(exps.indexOf(ansExp+g)<0 && ansExp+g>=1) exps.push(ansExp+g); g++; }
+  const order=shuffle(exps.slice(0,4));
+  return {
+    qHTML:"Viết kết quả dưới dạng <b>một lũy thừa</b>: <b>"+opExpr+"</b> = ?",
+    options: order.map(e=>"__html__"+powHtml(e)), answerIdx: order.indexOf(ansExp), tag:"Lũy thừa",
+    explain:{
+      correctHTML: opExpr+" = <b>"+powHtml(ansExp)+"</b>",
+      steps:[ isMul? "Nhân hai lũy thừa cùng cơ số: giữ cơ số, CỘNG số mũ." : "Chia hai lũy thừa cùng cơ số: giữ cơ số, TRỪ số mũ.",
+              isMul? (a+"^"+m+" × "+a+"^"+n+" = "+a+"^("+m+"+"+n+") = "+a+"^"+ansExp+".") : (a+"^"+m+" ÷ "+a+"^"+n+" = "+a+"^("+m+"−"+n+") = "+a+"^"+ansExp+".") ],
+      realWorld:"Quy tắc lũy thừa cùng cơ số giúp gộp nhiều thừa số giống nhau lại gọn gàng."
+    },
+    verify:{k:"powexp", a, m, n, isMul}
+  };
+}
+function genQ_nestedParens(){
+  const a=randInt(2,6), b=randInt(8,15), c=randInt(1,6), d=randInt(1,6);
+  const inner=c+d, mid=b-inner, ans=a*mid;
+  const expr=a+" × [ "+b+" − ( "+c+" + "+d+" ) ]";
+  const correct=intHTML(ans);
+  const pool=shuffle([intHTML(a*(b-c+d)), intHTML(a*b-c-d), intHTML(ans+a), intHTML(ans-a), intHTML(-ans)]).filter(s=>s!==correct);
+  const mo=build4Opts(correct,pool,seen=>{let x=1;while(x<40){const k=intHTML(ans+x);if(!seen.has(k))return k;x++}return null;});
+  return {
+    qHTML:"Tính giá trị: <b>"+expr+"</b> = ?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Thứ tự · Ngoặc nhiều tầng",
+    explain:{
+      correctHTML: expr+" = <b>"+intHTML(ans)+"</b>",
+      steps:["Làm ngoặc trong cùng trước: ("+c+" + "+d+") = "+inner+".","Rồi ngoặc ngoài: "+b+" − "+inner+" = "+mid+".","Cuối cùng: "+a+" × "+mid+" = "+ans+"."],
+      realWorld:"Bóc ngoặc từ trong ra ngoài, như mở hộp quà lồng nhau."
+    },
+    verify:{k:"nested", a,b,c,d}
+  };
+}
+function genQ_orderWithPower(){
+  const c=randInt(2,4), k=2, a=randInt(1,9), b=randInt(1,5), variant=pick([1,2]);
+  let expr, ans;
+  if(variant===1){ ans=a + b*Math.pow(c,k); expr=a+" + "+b+" × "+c+"<sup>"+k+"</sup>"; }
+  else { ans=Math.pow(c,k) - a; expr=c+"<sup>"+k+"</sup> − "+a; }
+  const correct=intHTML(ans);
+  const pool=shuffle([intHTML(ans+1),intHTML(ans-1),intHTML(variant===1? (a+b)*Math.pow(c,k) : c*k - a), intHTML(ans+c), intHTML(-ans)]).filter(s=>s!==correct);
+  const mo=build4Opts(correct,pool,seen=>{let x=1;while(x<30){const key=intHTML(ans+x);if(!seen.has(key))return key;x++}return null;});
+  return {
+    qHTML:"Tính giá trị: <b>"+expr+"</b> = ?",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Thứ tự có lũy thừa",
+    explain:{
+      correctHTML: expr+" = <b>"+intHTML(ans)+"</b>",
+      steps:["Thứ tự ưu tiên: LŨY THỪA trước, rồi nhân/chia, rồi cộng/trừ.", variant===1? (c+"^"+k+" = "+Math.pow(c,k)+"; "+b+" × "+Math.pow(c,k)+" = "+(b*Math.pow(c,k))+"; cộng "+a+" → "+ans+".") : (c+"^"+k+" = "+Math.pow(c,k)+"; trừ "+a+" → "+ans+".")],
+      realWorld:"Lũy thừa là phép 'mạnh nhất', tính trước cả nhân chia."
+    },
+    verify:{k:"orderpow", variant, a, b, c, exp:k}
+  };
+}
+
+/* ---------- Chặng 12 (mở rộng): biểu diễn thập phân ---------- */
+function genQ_fracToDecimalV2(){
+  const it=pick(FINITE_FRACS), correct=it[2];
+  const seen=new Set([correct]), distract=[];
+  const cands=[fmtNum(it[0]/(it[1]+1),4), fmtNum((it[0]+1)/it[1],4), fmtNum(it[0]/it[1]*10,4), fmtNum(it[0]/it[1]/10,4)];
+  for(const c of cands){ if(distract.length>=3) break; if(!seen.has(c)){ seen.add(c); distract.push(c); } }
+  const mo=makeOptionsStr(correct, distract);
+  return {
+    qHTML:"Đổi phân số "+F(it[0],it[1]).toHTML()+" sang số thập phân:",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Đổi ra thập phân",
+    explain:{
+      correctHTML: it[0]+"/"+it[1]+" = <b>"+correct+"</b>",
+      steps:["Lấy tử chia mẫu: "+it[0]+" ÷ "+it[1]+" = "+correct+".","Hoặc nhân để mẫu thành 10/100/1000 rồi đọc số thập phân."],
+      realWorld:"Chia "+it[0]+" cái bánh cho "+it[1]+" người, mỗi người được "+correct+" cái."
+    },
+    verify:{k:"f2d", n:it[0], d:it[1]}
+  };
+}
+function genQ_decimalToFracV2(){
+  const it=pick(FINITE_FRACS), correct=it[0]+"/"+it[1];
+  const distract=[(it[0]+1)+"/"+it[1], it[0]+"/"+(it[1]+1), (it[0]*2)+"/"+it[1], (it[0]+1)+"/"+(it[1]+1)];
+  const mo=makeOptionsStr(correct, distract);
+  return {
+    qHTML:"Đổi số thập phân <b>"+it[2]+"</b> sang phân số tối giản:",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"Đổi ra phân số",
+    explain:{
+      correctHTML: it[2]+" = <b>"+it[0]+"/"+it[1]+"</b>",
+      steps:["Viết "+it[2]+" thành phân số mẫu 10/100/1000 theo số chữ số thập phân, rồi rút gọn.","Kết quả tối giản: "+it[0]+"/"+it[1]+"."],
+      realWorld:"Số "+it[2]+" và phân số "+it[0]+"/"+it[1]+" là hai cách viết cùng một lượng."
+    },
+    verify:{k:"d2f", n:it[0], d:it[1], dec:it[2]}
+  };
+}
+function genQ_largestDecimal(){
+  const seen=new Set(), vals=[];
+  let guard=0;
+  while(vals.length<4 && guard<200){
+    guard++;
+    const v=randInt(1,99)/pick([10,100]);
+    const s=fmtNum(v,2);
+    if(seen.has(s)) continue;
+    if(vals.some(x=>Math.abs(x.v-v)<1e-9)) continue;
+    seen.add(s); vals.push({v,s});
+  }
+  let mx=vals[0]; vals.forEach(x=>{ if(x.v>mx.v) mx=x; });
+  const labels=vals.map(x=>x.s);
+  return {
+    qHTML:"Trong các số sau, số nào <b>lớn nhất</b>?",
+    options: labels, answerIdx: labels.indexOf(mx.s), tag:"So sánh số thập phân",
+    explain:{
+      correctHTML:"Lớn nhất là <b>"+mx.s+"</b>",
+      steps:["So sánh phần nguyên trước; nếu bằng thì so sánh lần lượt các chữ số sau dấu phẩy.","Lớn nhất: "+mx.s+"."],
+      realWorld:"Như so chiều cao: so mét trước, rồi đến xăng-ti-mét."
+    },
+    verify:{k:"maxdec", labels}
+  };
+}
+function genQ_compareDecFrac(){
+  const it=pick(FINITE_FRACS), fracVal=it[0]/it[1];
+  let dec, decVal;
+  if(Math.random()<0.3){ decVal=fracVal; dec=it[2]; }
+  else {
+    const delta=pick([0.1,0.2,0.05,-0.1,-0.2,-0.05]);
+    let dv=Math.round((fracVal+delta)*100)/100; if(dv<0) dv=fracVal+0.1;
+    dec=fmtNum(dv,2); decVal=parseFloat(dec.replace(",",".").replace("−","-"));
+  }
+  const sign=cmpSign(fracVal, decVal);
+  const mo=cmpOpts(sign);
+  return {
+    qHTML:"Điền dấu thích hợp: "+F(it[0],it[1]).toHTML()+" ⬚ <b>"+dec+"</b>",
+    options: mo.options, answerIdx: mo.answerIdx, tag:"So sánh phân số – thập phân",
+    explain:{
+      correctHTML: it[0]+"/"+it[1]+" "+sign+" "+dec,
+      steps:["Đổi phân số ra thập phân: "+it[0]+"/"+it[1]+" = "+it[2]+".","So sánh "+it[2]+" với "+dec+" → "+sign+"."],
+      realWorld:"Muốn so phân số với thập phân, đưa cả hai về cùng dạng (thập phân) rồi so."
+    },
+    verify:{k:"cmpval", a:fracVal, b:decVal}
+  };
+}
+function genQ_whichFinite(){
+  const finiteD=[2,4,5,8,10,16,20,25];
+  const infiniteD=[3,6,7,9,11,12,15,18,21];
+  const fd=pick(finiteD); let fn=randInt(1,fd-1); while(gcd(fn,fd)>1){ fn++; if(fn>=fd){fn=1;break;} }
+  const correct=fn+"/"+fd;
+  const seen=new Set([correct]), wrongs=[];
+  let guard=0;
+  while(wrongs.length<3 && guard<60){
+    guard++;
+    const d=pick(infiniteD); let n=randInt(1,d-1);
+    if(gcd(n,d)>1) continue;
+    const lbl=n+"/"+d;
+    if(seen.has(lbl)) continue;
+    if(isFiniteDecimal(F(n,d))) continue;
+    seen.add(lbl); wrongs.push(lbl);
+  }
+  const fb=["1/7","2/7","1/9","2/9","1/11","5/6","1/12"];
+  let fi=0;
+  while(wrongs.length<3 && fi<fb.length){ if(!seen.has(fb[fi])){ seen.add(fb[fi]); wrongs.push(fb[fi]); } fi++; }
+  const labels=shuffle([correct].concat(wrongs));
+  return {
+    qHTML:"Phân số nào sau đây viết được dưới dạng <b>số thập phân hữu hạn</b>?",
+    options: labels, answerIdx: labels.indexOf(correct), tag:"Biểu diễn thập phân",
+    explain:{
+      correctHTML:"<b>"+correct+"</b> là số thập phân hữu hạn.",
+      steps:["Phân số tối giản cho thập phân HỮU HẠN ⇔ mẫu chỉ chứa ước 2 và/hoặc 5.","Mẫu "+fd+" chỉ gồm ước 2 và/hoặc 5 → hữu hạn. Các phân số còn lại có mẫu chứa ước khác (3, 7, 9, 11...) → vô hạn tuần hoàn."],
+      realWorld:"Mẫu 'đẹp' (chỉ 2 và 5) thì chia hết nhanh; mẫu có 3, 7... thì chia mãi không dứt."
+    },
+    verify:{k:"whichfinite"}
+  };
+}
+
+/* ========================================================================
+   PHẦN 5 — DANH SÁCH ĐỀ CHO 12 CHẶNG (pool 6–8 generator/chặng, v3.2)
+   ========================================================================*/
+
+// Kho generator cho mỗi chặng — mỗi chặng 6–8 DẠNG bài khác nhau.
+const STAGE_POOLS = {
+  s1: [genQ_mulTable, genQ_divTable, genQ_quickAddSub, genQ_missingFactor, genQ_missingTerm, genQ_compareCalc, genQ_chainCalc],
+  s2: [genQ_intArith, genQ_parens, genQ_intOrder, genQ_findX, genQ_compareInt, genQ_absValue, genQ_twoParens],
+  s3: [genQ_simplifyFrac, genQ_commonDen, genQ_fracBasicPos, genQ_fracDecimal, genQ_compareFrac, genQ_equivFrac, genQ_largestFrac],
+  s4: [genQ_divRule, genQ_isMultipleYN, genQ_countDivisors, genQ_smallestMultipleAbove, genQ_multiSignDivisible, genQ_fillDigit],
+  s5: [genQ_primeOrComposite, genQ_primeFactorize, genQ_isPrimeYN, genQ_largestPrimeFactor, genQ_primeBetween, genQ_whichComposite],
+  s6: [genQ_gcd, genQ_lcm, genQ_coprimeYN, genQ_findOtherFromGcdLcm, genQ_commonDivisorPick, genQ_commonMultiplePick],
+  s7: [genQ_word_arith, genQ_word_trees, genQ_word_ages, genQ_word_consecutive, genQ_word_share, genQ_word_timesPlus],
+  s8: [genQ_word_fracPct, genQ_word_increasePct, genQ_word_distanceFrac, genQ_word_interest, genQ_word_percentOf, genQ_word_twoStepFrac],
+  s9: [genQ_word_gcdLcm, genQ_word_lights, genQ_word_tiles, genQ_word_lineUpMin, genQ_word_flowers, genQ_word_runners],
+  s10:[genQ_ratArith, genQ_ratFindX, genQ_ratCompare, genQ_ratEvalExpr, genQ_ratSimplest, genQ_ratReciprocalOpposite],
+  s11:[genQ_ratPower, genQ_ratOrder, genQ_powerOfPower, genQ_powerProductForm, genQ_nestedParens, genQ_orderWithPower],
+  s12:[genQ_ratDecimal, genQ_fracToDecimalV2, genQ_decimalToFracV2, genQ_largestDecimal, genQ_compareDecFrac, genQ_whichFinite]
+};
+
+// Sinh n câu: mỗi câu random chọn 1 generator trong kho, tránh để 2 câu cùng
+// DẠNG nằm liền kề nhau (xáo trộn đều các dạng trong một lượt chơi).
+function buildFromPool(pool, n){
+  const list = [];
+  let lastGen = null;
+  for(let i=0;i<n;i++){
+    let g, guard=0;
+    do { g = pick(pool); guard++; } while(pool.length>1 && g===lastGen && guard<16);
+    lastGen = g;
+    list.push(g());
+  }
+  return list;
+}
+
+function buildStage1(){ return buildFromPool(STAGE_POOLS.s1, 10); }
+function buildStage2(){ return buildFromPool(STAGE_POOLS.s2, 10); }
+function buildStage3(){ return buildFromPool(STAGE_POOLS.s3, 10); }
+function buildStage4(){ return buildFromPool(STAGE_POOLS.s10, 10); }  // Phần 4 / Chặng 10: 4 phép tính số hữu tỉ
+function buildStage5(){ return buildFromPool(STAGE_POOLS.s11, 10); }  // Chặng 11: lũy thừa & thứ tự
+function buildStage6(){ return buildFromPool(STAGE_POOLS.s12, 10); }  // Chặng 12: biểu diễn thập phân
+
+/* ----- Builders cho Phần 2 (Chặng 4,5,6) ----- */
+function buildStage_p2_1(){ return buildFromPool(STAGE_POOLS.s4, 10); }
+function buildStage_p2_2(){ return buildFromPool(STAGE_POOLS.s5, 10); }
+function buildStage_p2_3(){ return buildFromPool(STAGE_POOLS.s6, 10); }
+
+/* ----- Builders cho Phần 3 (Toán đố — Chặng 7,8,9) ----- */
+function buildStage_p3_1(){ return buildFromPool(STAGE_POOLS.s7, 10); }
+function buildStage_p3_2(){ return buildFromPool(STAGE_POOLS.s8, 10); }
+function buildStage_p3_3(){ return buildFromPool(STAGE_POOLS.s9, 10); }
 
 /* ========================================================================
    PHẦN 6 — SELF-TEST
@@ -1969,7 +3032,20 @@ function selfTest(){
     // v3:
     genQ_divRule, genQ_primeOrComposite, genQ_primeFactorize,
     genQ_gcd, genQ_lcm,
-    genQ_word_arith, genQ_word_fracPct, genQ_word_gcdLcm
+    genQ_word_arith, genQ_word_fracPct, genQ_word_gcdLcm,
+    // v3.2 — generator mở rộng:
+    genQ_missingFactor, genQ_missingTerm, genQ_compareCalc, genQ_chainCalc,
+    genQ_findX, genQ_compareInt, genQ_absValue, genQ_twoParens,
+    genQ_compareFrac, genQ_equivFrac, genQ_largestFrac,
+    genQ_isMultipleYN, genQ_countDivisors, genQ_smallestMultipleAbove, genQ_multiSignDivisible, genQ_fillDigit,
+    genQ_isPrimeYN, genQ_largestPrimeFactor, genQ_primeBetween, genQ_whichComposite,
+    genQ_coprimeYN, genQ_findOtherFromGcdLcm, genQ_commonDivisorPick, genQ_commonMultiplePick,
+    genQ_word_trees, genQ_word_ages, genQ_word_consecutive, genQ_word_share, genQ_word_timesPlus,
+    genQ_word_increasePct, genQ_word_distanceFrac, genQ_word_interest, genQ_word_percentOf, genQ_word_twoStepFrac,
+    genQ_word_lights, genQ_word_tiles, genQ_word_lineUpMin, genQ_word_flowers, genQ_word_runners,
+    genQ_ratFindX, genQ_ratCompare, genQ_ratEvalExpr, genQ_ratSimplest, genQ_ratReciprocalOpposite,
+    genQ_powerOfPower, genQ_powerProductForm, genQ_nestedParens, genQ_orderWithPower,
+    genQ_fracToDecimalV2, genQ_decimalToFracV2, genQ_largestDecimal, genQ_compareDecFrac, genQ_whichFinite
   ];
   let pass=0, fail=0;
   for(const g of gens){
@@ -2383,6 +3459,14 @@ function isPartComplete(p){
   for(let i=0;i<STAGES.length;i++) if(STAGES[i].partIdx===p && !state.completed[i]) return false;
   return true;
 }
+// Chặng "cuối phần" = chặng có chỉ số lớn nhất trong cùng partIdx (chặng 3, 6, 9, 12).
+// Dùng để trao thẻ cào MỖI lần vượt chặng này, kể cả khi phần đã từng hoàn tất.
+function isPartClosingStage(i){
+  const p = STAGES[i].partIdx;
+  let lastIdx = i;
+  for(let j=0;j<STAGES.length;j++) if(STAGES[j].partIdx===p && j>lastIdx) lastIdx=j;
+  return i===lastIdx;
+}
 function isUnlocked(i){
   const p = partOf(i);
   if(p===0) return true;
@@ -2601,6 +3685,8 @@ function renderStage(){
 
 function renderOptionLabel(label){
   if(typeof label === "string" && label.indexOf("__html__")===0) return label.slice("__html__".length);
+  if(label==="<") return "&lt;";   // dấu so sánh — escape để innerHTML không hiểu nhầm là thẻ
+  if(label===">") return "&gt;";
   if(/[a-zA-ZÀ-ỹ]/.test(label)) return label;
   if(label.indexOf("/")>=0){
     let neg=false, body=label;
@@ -2696,15 +3782,11 @@ function finishStage(){
   const s = STAGES[state.stageIdx];
   const pass = state.correctCount >= s.passN;
   const wasCompleted = state.completed[state.stageIdx];
-  // Kiểm tra phần đã hoàn tất trước chặng này hay chưa
-  const partWasComplete = isPartComplete(s.partIdx);
   state._justFirstStagePass = pass && !wasCompleted;
-  state._justCompletedPart  = pass && !wasCompleted && !partWasComplete && (()=>{
-    state.completed[state.stageIdx] = true;
-    const ok = isPartComplete(s.partIdx);
-    state.completed[state.stageIdx] = wasCompleted; // revert tạm; finishStage sẽ set lại bên dưới
-    return ok;
-  })();
+  // v3.2: Trao thẻ cào MỖI lần vượt chặng cuối của một phần (chặng 3, 6, 9, 12),
+  // kể cả khi phần đó đã từng hoàn tất trước đó. Bỏ điều kiện chống-spam cũ
+  // (trước đây chỉ trao lần đầu hoàn tất phần) để khuyến khích học lại.
+  state._justCompletedPart  = pass && isPartClosingStage(state.stageIdx);
   if(pass){
     state.completed[state.stageIdx] = true;
     saveCompleted();
@@ -2717,7 +3799,7 @@ function finishStage(){
 function buildPostFlow(){
   // Thẻ động viên random — luôn có sau mỗi chặng nhỏ.
   // Câu chuyện lịch sử — chỉ ở chặng có storyIdx (6 chặng).
-  // Thẻ cào — CHỈ ở lần ĐẦU hoàn tất phần (tránh chơi lại để spam tiền).
+  // Thẻ cào — MỖI lần vượt chặng cuối của phần (kể cả khi học lại phần đó).
   const stage = STAGES[state.stageIdx];
   state.postFlow = ["cheer"];
   if(stage.storyIdx!==null){
